@@ -18,6 +18,7 @@ const body = html.replace(tag, () => '<script>\n' + core + '\n</script>');
 const standalone =
   '<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n' +
   '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+  '<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 fill=%22%23FF8562%22/%3E%3Cpath d=%22M9 23V9h8a4 4 0 010 8H9%22 fill=%22none%22 stroke=%22%2317110E%22 stroke-width=%223%22/%3E%3C/svg%3E">\n' +
   body.replace('<meta name="description"', '</head>\n<body>\n<meta name="description"') + '\n</body>\n</html>\n';
 
 // <title>, <link> и <style> должны оказаться в <head>: переносим границу head/body после </style>
