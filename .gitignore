@@ -1,0 +1,9 @@
+# Внутренний исходник концепта — не публикуем (репозиторий публичный)
+docs/source/*.pdf
+
+# Служебное
+.playwright-mcp/
+node_modules/
+site/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,1339 @@
+<title>Собери проект</title>
+<meta name="description" content="Кликабельный прототип игры АРТ.БРОДСКИЙ × Нейроотличник">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Inter+Tight:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --ink: #0F1420;
+    --ink-2: #0B0F19;
+    --panel: #151C2B;
+    --panel-2: #1B2335;
+    --rule: rgba(160, 176, 220, 0.16);
+    --rule-strong: rgba(236, 239, 245, 0.34);
+    --paper: #ECEFF5;
+    --dim: #9AA3B6;
+    --faint: #69728A;
+    --c-line: #8C98FF;
+    --c-volume: #FF8562;
+    --c-material: #DDB892;
+    --c-green: #C6E975;
+    --c-light: #FFD36A;
+    --cta: #FF8562;
+    --cta-hover: #FF9D80;
+    --cta-ink: #17110E;
+    --f-display: 'Unbounded', 'Arial Black', Arial, sans-serif;
+    --f-ui: 'Inter Tight', Arial, sans-serif;
+    --f-mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--ink); }
+  body {
+    margin: 0;
+    color: var(--paper);
+    font: 15px/1.45 var(--f-ui);
+    padding-inline: 16px;
+    padding-block: 28px 56px;
+    background:
+      linear-gradient(rgba(140, 152, 255, 0.04) 1px, transparent 1px) 0 0 / 24px 24px,
+      linear-gradient(90deg, rgba(140, 152, 255, 0.04) 1px, transparent 1px) 0 0 / 24px 24px,
+      radial-gradient(ellipse 60% 50% at 30% 0%, rgba(123, 97, 255, 0.10) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 90% 100%, rgba(255, 133, 98, 0.07) 0%, transparent 70%),
+      var(--ink);
+    min-height: 100vh;
+  }
+  button, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--c-line); outline-offset: 2px; }
+  [hidden] { display: none !important; }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 400px) minmax(0, 1fr);
+    gap: 56px;
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .wrap { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 36px; }
+    .notes { max-width: 400px; position: static !important; }
+  }
+
+  /* ---------- общие ---------- */
+  .eyebrow { font: 500 11px/1.3 var(--f-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--dim); }
+  .display { font-family: var(--f-display); font-weight: 700; text-transform: uppercase; line-height: 1.02; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+  .btn {
+    appearance: none; border: 0; border-radius: 0; box-shadow: none; cursor: pointer;
+    font: 600 13px/1 var(--f-ui); letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 15px 18px; transition: background 0.2s, color 0.2s, opacity 0.2s;
+  }
+  .btn-primary { background: var(--cta); color: var(--cta-ink); }
+  .btn-primary:hover { background: var(--cta-hover); }
+  .btn-secondary { background: rgba(255, 255, 255, 0.08); color: var(--paper); }
+  .btn-secondary:hover { background: rgba(255, 255, 255, 0.14); }
+  .btn-small { padding: 10px 12px; font-size: 11px; }
+  .btn-block { width: 100%; }
+  .btn:disabled { opacity: 0.4; cursor: default; }
+  .t0 { --tc: var(--c-line); } .t1 { --tc: var(--c-volume); } .t2 { --tc: var(--c-material); } .t3 { --tc: var(--c-green); } .t4 { --tc: var(--c-light); }
+
+  /* ---------- телефон ---------- */
+  .phone { position: relative; width: 100%; background: var(--ink-2); border: 1px solid var(--rule); border-radius: 6px; overflow: hidden; }
+  .tg-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 46px; padding-inline: 14px; border-bottom: 1px solid var(--rule); background: var(--panel); font-size: 13px; }
+  .tg-bar .close { color: var(--c-line); }
+  .tg-bar .title { text-align: center; line-height: 1.15; }
+  .tg-bar .title b { display: block; font-weight: 600; }
+  .tg-bar .title span { font-size: 11px; color: var(--faint); }
+  .tg-bar .more { justify-self: end; color: var(--dim); letter-spacing: 0.1em; }
+  .screen { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+
+  .row-between { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+
+  /* неделя */
+  .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .wd { border: 1px solid var(--rule); padding: 6px 0 7px; text-align: center; font: 400 10px/1.2 var(--f-mono); color: var(--faint); }
+  .wd b { display: block; font: 600 12px/1.3 var(--f-ui); letter-spacing: 0.02em; }
+  .wd.done { color: var(--c-green); border-color: rgba(198, 233, 117, 0.45); background: rgba(198, 233, 117, 0.10); }
+  .wd.remarks { color: var(--c-light); border-color: rgba(255, 211, 106, 0.45); background: rgba(255, 211, 106, 0.08); }
+  .wd.today { color: var(--paper); border-color: var(--cta); box-shadow: inset 0 -2px 0 var(--cta); }
+
+  .delays { display: flex; align-items: center; gap: 6px; font: 400 11px var(--f-mono); color: var(--dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .delays i { width: 10px; height: 10px; border: 1px solid var(--c-light); display: inline-block; }
+  .delays i.on { background: var(--c-light); }
+
+  /* объект */
+  .obj { position: relative; border: 1px solid var(--rule); background: var(--ink); }
+  .obj canvas, .rv canvas { display: block; width: 100%; height: auto; aspect-ratio: 10 / 7; max-width: 100%; }
+  .obj-cap { position: absolute; inset: auto 0 0 0; display: flex; justify-content: space-between; gap: 8px; padding: 18px 10px 8px; background: linear-gradient(transparent, rgba(8, 11, 19, 0.88)); font: 400 11px var(--f-mono); color: var(--dim); }
+  .obj-cap b { color: var(--paper); font: 600 13px var(--f-ui); }
+
+  /* ведущий */
+  .host { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 10px; align-items: start; }
+  .avatar { width: 36px; height: 36px; background: var(--c-volume); color: var(--cta-ink); font: 700 16px/1 var(--f-display); display: grid; place-items: center; }
+  .bubble { background: var(--panel-2); border: 1px solid var(--rule); padding: 9px 12px 11px; border-radius: 0 6px 6px 6px; }
+  .who { display: flex; gap: 8px; align-items: baseline; font: 600 12px var(--f-ui); color: var(--c-volume); margin-bottom: 3px; }
+  .who span { font: 400 10px var(--f-mono); color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em; }
+  .bubble p { margin: 0; font-size: 14px; }
+
+  .goals { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .goal { display: flex; align-items: center; gap: 10px; border: 1px solid var(--rule); padding: 8px 10px; }
+  .gicon { width: 26px; height: 26px; color: var(--tc); flex: none; display: grid; place-items: center; }
+  .gicon svg { width: 100%; height: 100%; }
+  .gnum { display: block; font: 700 18px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+  .gname { font-size: 12px; color: var(--dim); }
+  .fine { font: 400 11px/1.4 var(--f-mono); color: var(--faint); margin: 0; }
+
+  /* штамп чертежа */
+  .stamp { display: grid; grid-template-columns: 1.35fr 1.2fr 0.62fr 0.72fr; border: 1px solid var(--rule-strong); }
+  .stamp > div { padding: 5px 8px 6px; border-left: 1px solid var(--rule-strong); min-width: 0; }
+  .stamp > div:first-child { border-left: 0; }
+  .stamp small { display: block; font: 400 9px/1.3 var(--f-mono); color: var(--dim); text-transform: uppercase; letter-spacing: 0.08em; }
+  .stamp b { display: block; font: 600 13px/1.25 var(--f-ui); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stamp .moves b { font: 700 18px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+  .stamp .moves.low b { color: var(--cta); }
+
+  .progress { display: grid; gap: 7px; }
+  .gp { display: grid; grid-template-columns: 22px minmax(0, 1fr) 54px; gap: 10px; align-items: center; }
+  .gp .gicon { width: 22px; height: 22px; }
+  .bar { height: 6px; background: rgba(255, 255, 255, 0.07); position: relative; }
+  .bar i { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--tc); transition: width 0.3s ease; }
+  .gp-val { font: 500 12px var(--f-mono); font-variant-numeric: tabular-nums; text-align: right; color: var(--dim); }
+  .gp.ok .gp-val { color: var(--tc); }
+
+  /* поле */
+  .board {
+    position: relative; width: 100%; aspect-ratio: 1; max-width: 100%; overflow: hidden; touch-action: none; user-select: none; -webkit-user-select: none;
+    background:
+      linear-gradient(rgba(140, 152, 255, 0.07) 1px, transparent 1px) 0 0 / calc(100% / 7) calc(100% / 7),
+      linear-gradient(90deg, rgba(140, 152, 255, 0.07) 1px, transparent 1px) 0 0 / calc(100% / 7) calc(100% / 7),
+      #0A0E17;
+    border: 1px solid var(--rule);
+  }
+  .tile { position: absolute; left: 0; top: 0; width: calc(100% / 7); height: calc(100% / 7); padding: 3px; transform: translate(calc(var(--c) * 100%), calc(var(--r) * 100%)); transition: transform 0.26s cubic-bezier(0.3, 0.8, 0.35, 1); cursor: pointer; }
+  .face { width: 100%; height: 100%; display: grid; place-items: center; color: var(--tc); background: color-mix(in srgb, var(--tc) 13%, #121928); border: 1px solid color-mix(in srgb, var(--tc) 42%, transparent); border-radius: 3px; transition: transform 0.18s ease, opacity 0.18s ease, background 0.15s; }
+  .face svg { width: 60%; height: 60%; }
+  .tile.sel .face { background: color-mix(in srgb, var(--tc) 36%, #121928); transform: scale(1.07); }
+  .tile.pop .face { transform: scale(0.25) rotate(25deg); opacity: 0; }
+  .tile.hint .face { animation: hint 0.9s ease-in-out infinite; }
+  .tile.cursor .face { box-shadow: 0 0 0 2px var(--paper) inset; }
+  @keyframes hint { 50% { transform: scale(0.86); background: color-mix(in srgb, var(--tc) 30%, #121928); } }
+  .board.shake { animation: shake 0.22s; }
+  @keyframes shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+  .approved { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; z-index: 5; }
+  .approved span { border: 3px solid var(--cta); color: var(--cta); background: rgba(11, 15, 25, 0.82); font: 700 26px/1 var(--f-display); text-transform: uppercase; padding: 12px 18px; transform: rotate(-9deg) scale(1.7); opacity: 0; transition: transform 0.34s cubic-bezier(0.2, 1.4, 0.4, 1), opacity 0.2s; }
+  .approved.on span { transform: rotate(-9deg) scale(1); opacity: 1; }
+
+  .sheet { border: 1px solid var(--cta); background: var(--panel-2); padding: 14px; display: grid; gap: 10px; }
+  .sheet p { margin: 0; }
+
+  .board-foot { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+  .say { display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--dim); min-height: 36px; }
+  .say .avatar { width: 24px; height: 24px; font-size: 11px; flex: none; }
+
+  /* сдача */
+  .rv { border: 1px solid var(--rule); background: var(--ink); }
+  .layers { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
+  .layers span { height: 4px; background: rgba(255, 255, 255, 0.08); }
+  .layers span.on { background: var(--c-light); }
+  .meta { font: 400 12px var(--f-mono); color: var(--dim); }
+
+  /* рулетка */
+  .wheel-wrap { position: relative; width: 100%; max-width: 330px; aspect-ratio: 1; margin: 4px auto 0; }
+  .wheel-wrap svg.wheel { width: 100%; height: 100%; display: block; transition: transform 4.2s cubic-bezier(0.12, 0.72, 0.18, 1); }
+  .wheel-pointer { position: absolute; left: 50%; top: -6px; width: 22px; height: 26px; transform: translateX(-50%); z-index: 2; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 14px; font: 400 11px var(--f-mono); color: var(--dim); justify-content: center; }
+  .legend i { display: inline-block; width: 9px; height: 9px; margin-right: 6px; vertical-align: -1px; }
+
+  /* приз */
+  .prize { border: 1px solid var(--rule-strong); padding: 14px; display: grid; gap: 10px; background: var(--panel); }
+  .prize h3 { margin: 0; font: 600 18px/1.25 var(--f-ui); text-wrap: balance; }
+  .prize p { margin: 0; font-size: 14px; color: var(--dim); }
+  .prize .big { font: 700 40px/1 var(--f-display); color: var(--cta); }
+  pre.prompt { margin: 0; white-space: pre-wrap; word-break: break-word; font: 400 12px/1.5 var(--f-mono); color: var(--paper); background: var(--ink-2); border: 1px solid var(--rule); padding: 10px 12px; }
+  .code { font: 500 22px/1 var(--f-mono); letter-spacing: 0.08em; padding: 12px; border: 1px dashed var(--cta); text-align: center; color: var(--paper); }
+  .share { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 12px; border: 1px dashed var(--rule-strong); padding: 10px; align-items: center; }
+  .share canvas { width: 100%; height: auto; aspect-ratio: 10 / 7; display: block; }
+  .share b { display: block; font: 600 14px/1.25 var(--f-ui); }
+  .share span { display: block; font: 400 11px/1.45 var(--f-mono); color: var(--dim); }
+  .next { border-top: 1px solid var(--rule); padding-top: 12px; display: grid; gap: 10px; }
+  .next p { margin: 0; font-size: 13px; color: var(--dim); }
+  .next p b { color: var(--paper); font-weight: 600; }
+
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--rule); }
+  .stats div { padding: 8px 10px; border-left: 1px solid var(--rule); }
+  .stats div:first-child { border-left: 0; }
+  .stats b { display: block; font: 700 20px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+  .stats small { font: 400 10px var(--f-mono); color: var(--dim); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .toast { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 20; background: var(--paper); color: #10131C; padding: 11px 13px; font-size: 13px; transform: translateY(16px); opacity: 0; pointer-events: none; transition: transform 0.25s, opacity 0.25s; }
+  .toast.on { transform: none; opacity: 1; }
+
+  /* ---------- заметки ---------- */
+  .notes { position: sticky; top: 24px; display: grid; gap: 22px; width: 100%; }
+  .notes h1 { font-size: clamp(34px, 5vw, 52px); }
+  .notes h1 em { font-style: normal; color: var(--cta); }
+  .lead { margin: 0; max-width: 60ch; color: var(--dim); font-size: 15px; }
+  .lead b { color: var(--paper); font-weight: 600; }
+  .note-card { border: 1px solid var(--rule); background: rgba(21, 28, 43, 0.72); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 16px 18px; display: grid; gap: 10px; }
+  .note-card h2 { margin: 0; font: 600 17px/1.3 var(--f-ui); text-wrap: balance; }
+  .note-card ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+  .note-card li { position: relative; padding-left: 16px; font-size: 14px; color: var(--dim); max-width: 64ch; }
+  .note-card li::before { content: ''; position: absolute; left: 0; top: 0.62em; width: 7px; height: 1px; background: var(--c-line); }
+  .note-card li b { color: var(--paper); font-weight: 600; }
+  .dec { font: 500 10px/1 var(--f-mono); padding: 2px 5px 3px; border: 1px solid rgba(140, 152, 255, 0.5); color: var(--c-line); white-space: nowrap; letter-spacing: 0.04em; }
+  .dec.new { border-color: rgba(255, 133, 98, 0.6); color: var(--cta); }
+  .steps { display: flex; flex-wrap: wrap; gap: 4px; }
+  .steps span { font: 400 11px var(--f-mono); padding: 4px 7px; border: 1px solid var(--rule); color: var(--faint); }
+  .steps span.on { color: var(--paper); border-color: var(--cta); }
+  .demo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .demo label { display: grid; gap: 5px; font: 400 10px var(--f-mono); color: var(--dim); text-transform: uppercase; letter-spacing: 0.06em; }
+  .demo select { appearance: none; border-radius: 0; background: var(--ink-2); border: 1px solid var(--rule); padding: 9px 10px; font: 500 13px var(--f-ui); color: var(--paper); text-transform: none; letter-spacing: 0; }
+  .demo select:focus { border-color: var(--cta); outline: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tile, .face, .bar i, .approved span, .toast { transition-duration: 0.01s !important; }
+    .wheel-wrap svg.wheel { transition-duration: 0.3s !important; }
+    .tile.hint .face, .board.shake { animation: none; }
+  }
+</style>
+
+<div class="wrap">
+  <main class="phone" id="phone" aria-label="Прототип мини-приложения">
+    <div class="tg-bar" aria-hidden="true">
+      <span class="close">Закрыть</span>
+      <span class="title"><b>Собери проект</b><span>мини-приложение</span></span>
+      <span class="more">•••</span>
+    </div>
+
+    <!-- ТЗ дня -->
+    <section class="screen" id="scr-brief" aria-labelledby="brief-stage">
+      <div class="row-between">
+        <span class="eyebrow" id="brief-date">ср 23.09</span>
+        <span class="delays" id="delays" aria-label="Отсрочки сдачи"></span>
+      </div>
+      <div class="week" id="week" role="list" aria-label="Неделя проекта"></div>
+      <div class="obj">
+        <canvas id="brief-canvas" width="400" height="280" role="img" aria-label="Визуализация объекта, проявленные слои"></canvas>
+        <div class="obj-cap"><b>Павильон у воды</b><span id="brief-layers">Проявлено 0 из 7</span></div>
+      </div>
+      <div>
+        <div class="eyebrow" id="brief-day">День проекта 1 из 7</div>
+        <h1 class="display" id="brief-stage" style="font-size:30px;margin-top:6px">Генплан</h1>
+        <p class="fine" id="brief-stage-desc" style="margin-top:6px">Посадка объекта на участок</p>
+      </div>
+      <div class="host">
+        <div class="avatar" aria-hidden="true">О</div>
+        <div class="bubble">
+          <div class="who">Отличник <span>ведущий · черновик</span></div>
+          <p id="brief-msg"></p>
+        </div>
+      </div>
+      <div class="goals" id="brief-goals"></div>
+      <button class="btn btn-primary btn-block" id="btn-play" type="button">Открыть поле</button>
+      <p class="fine" id="brief-field"></p>
+    </section>
+
+    <!-- Поле -->
+    <section class="screen" id="scr-board" hidden aria-label="Поле стадии">
+      <div class="stamp" aria-label="Штамп листа">
+        <div><small>Объект</small><b id="stamp-object">Павильон у воды</b></div>
+        <div><small>Стадия</small><b id="stamp-stage">Генплан</b></div>
+        <div><small>Лист</small><b id="stamp-sheet">1/7</b></div>
+        <div class="moves" id="stamp-moves-cell"><small>Ходы</small><b id="stamp-moves" aria-live="polite">25</b></div>
+      </div>
+      <div class="progress" id="progress"></div>
+      <div class="board" id="board" tabindex="0" role="application" aria-label="Поле 7 на 7. Стрелки — перемещение, пробел — выбрать фишку, вторая фишка рядом — обмен">
+        <div class="approved" id="approved"><span>Принято</span></div>
+      </div>
+      <div class="sheet" id="sheet" hidden role="dialog" aria-labelledby="sheet-text">
+        <p id="sheet-text"></p>
+        <button class="btn btn-primary btn-block" id="sheet-btn" type="button"></button>
+      </div>
+      <div class="board-foot">
+        <div class="say"><span class="avatar" aria-hidden="true">О</span><span id="say" aria-live="polite"></span></div>
+        <button class="btn btn-secondary btn-small" id="btn-hint" type="button">Подсказка</button>
+      </div>
+    </section>
+
+    <!-- Сдача -->
+    <section class="screen" id="scr-reveal" hidden aria-labelledby="rv-title">
+      <div class="eyebrow" id="rv-eyebrow">Лист 1 из 7 сдан</div>
+      <h2 class="display" id="rv-title" style="font-size:30px">Генплан</h2>
+      <div class="rv"><canvas id="rv-canvas" width="400" height="280" role="img" aria-label="Проявление слоя визуализации"></canvas></div>
+      <div class="layers" id="rv-layers" aria-hidden="true"></div>
+      <div class="meta" id="rv-meta"></div>
+      <div class="host">
+        <div class="avatar" aria-hidden="true">О</div>
+        <div class="bubble"><div class="who">Отличник <span>ведущий · черновик</span></div><p id="rv-msg"></p></div>
+      </div>
+      <button class="btn btn-primary btn-block" id="btn-to-wheel" type="button">Крутить рулетку</button>
+    </section>
+
+    <!-- Рулетка -->
+    <section class="screen" id="scr-wheel" hidden aria-labelledby="wheel-title">
+      <div class="eyebrow">Награда за сданную стадию · 1 спин</div>
+      <h2 class="display" id="wheel-title" style="font-size:24px">Архитектурная рулетка</h2>
+      <div class="wheel-wrap">
+        <svg class="wheel-pointer" viewBox="0 0 22 26" aria-hidden="true"><path d="M1 1h20L11 25z" fill="#ECEFF5" stroke="#0B0F19" stroke-width="2"/></svg>
+        <svg class="wheel" id="wheel" viewBox="0 0 200 200" role="img" aria-label="Рулетка: 8 промптов, 3 скидки, 1 приз студии"></svg>
+      </div>
+      <div class="legend" id="legend"></div>
+      <button class="btn btn-primary btn-block" id="btn-spin" type="button">Крутить</button>
+      <p class="fine" id="wheel-fine">Проигрышных секторов нет: не выпала скидка — выпал рабочий промпт.</p>
+    </section>
+
+    <!-- Приз -->
+    <section class="screen" id="scr-prize" hidden aria-label="Приз дня">
+      <div id="prize-card"></div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">Карточка дня для чата</div>
+        <div class="share">
+          <canvas id="share-canvas" width="400" height="280" aria-hidden="true"></canvas>
+          <div id="share-text"></div>
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-block" id="btn-share" type="button">Отправить карточку в чат</button>
+      <div class="next" id="next"></div>
+    </section>
+
+    <!-- Проект сдан -->
+    <section class="screen" id="scr-done" hidden aria-labelledby="done-title">
+      <div class="eyebrow">Воскресенье проекта · 7 из 7</div>
+      <h2 class="display" id="done-title" style="font-size:30px">Проект сдан</h2>
+      <div class="rv"><canvas id="done-canvas" width="400" height="280" role="img" aria-label="Финальная визуализация: павильон у воды"></canvas></div>
+      <div class="stats" id="done-stats"></div>
+      <div class="host">
+        <div class="avatar" aria-hidden="true">О</div>
+        <div class="bubble"><div class="who">Отличник <span>ведущий · черновик</span></div><p id="done-msg"></p></div>
+      </div>
+      <button class="btn btn-primary btn-block" id="btn-restart" type="button">Начать неделю заново</button>
+    </section>
+
+    <div class="toast" id="toast" role="status"></div>
+  </main>
+
+  <aside class="notes" aria-label="Заметки к прототипу">
+    <div>
+      <div class="eyebrow" style="margin-bottom:10px">АРТ.БРОДСКИЙ × Нейроотличник · прототип к концепту v1.0</div>
+      <h1 class="display">Собери <em>проект</em></h1>
+    </div>
+    <p class="lead">Кликабельный прототип, чтобы все стороны увидели одно и то же. <b>Механика настоящая</b>: поле, каскады, цели, сдача, рулетка. <b>Заглушки</b>: рисунок вместо рендера студии, примеры промптов, промокод и проверка подписки.</p>
+    <div class="steps" id="steps" aria-label="Путь игрока за день"></div>
+    <div class="note-card" id="note" aria-live="polite"></div>
+    <div class="note-card">
+      <h2>Режим показа</h2>
+      <div class="demo">
+        <button class="btn btn-secondary btn-small" id="demo-win" type="button">Сдать стадию сразу</button>
+        <button class="btn btn-secondary btn-small" id="demo-skip" type="button">Прогулять день</button>
+        <label for="demo-day">Перейти к дню
+          <select id="demo-day">
+            <option value="1">1 · Генплан</option><option value="2">2 · Планы</option><option value="3">3 · Разрезы</option><option value="4">4 · Фасады</option><option value="5">5 · Материалы</option><option value="6">6 · Свет и окружение</option><option value="7">7 · Визуализация</option>
+          </select>
+        </label>
+        <label for="demo-spin">Следующий спин
+          <select id="demo-spin">
+            <option value="auto">Как решит сервер</option><option value="prompt">Промпт</option><option value="discount">Скидка</option><option value="studio">Приз студии</option>
+          </select>
+        </label>
+        <button class="btn btn-secondary btn-small" id="demo-reset" type="button" style="grid-column:1 / -1">Сбросить прототип</button>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script>
+/*
+ * «Собери проект» — ядро матч-3 без DOM.
+ * Одно и то же ядро используется прототипом (браузер) и симуляцией баланса (node).
+ * Поле детерминировано: сид = объект + стадия + дата, поэтому стартовое поле у всех одинаковое,
+ * а сервер может переиграть присланный лог ходов и проверить сдачу.
+ */
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.SobCore = api;
+})(typeof self !== 'undefined' ? self : this, function () {
+  'use strict';
+
+  const SIZE = 7;
+
+  // Пять элементов работы архитектора. Индекс = тип фишки.
+  const TYPES = [
+    { key: 'line', name: 'Линия' },
+    { key: 'volume', name: 'Объём' },
+    { key: 'material', name: 'Материал' },
+    { key: 'green', name: 'Зелень' },
+    { key: 'light', name: 'Свет' },
+  ];
+  const T = { line: 0, volume: 1, material: 2, green: 3, light: 4 };
+
+  // Неделя проекта. goals: [[тип, количество], ...]. Цифры откалиброваны симуляцией (docs/02-GDD.md, §6).
+  const STAGES = [
+    { day: 1, code: 'ГП', name: 'Генплан', desc: 'Посадка объекта на участок', goals: [[T.green, 16], [T.line, 12]] },
+    { day: 2, code: 'ПЛ', name: 'Планы', desc: 'Организация пространства внутри', goals: [[T.line, 18], [T.volume, 12]] },
+    { day: 3, code: 'РЗ', name: 'Разрезы', desc: 'Что происходит по высоте', goals: [[T.volume, 18], [T.line, 16]] },
+    { day: 4, code: 'ФС', name: 'Фасады', desc: 'Как объект выглядит снаружи', goals: [[T.volume, 20], [T.material, 16]] },
+    { day: 5, code: 'МТ', name: 'Материалы', desc: 'Из чего это сделано', goals: [[T.material, 20], [T.green, 18]] },
+    { day: 6, code: 'СВ', name: 'Свет и окружение', desc: 'Время суток, среда, атмосфера', goals: [[T.light, 22], [T.green, 16]] },
+    { day: 7, code: 'ВЗ', name: 'Визуализация', desc: 'Проект сдан — рендер открывается целиком', goals: [[T.light, 22], [T.material, 18]] },
+  ];
+
+  const MOVES_PER_STAGE = 25;
+  const EXTRA_MOVES = 5; // «Доработка»: один раз за стадию, если ходы кончились
+
+  function hashStr(s) {
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) {
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+
+  function makeRng(seedStr) {
+    let a = hashStr(String(seedStr));
+    return function () {
+      a |= 0;
+      a = (a + 0x6d2b79f5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function adjacent(a, b) {
+    const ra = (a / SIZE) | 0, ca = a % SIZE, rb = (b / SIZE) | 0, cb = b % SIZE;
+    return Math.abs(ra - rb) + Math.abs(ca - cb) === 1;
+  }
+
+  function findMatches(g) {
+    const hit = new Set();
+    for (let r = 0; r < SIZE; r++) {
+      let run = 1;
+      for (let c = 1; c <= SIZE; c++) {
+        if (c < SIZE && g[r * SIZE + c].t === g[r * SIZE + c - 1].t) run++;
+        else {
+          if (run >= 3) for (let k = c - run; k < c; k++) hit.add(r * SIZE + k);
+          run = 1;
+        }
+      }
+    }
+    for (let c = 0; c < SIZE; c++) {
+      let run = 1;
+      for (let r = 1; r <= SIZE; r++) {
+        if (r < SIZE && g[r * SIZE + c].t === g[(r - 1) * SIZE + c].t) run++;
+        else {
+          if (run >= 3) for (let k = r - run; k < r; k++) hit.add(k * SIZE + c);
+          run = 1;
+        }
+      }
+    }
+    return hit;
+  }
+
+  function swapCells(g, a, b) {
+    const x = g[a];
+    g[a] = g[b];
+    g[b] = x;
+  }
+
+  function findMoves(g) {
+    const moves = [];
+    for (let i = 0; i < SIZE * SIZE; i++) {
+      const c = i % SIZE;
+      const nbrs = [];
+      if (c < SIZE - 1) nbrs.push(i + 1);
+      if (i + SIZE < SIZE * SIZE) nbrs.push(i + SIZE);
+      for (const j of nbrs) {
+        swapCells(g, i, j);
+        if (findMatches(g).size) moves.push([i, j]);
+        swapCells(g, i, j);
+      }
+    }
+    return moves;
+  }
+
+  function createGame(seedStr) {
+    const rng = makeRng(seedStr);
+    const rand = () => Math.floor(rng() * TYPES.length);
+    const grid = new Array(SIZE * SIZE);
+    let nextId = 1;
+
+    function fill() {
+      nextId = 1;
+      for (let i = 0; i < SIZE * SIZE; i++) {
+        const r = (i / SIZE) | 0, c = i % SIZE;
+        let t, guard = 0;
+        do {
+          t = rand();
+          guard++;
+        } while (
+          guard < 60 &&
+          ((c >= 2 && grid[i - 1].t === t && grid[i - 2].t === t) ||
+            (r >= 2 && grid[i - SIZE].t === t && grid[i - 2 * SIZE].t === t))
+        );
+        grid[i] = { id: nextId++, t };
+      }
+    }
+
+    function reshuffle() {
+      const cells = grid.slice();
+      let tries = 0;
+      do {
+        for (let i = cells.length - 1; i > 0; i--) {
+          const j = Math.floor(rng() * (i + 1));
+          const x = cells[i];
+          cells[i] = cells[j];
+          cells[j] = x;
+        }
+        for (let i = 0; i < cells.length; i++) grid[i] = cells[i];
+        tries++;
+      } while ((findMatches(grid).size || !findMoves(grid).length) && tries < 200);
+    }
+
+    fill();
+    let tries = 0;
+    while (!findMoves(grid).length && tries++ < 50) fill();
+
+    const snapshot = () => grid.map((x) => ({ id: x.id, t: x.t }));
+
+    /**
+     * Пытается поменять фишки a и b местами.
+     * Невалидный свап (без совпадения) ход не тратит.
+     * steps — каскады по порядку: что сгорело, сколько каждого типа, какие фишки упали сверху.
+     */
+    function trySwap(a, b) {
+      if (!adjacent(a, b)) return { valid: false };
+      swapCells(grid, a, b);
+      let m = findMatches(grid);
+      if (!m.size) {
+        swapCells(grid, a, b);
+        return { valid: false };
+      }
+      const steps = [];
+      while (m.size) {
+        const counts = new Array(TYPES.length).fill(0);
+        const cleared = [];
+        m.forEach((i) => {
+          counts[grid[i].t]++;
+          cleared.push(grid[i].id);
+          grid[i] = null;
+        });
+        const spawned = [];
+        for (let c = 0; c < SIZE; c++) {
+          let write = SIZE - 1;
+          for (let r = SIZE - 1; r >= 0; r--) {
+            const cell = grid[r * SIZE + c];
+            if (cell) {
+              if (write !== r) {
+                grid[write * SIZE + c] = cell;
+                grid[r * SIZE + c] = null;
+              }
+              write--;
+            }
+          }
+          const missing = write + 1;
+          for (let r = write; r >= 0; r--) {
+            const cell = { id: nextId++, t: rand() };
+            grid[r * SIZE + c] = cell;
+            spawned.push({ id: cell.id, startRow: r - missing });
+          }
+        }
+        steps.push({ cleared, counts, spawned, snapshot: snapshot() });
+        m = findMatches(grid);
+      }
+      let reshuffled = false;
+      if (!findMoves(grid).length) {
+        reshuffle();
+        reshuffled = true;
+      }
+      return { valid: true, steps, reshuffled, snapshot: snapshot() };
+    }
+
+    return {
+      snapshot,
+      trySwap,
+      moves: () => findMoves(grid),
+      hint: () => findMoves(grid)[0] || null,
+    };
+  }
+
+  function seedFor(objectKey, stageDay, dateStr) {
+    return objectKey + '|' + stageDay + '|' + dateStr;
+  }
+
+  function goalsMet(goals, collected) {
+    return goals.every(([t, n]) => collected[t] >= n);
+  }
+
+  return { SIZE, TYPES, T, STAGES, MOVES_PER_STAGE, EXTRA_MOVES, hashStr, makeRng, adjacent, findMatches, createGame, seedFor, goalsMet };
+});
+
+</script>
+<script>
+(function () {
+  'use strict';
+  const { SIZE, TYPES, STAGES, MOVES_PER_STAGE, EXTRA_MOVES, createGame, seedFor, goalsMet, adjacent } = window.SobCore;
+  const $ = (s) => document.querySelector(s);
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = (ms) => new Promise((r) => setTimeout(r, reduce ? Math.min(ms, 40) : ms));
+
+  const OBJECT = { key: 'pavilion', name: 'Павильон у воды' };
+  const STORE = 'sobp-proto-v1';
+
+  const ICON = [
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="square"><path d="M3 12h18M3 7.5v9M21 7.5v9M5.5 14.5l3-5M15.5 14.5l3-5"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="4" y="4" width="16" height="16"/><path d="M4 12l8-8M4 20L20 4M12 20l8-8"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.3" fill="currentColor"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>',
+  ];
+
+  const HOST = {
+    tz: [
+      'День первый. Генплан. Участок у воды, заказчик хочет видеть закат из гостиной. Посади объект и сохрани сосны.',
+      'Планы. Заказчик спросил, где будет кухня. Хороший вопрос для второго дня. Разведи пространство.',
+      'Разрезы. Заказчик хочет второй свет — покажи, что это возможно.',
+      'Фасады. Главный фасад смотрит на воду, его увидят все. Не подведи.',
+      'Материалы. Бетон, дерево, стекло. Никакого сайдинга — я проверю.',
+      'Свет и окружение. Золотой час, вода, сосны. Сделай так, чтобы туда захотелось поехать.',
+      'Последний день проекта. Финальная подача. Собери свет и материал — и открываем рендер целиком.',
+    ],
+    ok: [
+      'Посадка принята. Сосны на месте, закат из гостиной есть.',
+      'Кухня нашлась. Заказчик доволен, я — почти.',
+      'Второй свет есть. Разрез читается.',
+      'Фасад держит воду. Хорошо.',
+      'Сайдинга не нашёл. Принято.',
+      'Вот теперь туда хочется. Завтра сдаём.',
+      'Проект сдан. Смотри, что получилось.',
+    ],
+    fast: (n) => `Сдал за ${n} ${plural(n, 'ход', 'хода', 'ходов')}. Даже придраться не к чему.`,
+    remarks: 'Принял с замечаниями. Рендер открываю, но завтра соберись.',
+    boardStart: 'Меняй соседние фишки. Три в ряд — в зачёт.',
+    cascade: ['Каскад. Заказчик такое любит.', 'Само посыпалось — так и задумано.', 'Красиво пошло.'],
+    skip: (left) => left > 0 ? `Вчера тебя не было. Отсрочка списана, осталась ${left}. Заказчик пока не знает.` : 'Вчера опять пропуск. Отсрочек больше нет — ещё один прогул, и проект сорван.',
+    broken: 'Проект сорван: отсрочки кончились. Бывает и у лучших бюро. Начинаем объект заново.',
+  };
+
+  // Примеры. Финальные 30 промптов пишут школа и студия (Р6).
+  const PROMPTS = [
+    { title: 'Закатная подача у воды', from: 'пример от студии', text: 'Minimalist lakeside pavilion at golden hour, cantilevered concrete roof, floor-to-ceiling glazing, warm interior light, still water reflection, architectural photography, 24mm, soft haze --ar 3:2', tip: 'Время суток меняйте последним: композиция сохранится.' },
+    { title: 'Разрез с людьми и светом', from: 'пример от школы', text: 'Architectural section drawing of a two-storey house with double-height living room, sunlight rays through clerestory, people for scale, clean linework, subtle watercolor wash, white background', tip: 'Слова «double-height» и «clerestory» дают второй свет без долгих объяснений.' },
+    { title: 'Материалы крупным планом', from: 'пример от студии', text: 'Close-up facade detail, board-formed concrete meeting vertical larch cladding, black steel window frame, raking morning light, shallow depth of field, photorealistic, 85mm', tip: 'Называйте породу дерева — «larch» и «oak» дают разную фактуру.' },
+    { title: 'Генплан для портфолио', from: 'пример от школы', text: 'Architectural site plan, top view, pavilion on a lake shore, pine trees with soft shadows, paths and deck, muted colors, paper texture, scale bar and north arrow, presentation board style', tip: 'Для плана всегда добавляйте «top view» — иначе уйдёт в перспективу.' },
+    { title: 'Интерьер тёплым вечером', from: 'пример от студии', text: 'Interior of a timber pavilion at dusk, panoramic window to the lake, linen sofa, pendant lamps, warm 2700K light, reflections on glass, editorial interior photography, 28mm', tip: 'Температура света в кельвинах работает точнее, чем «warm».' },
+    { title: 'Скетч поверх фото участка', from: 'пример от школы', text: 'Loose architectural concept sketch over a site photo, black ink lines, marker shading, pavilion massing by the water, annotations, hand-drawn look', tip: 'Загрузите фото участка как референс и снизьте его вес.' },
+    { title: 'Фасад в тумане', from: 'пример от студии', text: 'Front elevation of a glass pavilion in morning fog, symmetrical composition, pine forest background, muted palette, minimal, fine art architectural photography --ar 16:9', tip: 'Симметрия и туман скрывают недоработанные детали модели.' },
+    { title: 'Аксонометрия для подачи', from: 'пример от школы', text: 'Exploded axonometric diagram of a pavilion: roof slab, glass volume, concrete core, timber deck, labeled layers, isometric view, clean vector style, limited palette', tip: 'Слово «labeled» даёт подписи — потом замените их на свои.' },
+  ];
+
+  const WD = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
+  const plural = (n, one, few, many) => { const m10 = n % 10, m100 = n % 100; if (m10 === 1 && m100 !== 11) return one; if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few; return many; };
+  const dateOf = (cal) => new Date(2026, 8, 23 + cal);
+  const fmt = (cal) => { const d = dateOf(cal); return WD[d.getDay()] + ' ' + String(d.getDate()).padStart(2, '0') + '.' + String(d.getMonth() + 1).padStart(2, '0'); };
+  const iso = (cal) => { const d = dateOf(cal); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
+  const goalText = (goals) => goals.map(([t, n]) => TYPES[t].name.toLowerCase() + ' ×' + n).join(', ');
+
+  // ---------- состояние ----------
+  const fresh = () => ({ v: 1, stage: 1, cal: 0, delays: 2, done: {}, spun: {}, prizes: [], subscribed: false, code: null, studioStock: 8, note: null });
+  let S = null;
+  try { S = JSON.parse(localStorage.getItem(STORE)); } catch (e) { S = null; }
+  if (!S || S.v !== 1) S = fresh();
+  const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) { /* без хранилища прототип работает в памяти */ } };
+
+  // ---------- визуализация объекта (заглушка вместо рендера студии) ----------
+  const Scene = (function () {
+    const W = 400, H = 280, F = W * 1.05, WL = -0.45;
+    const V = (x, y, z) => ({ x, y, z });
+    const dot = (a, b) => a.x * b.x + a.y * b.y + a.z * b.z;
+    const norm = (a) => { const l = Math.hypot(a.x, a.y, a.z); return V(a.x / l, a.y / l, a.z / l); };
+    const cross = (a, b) => V(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x);
+    const C = V(-2, 2, -18), TG = V(8, 1.4, 4);
+    const f = norm(V(TG.x - C.x, TG.y - C.y, TG.z - C.z));
+    const r = norm(V(f.z, 0, -f.x));
+    const u = cross(f, r);
+    const P = (x, y, z) => { const d = V(x - C.x, y - C.y, z - C.z); const zz = Math.max(dot(d, f), 0.1); return [W / 2 + (dot(d, r) / zz) * F, H / 2 - (dot(d, u) / zz) * F, zz]; };
+    const HY = P(C.x + f.x * 1e5, C.y, C.z + f.z * 1e5)[1];
+
+    const OBJS = [
+      { b: [0, 15, -0.35, 0, -1.5, 8], mat: '#9C6D48' },
+      { b: [5, 9, -0.62, -0.35, -2.3, -1.5], mat: '#7F786D' },
+      { b: [0.5, 15.5, 3, 3.42, 0, 8.5], mat: '#D3CDC2', roof: true },
+      { b: [11, 14, 0, 3, 1, 7], mat: '#B4AEA3' },
+      { b: [2.5, 11, 0, 3, 1.5, 6.5], mat: '#2F4B58', glass: true },
+      { b: [1.02, 1.2, 0, 3, 0.51, 0.69], mat: '#DAD5CC' },
+      { b: [14.6, 14.78, 0, 3, 0.51, 0.69], mat: '#DAD5CC' },
+    ];
+    const TREES = [
+      { x: -4, z: 11, h: 7, r: 2.6 }, { x: 1, z: 15, h: 9.5, r: 3 }, { x: 6.5, z: 18, h: 8, r: 3.2 },
+      { x: 12.5, z: 14, h: 9, r: 2.8 }, { x: 18, z: 10, h: 6.5, r: 2.4 }, { x: 22, z: 16, h: 9, r: 3 }, { x: -8, z: 5, h: 6, r: 2.2 },
+    ];
+
+    function faces(b, camY) {
+      const [x0, x1, y0, y1, z0, z1] = b;
+      const list = [
+        { n: V(0, 0, -1), p: [[x0, y0, z0], [x1, y0, z0], [x1, y1, z0], [x0, y1, z0]], k: 0.86 },
+        { n: V(-1, 0, 0), p: [[x0, y0, z1], [x0, y0, z0], [x0, y1, z0], [x0, y1, z1]], k: 0.68 },
+        { n: V(1, 0, 0), p: [[x1, y0, z0], [x1, y0, z1], [x1, y1, z1], [x1, y1, z0]], k: 0.6 },
+        { n: V(0, 1, 0), p: [[x0, y1, z0], [x1, y1, z0], [x1, y1, z1], [x0, y1, z1]], k: 1 },
+        { n: V(0, -1, 0), p: [[x0, y0, z0], [x0, y0, z1], [x1, y0, z1], [x1, y0, z0]], k: 0.52 },
+        { n: V(0, 0, 1), p: [[x0, y0, z1], [x0, y1, z1], [x1, y1, z1], [x1, y0, z1]], k: 0.75 },
+      ];
+      return list.filter((fc) => { const q = fc.p[0]; return dot(fc.n, V(C.x - q[0], camY - q[1], C.z - q[2])) > 0; });
+    }
+    function shade(hex, k) {
+      const n = parseInt(hex.slice(1), 16);
+      const c = (v) => Math.max(0, Math.min(255, Math.round(v * k)));
+      return `rgb(${c((n >> 16) & 255)},${c((n >> 8) & 255)},${c(n & 255)})`;
+    }
+    function path(ctx, pts) { ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.closePath(); }
+    function line(ctx, a, b) { ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+    const shorePts = () => [-30, -10, 0, 10, 20, 40, 80, 200, 1000, 3000].map((x) => P(x, 0, 0));
+    function waterPath(ctx) { const s = shorePts(); ctx.beginPath(); s.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.lineTo(W + 20, H + 20); ctx.lineTo(-20, H + 20); ctx.closePath(); }
+
+    let noise = null;
+    function noiseCanvas() {
+      if (noise) return noise;
+      noise = document.createElement('canvas'); noise.width = 200; noise.height = 140;
+      const g = noise.getContext('2d'); const img = g.createImageData(200, 140);
+      for (let i = 0; i < img.data.length; i += 4) { const v = Math.random() * 255; img.data[i] = v; img.data[i + 1] = v * 0.95; img.data[i + 2] = v * 1.1; img.data[i + 3] = 255; }
+      g.putImageData(img, 0, 0); return noise;
+    }
+
+    function drawPavilion(ctx, L, mirror) {
+      const camY = mirror ? 2 * WL - C.y : C.y;
+      for (const o of OBJS) {
+        for (const fc of faces(o.b, camY)) {
+          const pts = fc.p.map((q) => P(q[0], mirror ? 2 * WL - q[1] : q[1], q[2]));
+          let fill = L >= 5 ? shade(o.mat, fc.k) : shade('#8D96AA', fc.k * 0.92);
+          if (o.roof && fc.n.y < 0 && L >= 6) fill = '#C99968';
+          path(ctx, pts);
+          if (o.glass && L >= 6 && fc.n.y === 0) {
+            const g = ctx.createLinearGradient(pts[0][0], 0, pts[1][0], 0);
+            g.addColorStop(0, fc.n.z < 0 ? '#FFD08A' : '#D98A52'); g.addColorStop(1, '#E28449');
+            ctx.fillStyle = g;
+          } else ctx.fillStyle = fill;
+          ctx.fill();
+          if (o.glass && L >= 4 && fc.n.z < 0 && !mirror) {
+            ctx.strokeStyle = L >= 6 ? 'rgba(27,30,38,0.85)' : 'rgba(20,26,38,0.6)'; ctx.lineWidth = 1.4;
+            for (let x = 2.5 + 1.42; x < 11; x += 1.42) line(ctx, P(x, 0, 1.5), P(x, 3, 1.5));
+            line(ctx, P(2.5, 2.55, 1.5), P(11, 2.55, 1.5));
+            if (L === 5) { ctx.fillStyle = 'rgba(200,225,235,0.12)'; path(ctx, [P(3.2, 0, 1.5), P(5.5, 0, 1.5), P(8.2, 3, 1.5), P(5.9, 3, 1.5)]); ctx.fill(); }
+          }
+        }
+      }
+    }
+
+    function draw(ctx, L) {
+      ctx.save();
+      // фон
+      if (L >= 6) {
+        const sky = ctx.createLinearGradient(0, 0, 0, HY);
+        sky.addColorStop(0, '#1B2744'); sky.addColorStop(0.55, '#5E5874'); sky.addColorStop(1, '#F0A86F');
+        ctx.fillStyle = sky; ctx.fillRect(0, 0, W, HY + 1);
+        const sun = ctx.createRadialGradient(W * 0.2, HY - 8, 0, W * 0.2, HY - 8, 90);
+        sun.addColorStop(0, 'rgba(255,230,170,0.95)'); sun.addColorStop(0.25, 'rgba(255,190,120,0.45)'); sun.addColorStop(1, 'rgba(255,170,110,0)');
+        ctx.fillStyle = sun; ctx.fillRect(0, 0, W, H);
+        const land = ctx.createLinearGradient(0, HY, 0, H * 0.72);
+        land.addColorStop(0, '#4B4E3A'); land.addColorStop(1, '#27301F');
+        ctx.fillStyle = land; ctx.fillRect(0, HY, W, H - HY);
+      } else if (L === 5) {
+        ctx.fillStyle = '#1A2336'; ctx.fillRect(0, 0, W, HY + 1);
+        ctx.fillStyle = '#2B3528'; ctx.fillRect(0, HY, W, H - HY);
+      } else {
+        ctx.fillStyle = '#0F1420'; ctx.fillRect(0, 0, W, H);
+        ctx.strokeStyle = 'rgba(140,152,255,0.07)'; ctx.lineWidth = 1;
+        for (let x = 0; x <= W; x += 20) line(ctx, [x + 0.5, 0], [x + 0.5, H]);
+        for (let y = 0; y <= H; y += 20) line(ctx, [0, y + 0.5], [W, y + 0.5]);
+      }
+      // вода
+      if (L >= 5) {
+        waterPath(ctx);
+        if (L >= 6) {
+          const sy = P(8, 0, 0)[1];
+          const wg = ctx.createLinearGradient(0, sy, 0, H);
+          wg.addColorStop(0, '#B88A6E'); wg.addColorStop(0.35, '#4E5670'); wg.addColorStop(1, '#141E2C');
+          ctx.fillStyle = wg;
+        } else ctx.fillStyle = '#1C2C39';
+        ctx.fill();
+      }
+      // дальний лес
+      if (L >= 5) {
+        ctx.fillStyle = L >= 6 ? '#2B3522' : '#27321F';
+        for (let x = -60; x < 140; x += 2.6) {
+          const h = 4 + 3.5 * Math.abs(Math.sin(x * 1.7));
+          const p = P(x, h * 0.62, 70); const rr = (h * 0.42 / p[2]) * F;
+          if (p[0] < -20 || p[0] > W + 20) continue;
+          ctx.beginPath(); ctx.arc(p[0], p[1], rr, 0, Math.PI * 2); ctx.fill();
+          ctx.fillRect(p[0] - rr, p[1], rr * 2, HY - p[1] + 2);
+        }
+      }
+      // отражение
+      if (L >= 7) {
+        ctx.save(); waterPath(ctx); ctx.clip(); ctx.globalAlpha = 0.3; drawPavilion(ctx, L, true); ctx.restore();
+        ctx.strokeStyle = 'rgba(255,220,170,0.16)'; ctx.lineWidth = 1;
+        for (let i = 0; i < 9; i++) { const y = P(8, 0, 0)[1] + 14 + i * 9.5; const x0 = 70 + ((i * 53) % 140); line(ctx, [x0, y], [x0 + 40 + ((i * 29) % 60), y]); }
+      }
+      // деревья
+      TREES.forEach((t) => {
+        if (L >= 5) {
+          const base = P(t.x, 0, t.z), crown = P(t.x, t.h * 0.62, t.z); const rr = (t.r / crown[2]) * F;
+          ctx.strokeStyle = L >= 6 ? '#2A2119' : '#2F3A2C'; ctx.lineWidth = Math.max(1, (0.3 / base[2]) * F);
+          line(ctx, base, P(t.x, t.h * 0.5, t.z));
+          ctx.fillStyle = L >= 6 ? '#2E3D27' : '#34422F';
+          ctx.beginPath(); ctx.ellipse(crown[0], crown[1], rr * 0.9, rr * 1.15, 0, 0, Math.PI * 2); ctx.fill();
+          if (L >= 6) {
+            const lit = ctx.createLinearGradient(crown[0] - rr, 0, crown[0] + rr, 0);
+            lit.addColorStop(0, 'rgba(214,164,98,0.22)'); lit.addColorStop(0.5, 'rgba(214,164,98,0)');
+            ctx.fillStyle = lit; ctx.beginPath(); ctx.ellipse(crown[0], crown[1], rr * 0.9, rr * 1.15, 0, 0, Math.PI * 2); ctx.fill();
+          }
+        }
+      });
+      // объёмы
+      if (L >= 4) drawPavilion(ctx, L, false);
+
+      // линии чертежа поверх
+      const aPlan = [0, 1, 1, 1, 0.45, 0.15, 0, 0][L];
+      const aFoot = [0, 0, 1, 1, 0.4, 0, 0, 0][L];
+      const aWire = [0, 0, 0, 1, 0.55, 0.2, 0, 0][L];
+      if (aPlan) {
+        ctx.globalAlpha = aPlan; ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(140,152,255,0.55)'; line(ctx, [0, HY], [W, HY]);
+        ctx.strokeStyle = 'rgba(140,152,255,0.18)';
+        for (let x = -4; x <= 20; x += 4) line(ctx, P(x, 0, 0), P(x, 0, 16));
+        for (let z = 0; z <= 16; z += 4) line(ctx, P(-4, 0, z), P(20, 0, z));
+        ctx.strokeStyle = '#8C98FF'; ctx.lineWidth = 1.4;
+        const s = shorePts(); ctx.beginPath(); s.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.stroke();
+        ctx.strokeStyle = '#C6E975'; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.2;
+        path(ctx, [P(-4, 0, 0.2), P(19, 0, 0.2), P(19, 0, 16), P(-4, 0, 16)]); ctx.stroke(); ctx.setLineDash([]);
+        TREES.forEach((t) => { ctx.beginPath(); for (let i = 0; i <= 20; i++) { const a = (i / 20) * Math.PI * 2; const p = P(t.x + Math.cos(a) * t.r, 0, t.z + Math.sin(a) * t.r); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); } ctx.stroke(); const c = P(t.x, 0, t.z); ctx.fillStyle = '#C6E975'; ctx.fillRect(c[0] - 1, c[1] - 1, 2, 2); });
+        // размерная линия, мм
+        const a = P(0, -0.35, -1.5), b = P(15, -0.35, -1.5); const off = 16;
+        ctx.strokeStyle = '#ECEFF5'; ctx.lineWidth = 1;
+        line(ctx, [a[0], a[1] + off], [b[0], b[1] + off]);
+        line(ctx, [a[0] - 4, a[1] + off + 4], [a[0] + 4, a[1] + off - 4]); line(ctx, [b[0] - 4, b[1] + off + 4], [b[0] + 4, b[1] + off - 4]);
+        ctx.fillStyle = '#ECEFF5'; ctx.font = '500 10px "IBM Plex Mono", monospace'; ctx.textAlign = 'center';
+        ctx.fillText('15 000', (a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + off - 4);
+        // север
+        ctx.strokeStyle = '#ECEFF5'; ctx.beginPath(); ctx.arc(W - 24, 26, 10, 0, Math.PI * 2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(W - 24, 14); ctx.lineTo(W - 20, 28); ctx.lineTo(W - 28, 28); ctx.closePath(); ctx.fill();
+        ctx.fillText('С', W - 24, 50);
+        ctx.globalAlpha = 1;
+      }
+      if (aFoot) {
+        ctx.globalAlpha = aFoot; ctx.strokeStyle = '#8C98FF'; ctx.lineWidth = 1.3;
+        [[0, 15, -1.5, 8], [2.5, 11, 1.5, 6.5], [11, 14, 1, 7]].forEach(([x0, x1, z0, z1]) => { path(ctx, [P(x0, 0, z0), P(x1, 0, z0), P(x1, 0, z1), P(x0, 0, z1)]); ctx.stroke(); });
+        ctx.setLineDash([3, 3]); path(ctx, [P(0.5, 0, 0), P(15.5, 0, 0), P(15.5, 0, 8.5), P(0.5, 0, 8.5)]); ctx.stroke(); ctx.setLineDash([]);
+        line(ctx, P(6.8, 0, 1.5), P(6.8, 0, 6.5));
+        ctx.globalAlpha = 1;
+      }
+      if (aWire) {
+        ctx.globalAlpha = aWire; ctx.strokeStyle = L >= 4 ? '#0F1420' : '#ECEFF5'; ctx.lineWidth = 1.1;
+        OBJS.forEach((o) => faces(o.b, C.y).forEach((fc) => { path(ctx, fc.p.map((q) => P(q[0], q[1], q[2]))); ctx.stroke(); }));
+        ctx.globalAlpha = 1;
+      }
+      // финальная подача
+      if (L >= 7) {
+        const vg = ctx.createRadialGradient(W / 2, H * 0.55, H * 0.3, W / 2, H * 0.55, W * 0.72);
+        vg.addColorStop(0, 'rgba(6,9,16,0)'); vg.addColorStop(1, 'rgba(6,9,16,0.55)');
+        ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
+      }
+      // шум: чем меньше сдано, тем больше
+      const nz = L >= 7 ? 0 : ((7 - L) / 7) * 0.24;
+      if (nz) { ctx.globalAlpha = nz; ctx.drawImage(noiseCanvas(), 0, 0, W, H); ctx.globalAlpha = 1; }
+      ctx.restore();
+    }
+    return { W, H, draw };
+  })();
+
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+  function setup(cv) { cv.width = Scene.W * dpr; cv.height = Scene.H * dpr; const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return ctx; }
+  function drawTo(cv, L) { const ctx = setup(cv); Scene.draw(ctx, Math.max(0, Math.min(7, L))); }
+  function offscreen(L) { const cv = document.createElement('canvas'); drawTo(cv, L); return cv; }
+  let revealRaf = 0;
+  function animateReveal(cv, from, to) {
+    cancelAnimationFrame(revealRaf);
+    const A = offscreen(from), B2 = offscreen(to);
+    cv.width = A.width; cv.height = A.height;
+    const ctx = cv.getContext('2d');
+    const dur = reduce ? 1 : 2300; const t0 = performance.now();
+    const frame = (now) => {
+      const t = Math.min(1, (now - t0) / dur);
+      const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.drawImage(A, 0, 0);
+      const x = e * cv.width;
+      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, x, cv.height); ctx.clip(); ctx.drawImage(B2, 0, 0); ctx.restore();
+      if (t < 1) {
+        const g = ctx.createLinearGradient(x - 30 * dpr, 0, x, 0);
+        g.addColorStop(0, 'rgba(255,211,106,0)'); g.addColorStop(1, 'rgba(255,211,106,0.35)');
+        ctx.fillStyle = g; ctx.fillRect(x - 30 * dpr, 0, 30 * dpr, cv.height);
+        ctx.fillStyle = '#FFD36A'; ctx.fillRect(x - dpr, 0, 2 * dpr, cv.height);
+        revealRaf = requestAnimationFrame(frame);
+      }
+    };
+    revealRaf = requestAnimationFrame(frame);
+  }
+
+  // ---------- экраны ----------
+  const SCREENS = ['brief', 'board', 'reveal', 'wheel', 'prize', 'done'];
+  let current = 'brief';
+  function show(name) {
+    SCREENS.forEach((n) => { $('#scr-' + n).hidden = n !== name; });
+    current = name; renderNotes();
+    const top = $('#phone').getBoundingClientRect().top;
+    if (top < 0) window.scrollBy({ top: top - 12, behavior: reduce ? 'auto' : 'smooth' });
+  }
+  let toastTimer = 0;
+  function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 2600); }
+  function copy(text, okMsg) {
+    const done = () => toast(okMsg);
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => toast('Не получилось скопировать: выделите текст вручную.'));
+    else toast('Не получилось скопировать: выделите текст вручную.');
+  }
+
+  function renderWeek(el) {
+    el.innerHTML = STAGES.map((st) => {
+      const d = S.done[st.day];
+      let cls = 'wd';
+      if (d) cls += d.remarks ? ' remarks' : ' done';
+      else if (st.day === S.stage) cls += ' today';
+      const state = d ? (d.remarks ? 'сдано с замечаниями' : 'сдано') : st.day === S.stage ? 'сегодня' : 'впереди';
+      return `<div class="${cls}" role="listitem" aria-label="День ${st.day}, ${st.name}: ${state}"><b>${st.code}</b>${st.day}</div>`;
+    }).join('');
+  }
+
+  function renderBrief() {
+    if (S.stage > 7) { renderDone(); show('done'); return; }
+    const st = STAGES[S.stage - 1];
+    $('#brief-date').textContent = fmt(S.cal);
+    $('#delays').innerHTML = 'Отсрочки <i class="' + (S.delays >= 1 ? 'on' : '') + '"></i><i class="' + (S.delays >= 2 ? 'on' : '') + '"></i>';
+    renderWeek($('#week'));
+    $('#brief-day').textContent = 'День проекта ' + S.stage + ' из 7';
+    $('#brief-stage').textContent = st.name;
+    $('#brief-stage-desc').textContent = st.desc;
+    $('#brief-msg').textContent = (S.note ? S.note + ' ' : '') + HOST.tz[S.stage - 1] + ' Нужно: ' + goalText(st.goals) + '. Ходов ' + MOVES_PER_STAGE + '.';
+    $('#brief-goals').innerHTML = st.goals.map(([t, n]) => `<div class="goal t${t}"><span class="gicon">${ICON[t]}</span><span><span class="gnum">${n}</span><span class="gname">${TYPES[t].name}</span></span></div>`).join('');
+    const doneToday = !!S.done[S.stage];
+    $('#btn-play').textContent = doneToday ? (S.spun[S.stage] ? 'Следующий день' : 'Стадия сдана — к рулетке') : 'Открыть поле';
+    const shown = Object.keys(S.done).length;
+    drawTo($('#brief-canvas'), shown);
+    $('#brief-layers').textContent = 'Проявлено ' + shown + ' из 7';
+    $('#brief-field').textContent = 'Поле дня одинаковое у всех, кто сегодня на этой стадии · ' + fmt(S.cal);
+  }
+
+  // ---------- поле ----------
+  let game = null, B = null, els = {}, busy = false, sel = null, cursor = 24, kb = false, hintTimer = 0;
+  const board = $('#board');
+
+  function startBoard() {
+    const st = STAGES[S.stage - 1];
+    game = createGame(seedFor(OBJECT.key, S.stage, iso(S.cal)));
+    B = { moves: MOVES_PER_STAGE, used: 0, extraUsed: false, col: [0, 0, 0, 0, 0], goals: st.goals, over: false };
+    $('#stamp-object').textContent = OBJECT.name;
+    $('#stamp-stage').textContent = st.name;
+    $('#stamp-sheet').textContent = S.stage + '/7';
+    $('#sheet').hidden = true;
+    $('#approved').classList.remove('on');
+    $('#progress').innerHTML = st.goals.map(([t, n]) => `<div class="gp t${t}" data-t="${t}"><span class="gicon">${ICON[t]}</span><span class="bar"><i></i></span><span class="gp-val">0/${n}</span></div>`).join('');
+    buildBoard(game.snapshot());
+    busy = false; sel = null;
+    updateHud();
+    say(HOST.boardStart);
+    show('board');
+    armHint();
+  }
+  function buildBoard(snap) {
+    board.querySelectorAll('.tile').forEach((e) => e.remove());
+    els = {};
+    snap.forEach((cell, i) => makeTile(cell, i, null));
+    renderCursor();
+  }
+  function makeTile(cell, i, startRow) {
+    const el = document.createElement('div');
+    el.className = 'tile t' + cell.t;
+    el.innerHTML = '<div class="face">' + ICON[cell.t] + '</div>';
+    el.setAttribute('aria-hidden', 'true');
+    el.style.setProperty('--c', i % SIZE);
+    if (startRow != null) {
+      el.style.transition = 'none';
+      el.style.setProperty('--r', startRow);
+      board.appendChild(el);
+      el.getBoundingClientRect();
+      el.style.transition = '';
+    } else {
+      el.style.setProperty('--r', (i / SIZE) | 0);
+      board.appendChild(el);
+    }
+    els[cell.id] = el;
+  }
+  function place(id, i) { const el = els[id]; if (!el) return; el.style.setProperty('--c', i % SIZE); el.style.setProperty('--r', (i / SIZE) | 0); }
+  function elAt(i) { return els[game.snapshot()[i].id]; }
+  function setSel(i) { clearSel(); sel = i; const el = elAt(i); if (el) el.classList.add('sel'); }
+  function clearSel() { if (sel !== null) { const el = elAt(sel); if (el) el.classList.remove('sel'); } sel = null; }
+  function renderCursor() { board.querySelectorAll('.tile.cursor').forEach((e) => e.classList.remove('cursor')); if (kb && game && document.activeElement === board) { const el = elAt(cursor); if (el) el.classList.add('cursor'); } }
+  function say(text) { $('#say').textContent = text; }
+
+  function updateHud() {
+    $('#stamp-moves').textContent = B.moves;
+    $('#stamp-moves-cell').classList.toggle('low', B.moves <= 5);
+    B.goals.forEach(([t, n], k) => {
+      const row = $('#progress').children[k]; const v = Math.min(B.col[t], n);
+      row.querySelector('i').style.width = (v / n) * 100 + '%';
+      row.querySelector('.gp-val').textContent = v + '/' + n;
+      row.classList.toggle('ok', v >= n);
+    });
+  }
+  function clearHint() { clearTimeout(hintTimer); board.querySelectorAll('.tile.hint').forEach((e) => e.classList.remove('hint')); }
+  function showHint() { clearHint(); const m = game && game.hint(); if (m) m.forEach((i) => { const el = elAt(i); if (el) el.classList.add('hint'); }); }
+  function armHint() { clearHint(); hintTimer = setTimeout(() => { if (!busy && B && !B.over) showHint(); }, 9000); }
+
+  async function doSwap(a, b) {
+    if (busy || !B || B.over) return;
+    busy = true; clearHint(); clearSel();
+    const snap = game.snapshot();
+    const ida = snap[a].id, idb = snap[b].id;
+    place(ida, b); place(idb, a);
+    await wait(180);
+    const res = game.trySwap(a, b);
+    if (!res.valid) {
+      place(ida, a); place(idb, b);
+      board.classList.remove('shake'); void board.offsetWidth; board.classList.add('shake');
+      await wait(200);
+      busy = false; armHint(); return;
+    }
+    B.moves--; B.used++;
+    updateHud();
+    for (const st of res.steps) {
+      st.cleared.forEach((id) => els[id] && els[id].classList.add('pop'));
+      st.counts.forEach((c, t) => { B.col[t] += c; });
+      updateHud();
+      await wait(200);
+      st.cleared.forEach((id) => { if (els[id]) { els[id].remove(); delete els[id]; } });
+      const starts = new Map(st.spawned.map((s) => [s.id, s.startRow]));
+      st.snapshot.forEach((cell, i) => { if (!els[cell.id]) makeTile(cell, i, starts.has(cell.id) ? starts.get(cell.id) : -1); });
+      st.snapshot.forEach((cell, i) => place(cell.id, i));
+      await wait(290);
+    }
+    if (res.steps.length >= 3) say(HOST.cascade[B.used % HOST.cascade.length]);
+    if (res.reshuffled) {
+      say('Ходов на поле не осталось — перемешал.');
+      await wait(250);
+      buildBoard(res.snapshot);
+    }
+    renderCursor();
+    if (goalsMet(B.goals, B.col)) return win(false);
+    if (B.moves <= 0) return outOfMoves();
+    busy = false; armHint();
+  }
+
+  function outOfMoves() {
+    B.over = true; clearHint();
+    const missing = B.goals.filter(([t, n]) => B.col[t] < n).map(([t, n]) => TYPES[t].name.toLowerCase() + ' ×' + (n - B.col[t])).join(', ');
+    $('#sheet').hidden = false;
+    if (!B.extraUsed) {
+      $('#sheet-text').textContent = 'Ходы кончились. До сдачи не хватает: ' + missing + '. Заказчик даёт время на доработку.';
+      $('#sheet-btn').textContent = 'Доработать: +' + EXTRA_MOVES + ' ходов';
+      $('#sheet-btn').onclick = () => { B.extraUsed = true; B.moves += EXTRA_MOVES; B.over = false; busy = false; $('#sheet').hidden = true; updateHud(); say('Пять ходов. Больше не дам.'); armHint(); };
+    } else {
+      $('#sheet-text').textContent = 'Доработка тоже кончилась. Не хватает: ' + missing + '. Стадию можно сдать с замечаниями — рендер всё равно откроется.';
+      $('#sheet-btn').textContent = 'Сдать с замечаниями';
+      $('#sheet-btn').onclick = () => { $('#sheet').hidden = true; win(true); };
+    }
+    $('#sheet-btn').focus();
+  }
+
+  async function win(remarks) {
+    B.over = true; busy = true; clearHint();
+    $('#approved span').textContent = remarks ? 'С замечаниями' : 'Принято';
+    $('#approved').classList.add('on');
+    S.done[S.stage] = { moves: B.used, remarks, extra: B.extraUsed, date: iso(S.cal) };
+    S.note = null; save();
+    await wait(1150);
+    openReveal();
+    busy = false;
+  }
+
+  // ввод: свайп или два тапа
+  let pStart = null;
+  function cellAt(e) { const rc = board.getBoundingClientRect(); const c = Math.floor(((e.clientX - rc.left) / rc.width) * SIZE); const r = Math.floor(((e.clientY - rc.top) / rc.height) * SIZE); return c < 0 || r < 0 || c >= SIZE || r >= SIZE ? -1 : r * SIZE + c; }
+  board.addEventListener('pointerdown', (e) => {
+    if (busy || !B || B.over) return;
+    const i = cellAt(e); if (i < 0) return;
+    kb = false; renderCursor();
+    pStart = { i, x: e.clientX, y: e.clientY, moved: false };
+    try { board.setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+  });
+  board.addEventListener('pointermove', (e) => {
+    if (!pStart || pStart.moved) return;
+    const dx = e.clientX - pStart.x, dy = e.clientY - pStart.y, th = (board.clientWidth / SIZE) * 0.35;
+    if (Math.abs(dx) < th && Math.abs(dy) < th) return;
+    pStart.moved = true;
+    const i = pStart.i, r = (i / SIZE) | 0, c = i % SIZE; let j = -1;
+    if (Math.abs(dx) > Math.abs(dy)) { if (dx > 0 && c < SIZE - 1) j = i + 1; if (dx < 0 && c > 0) j = i - 1; }
+    else { if (dy > 0 && r < SIZE - 1) j = i + SIZE; if (dy < 0 && r > 0) j = i - SIZE; }
+    if (j >= 0) doSwap(i, j);
+  });
+  board.addEventListener('pointerup', () => { if (!pStart) return; const p = pStart; pStart = null; if (!p.moved) tapCell(p.i); });
+  board.addEventListener('pointercancel', () => { pStart = null; });
+  function tapCell(i) {
+    if (busy || !B || B.over) return;
+    if (sel === null) return setSel(i);
+    if (sel === i) return clearSel();
+    if (adjacent(sel, i)) { const a = sel; clearSel(); doSwap(a, i); } else setSel(i);
+  }
+  board.addEventListener('keydown', (e) => {
+    if (!B) return;
+    const k = e.key; let r = (cursor / SIZE) | 0, c = cursor % SIZE;
+    if (k === 'ArrowLeft') c = Math.max(0, c - 1); else if (k === 'ArrowRight') c = Math.min(SIZE - 1, c + 1);
+    else if (k === 'ArrowUp') r = Math.max(0, r - 1); else if (k === 'ArrowDown') r = Math.min(SIZE - 1, r + 1);
+    else if (k === ' ' || k === 'Enter') { e.preventDefault(); kb = true; tapCell(cursor); renderCursor(); return; }
+    else return;
+    e.preventDefault(); kb = true; cursor = r * SIZE + c; renderCursor();
+  });
+  board.addEventListener('blur', () => board.querySelectorAll('.tile.cursor').forEach((el) => el.classList.remove('cursor')));
+  $('#btn-hint').onclick = () => { if (!busy && B && !B.over) { showHint(); say('Вот здесь. Но в следующий раз сам.'); } };
+
+  // ---------- сдача ----------
+  function openReveal() {
+    const st = STAGES[S.stage - 1], d = S.done[S.stage];
+    const shown = Object.keys(S.done).length;
+    $('#rv-eyebrow').textContent = 'Лист ' + S.stage + ' из 7 сдан';
+    $('#rv-title').textContent = st.name;
+    $('#rv-layers').innerHTML = STAGES.map((s) => `<span class="${S.done[s.day] ? 'on' : ''}"></span>`).join('');
+    const total = MOVES_PER_STAGE + (d.extra ? EXTRA_MOVES : 0);
+    $('#rv-meta').textContent = (d.remarks ? 'с замечаниями · ' : '') + 'сдал за ' + d.moves + ' ' + plural(d.moves, 'ход', 'хода', 'ходов') + ' из ' + total + ' · поле ' + fmt(S.cal);
+    $('#rv-msg').textContent = d.remarks ? HOST.remarks : d.moves <= 12 ? HOST.fast(d.moves) : HOST.ok[S.stage - 1];
+    $('#btn-to-wheel').textContent = S.spun[S.stage] ? 'Дальше' : 'Крутить архитектурную рулетку';
+    show('reveal');
+    animateReveal($('#rv-canvas'), shown - 1, shown);
+  }
+  $('#btn-to-wheel').onclick = () => { if (S.spun[S.stage]) { const last = S.prizes[S.prizes.length - 1]; if (last) openPrize(last); else nextDay(); } else openWheel(); };
+
+  // ---------- рулетка ----------
+  const SECTORS = ['studio', 'prompt', 'prompt', 'discount', 'prompt', 'prompt', 'discount', 'prompt', 'prompt', 'discount', 'prompt', 'prompt'];
+  let wheelRot = 0;
+  function buildWheel() {
+    const locked = S.stage < 3;
+    const pt = (deg, rad) => { const a = (deg * Math.PI) / 180; return [100 + rad * Math.sin(a), 100 - rad * Math.cos(a)]; };
+    let html = '<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#222838"/><path d="M0 0v6" stroke="#3A4256" stroke-width="2"/></pattern></defs>';
+    SECTORS.forEach((type, k) => {
+      const [x0, y0] = pt(k * 30, 97), [x1, y1] = pt((k + 1) * 30, 97);
+      let fill, ink, label;
+      if (type === 'studio') { fill = '#C6E975'; ink = '#17110E'; label = 'СТУДИЯ'; }
+      else if (type === 'discount') { fill = locked ? 'url(#hatch)' : '#FF8562'; ink = locked ? '#8C94A8' : '#17110E'; label = locked ? 'С 3 ДНЯ' : '−20%'; }
+      else { fill = k % 2 ? '#1F2940' : '#2A3550'; ink = '#ECEFF5'; label = 'ПРОМПТ'; }
+      html += `<path d="M100 100 L${x0.toFixed(2)} ${y0.toFixed(2)} A97 97 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z" fill="${fill}" stroke="#0B0F19" stroke-width="1.2"/>`;
+      html += `<g transform="rotate(${k * 30 + 15} 100 100)"><text x="100" y="40" transform="rotate(-90 100 40)" fill="${ink}" font-family="IBM Plex Mono, monospace" font-size="${label.length > 6 ? 8 : 9.5}" font-weight="500" text-anchor="middle" dominant-baseline="middle" letter-spacing="0.5">${label}</text></g>`;
+    });
+    html += '<circle cx="100" cy="100" r="99" fill="none" stroke="#ECEFF5" stroke-opacity="0.35" stroke-width="1"/><circle cx="100" cy="100" r="17" fill="#0B0F19" stroke="#ECEFF5" stroke-opacity="0.35"/><text x="100" y="101" fill="#ECEFF5" font-family="Unbounded, Arial" font-size="7" font-weight="700" text-anchor="middle" dominant-baseline="middle">А×Н</text>';
+    $('#wheel').innerHTML = html;
+    $('#legend').innerHTML = '<span><i style="background:#2A3550"></i>Промпт · 8</span><span><i style="background:' + (locked ? '#3A4256' : '#FF8562') + '"></i>Скидка 20% · 3' + (locked ? ' · с 3-го дня' : '') + '</span><span><i style="background:#C6E975"></i>Приз студии · 1</span>';
+  }
+  function openWheel() {
+    buildWheel();
+    const spun = !!S.spun[S.stage];
+    $('#btn-spin').disabled = spun;
+    $('#btn-spin').textContent = spun ? 'Спин на сегодня использован' : 'Крутить';
+    show('wheel');
+  }
+  function pickOutcome() {
+    const forced = $('#demo-spin').value;
+    if (forced !== 'auto') { $('#demo-spin').value = 'auto'; if (forced === 'discount' && S.stage < 3) toast('Скидка до 3-го дня закрыта — показываю, как выглядит приз.'); return forced; }
+    const wStudio = S.studioStock > 0 ? 0.03 : 0;
+    const wDisc = S.stage >= 3 && !S.code ? 0.2 : 0;
+    const x = Math.random();
+    if (x < wStudio) return 'studio';
+    if (x < wStudio + wDisc) return 'discount';
+    return 'prompt';
+  }
+  $('#btn-spin').onclick = () => {
+    if (S.spun[S.stage]) return;
+    const out = pickOutcome();
+    const cands = SECTORS.map((t, k) => (t === out ? k : -1)).filter((k) => k >= 0);
+    const k = cands[Math.floor(Math.random() * cands.length)];
+    const base = wheelRot - (wheelRot % 360);
+    let final = base + 360 * 5 + (((-(k * 30 + 15)) % 360) + 360) % 360 + (Math.random() * 14 - 7);
+    if (final <= wheelRot) final += 360;
+    wheelRot = final;
+    $('#wheel').style.transform = `rotate(${final}deg)`;
+    S.spun[S.stage] = true; save();
+    $('#btn-spin').disabled = true; $('#btn-spin').textContent = 'Крутится…';
+    setTimeout(() => grantPrize(out), reduce ? 450 : 4400);
+  };
+  function genCode() { const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 4; i++) s += abc[Math.floor(Math.random() * abc.length)]; return 'ARTB-' + s + '-20'; }
+  function grantPrize(out) {
+    let p;
+    if (out === 'prompt') p = { type: 'prompt', idx: S.prizes.filter((x) => x.type === 'prompt').length % PROMPTS.length };
+    else if (out === 'discount') { if (!S.code) S.code = genCode(); p = { type: 'discount' }; }
+    else { S.studioStock = Math.max(0, S.studioStock - 1); p = { type: 'studio', what: S.studioStock >= 5 ? 'consult' : 'frame' }; }
+    p.day = S.stage; S.prizes.push(p); save();
+    openPrize(p);
+  }
+
+  // ---------- приз ----------
+  function openPrize(p) {
+    const card = $('#prize-card');
+    if (p.type === 'prompt') {
+      const pr = PROMPTS[p.idx];
+      card.innerHTML = `<div class="prize"><div class="eyebrow">Рабочий промпт · ${pr.from}</div><h3>${pr.title}</h3><pre class="prompt" id="prompt-text">${pr.text}</pre><p>${pr.tip}</p><button class="btn btn-primary btn-block" id="btn-copy-prompt" type="button">Скопировать промпт</button></div>`;
+      $('#btn-copy-prompt').onclick = () => copy(pr.text, 'Промпт скопирован.');
+    } else if (p.type === 'discount') {
+      if (!S.subscribed) {
+        card.innerHTML = `<div class="prize"><div class="eyebrow">Скидка на октябрьский интенсив</div><div class="big">−20%</div><h3>Код откроется после подписки на канал школы</h3><p>Там же лежит запись эфира. Бот проверит подписку автоматически.</p><button class="btn btn-primary btn-block" id="btn-sub" type="button">Подписаться на канал</button></div>`;
+        $('#btn-sub').onclick = () => { S.subscribed = true; save(); toast('Подписка подтверждена — код открыт.'); openPrize(p); };
+      } else {
+        card.innerHTML = `<div class="prize"><div class="eyebrow">Скидка на октябрьский интенсив</div><div class="big">−20%</div><div class="code" id="code">${S.code}</div><p>Личный код, один на Telegram-аккаунт. Действует до старта интенсива. Оплата — на сайте школы, в игре ничего не продаётся.</p><button class="btn btn-primary btn-block" id="btn-copy-code" type="button">Скопировать код</button></div>`;
+        $('#btn-copy-code').onclick = () => copy(S.code, 'Код скопирован.');
+      }
+    } else {
+      const consult = p.what === 'consult';
+      card.innerHTML = `<div class="prize" style="border-color:#C6E975"><div class="eyebrow" style="color:#C6E975">Редкий сектор · приз студии</div><h3>${consult ? 'Консультация по визуализации, 30 минут' : 'Бесплатный кадр визуализации вашего проекта'}</h3><p>Студия Нейроотличник напишет вам в Telegram в течение двух рабочих дней. В пуле осталось призов: ${S.studioStock} из 8.</p></div>`;
+    }
+    const d = S.done[p.day] || { moves: 0 };
+    const st = STAGES[p.day - 1];
+    drawTo($('#share-canvas'), Object.keys(S.done).length);
+    $('#share-text').innerHTML = `<b>${OBJECT.name}</b><span>Лист ${p.day}/7 · ${st.name}</span><span>${d.remarks ? 'с замечаниями' : 'сдал за ' + d.moves + ' из ' + MOVES_PER_STAGE}</span><span>поле ${fmt(S.cal)}</span>`;
+    $('#btn-share').onclick = () => copy(`Собери проект · ${OBJECT.name}\nЛист ${p.day}/7 «${st.name}» — ${d.remarks ? 'сдал с замечаниями' : 'сдал за ' + d.moves + ' из ' + MOVES_PER_STAGE + ' ходов'}\nПоле ${fmt(S.cal)}. А ты за сколько?`, 'Текст карточки скопирован. В Telegram здесь откроется выбор чата.');
+    const nx = STAGES[p.day];
+    $('#next').innerHTML = nx
+      ? `<p>Завтра: <b>${nx.name}</b> — ${goalText(nx.goals)}. Отличник пришлёт ТЗ утром.</p><button class="btn btn-secondary btn-block" id="btn-next" type="button">Следующий день</button>`
+      : `<p><b>Все семь листов сданы.</b> Рендер открыт целиком.</p><button class="btn btn-primary btn-block" id="btn-next" type="button">Смотреть проект целиком</button>`;
+    $('#btn-next').onclick = nextDay;
+    show('prize');
+  }
+
+  function nextDay() { S.stage += 1; S.cal += 1; S.note = null; save(); show('brief'); renderBrief(); }
+
+  function renderDone() {
+    const days = Object.values(S.done);
+    const moves = days.reduce((s, d) => s + d.moves, 0);
+    const remarks = days.filter((d) => d.remarks).length;
+    drawTo($('#done-canvas'), 7);
+    $('#done-stats').innerHTML = `<div><b>${moves}</b><small>ходов за неделю</small></div><div><b>${S.prizes.length}</b><small>наград</small></div><div><b>${remarks}</b><small>с замечаниями</small></div>`;
+    $('#done-msg').textContent = 'Павильон у воды сдан. На следующей неделе — новый объект: дом на склоне. ТЗ пришлю утром.';
+  }
+  $('#btn-restart').onclick = () => { S = fresh(); save(); show('brief'); renderBrief(); };
+
+  $('#btn-play').onclick = () => {
+    if (S.done[S.stage]) { if (!S.spun[S.stage]) openWheel(); else nextDay(); }
+    else startBoard();
+  };
+
+  // ---------- заметки для сторон ----------
+  const D = (id, isNew) => `<span class="dec${isNew ? ' new' : ''}">${id}</span>`;
+  const NOTES = {
+    brief: { step: 0, title: 'Утро: техзадание дня', items: [
+      `Ведёт игру <b>Отличник</b>: выдаёт ТЗ, хвалит, ворчит за прогул. Пока черновик — зависит от иерархии брендов.`,
+      `<b>Неделя личная</b>: день 1 — день первого входа. Эфир 23.09 выпадает на среду. При неделе «ПН–ВС» зрители эфира начали бы с «Разрезов» и не увидели бы рендер целиком. ${D('Р13', true)}`,
+      `<b>Отсрочки</b>: две на проект. Прогул списывает одну, третий срывает проект. Попробуйте «Прогулять день» в режиме показа.`,
+      `В бою это же сообщение утром присылает бот, не больше двух напоминаний в день.`,
+    ] },
+    board: { step: 1, title: 'Поле 7 × 7: пять элементов, 25 ходов', items: [
+      `Стартовое поле строится из объекта, стадии и даты. У всех, кто сегодня на этой стадии, оно одинаковое, поэтому результаты можно сравнивать. Сервер переигрывает лог ходов и так проверяет сдачу.`,
+      `Обмен без совпадения ход не тратит. Спецэлементов, бустеров и жизней нет — как в концепте.`,
+      `<b>Цели подняты против примера из концепта</b>: «12 объёмов и 8 линий» случайные ходы собирают примерно за 11 ходов. Новые цели проверены симуляцией — таблица в docs/02-GDD.md. ${D('Р14', true)}`,
+      `Кончились ходы — один раз даётся «доработка» (+5), затем сдача «с замечаниями». Стадия не барьер: до рулетки доходят все. ${D('Р15', true)}`,
+    ] },
+    reveal: { step: 2, title: 'Сдача: проявляется слой визуализации', items: [
+      `Семь слоёв: генплан → планы → разрезы → фасады → материалы → свет → финальный кадр.`,
+      `Здесь <b>рисунок-заглушка</b>. В бою студия даёт один финальный рендер на объект (по желанию ещё вайрфрейм), а слои открываются на клиенте масками и фильтрами. Генерации в рантайме нет. ${D('Р7')} ${D('Р8')}`,
+    ] },
+    wheel: { step: 3, title: 'Архитектурная рулетка', items: [
+      `12 секторов: 8 промптов, 3 скидки, 1 приз студии. Проигрышных нет.`,
+      `<b>Круг показывает призы, но не шансы.</b> Результат выбирает сервер с учётом остатков. При честной 1/12 восемь призов студии разошлись бы в первый же вечер. ${D('Р5')} ${D('Р16', true)}`,
+      `До 3-го дня секторы скидки закрыты штриховкой. Проверить разные призы можно через «Следующий спин».`,
+    ] },
+    prize: { step: 4, title: 'Приз и карточка дня', items: [
+      `Промпт выдаётся без условий. Скидка — после подписки на канал школы; чтобы проверять подписку, бот должен быть админом канала. ${D('Р11')}`,
+      `Код уникальный, один на Telegram-аккаунт, из пула 150 кодов GetCourse. Срок — до старта интенсива. ${D('Р1')} ${D('Р2')} ${D('Р3')}`,
+      `Карточка дня без спойлеров: объект, стадия, ходы. В Telegram она уходит в чат нативным окном выбора.`,
+      `Розыгрыш призов — рекламная акция. Правила (организатор, призы, сроки) нужно опубликовать до запуска. ${D('Р17', true)}`,
+    ] },
+    done: { step: 4, title: 'Последний день проекта', items: [
+      `Рендер открыт целиком. Следующая неделя — новый объект. К запуску нужно 4 объекта. ${D('Р8')}`,
+      `Проверить удержание: сколько игроков дошло до 3-го и 7-го дня, сколько кодов дожило до оплаты. ${D('Р4')}`,
+    ] },
+  };
+  const STEP_NAMES = ['ТЗ', 'Поле', 'Сдача', 'Рулетка', 'Приз'];
+  function renderNotes() {
+    const n = NOTES[current];
+    $('#steps').innerHTML = STEP_NAMES.map((s, i) => `<span class="${i === n.step ? 'on' : ''}">${s}</span>`).join('');
+    $('#note').innerHTML = `<div class="eyebrow">Сейчас на экране</div><h2>${n.title}</h2><ul>${n.items.map((i) => `<li>${i}</li>`).join('')}</ul>`;
+  }
+
+  // ---------- режим показа ----------
+  $('#demo-win').onclick = () => {
+    if (S.stage > 7) return toast('Неделя уже сдана. Сбросьте прототип.');
+    if (S.done[S.stage]) return toast('Эта стадия уже сдана. Дальше — рулетка или следующий день.');
+    if (current !== 'board') startBoard();
+    if (busy) return;
+    B.goals.forEach(([t, n]) => { B.col[t] = Math.max(B.col[t], n); });
+    B.used = Math.max(B.used, 14);
+    updateHud(); win(false);
+  };
+  $('#demo-skip').onclick = () => {
+    if (S.stage > 7) return toast('Неделя уже сдана. Сбросьте прототип.');
+    if (S.done[S.stage]) { S.stage += 1; S.cal += 1; if (S.stage > 7) { save(); show('brief'); renderBrief(); return; } }
+    S.cal += 1; S.delays -= 1;
+    if (S.delays < 0) { const cal = S.cal; S = fresh(); S.cal = cal; S.note = HOST.broken; }
+    else S.note = HOST.skip(S.delays);
+    save(); show('brief'); renderBrief();
+  };
+  $('#demo-day').onchange = (e) => {
+    const n = Number(e.target.value);
+    S = fresh();
+    for (let d = 1; d < n; d++) { S.done[d] = { moves: 13 + ((d * 5) % 8), remarks: false, extra: false, date: iso(d - 1) }; S.spun[d] = true; S.prizes.push({ type: 'prompt', idx: (d - 1) % PROMPTS.length, day: d }); }
+    S.stage = n; S.cal = n - 1; save(); show('brief'); renderBrief();
+  };
+  $('#demo-reset').onclick = () => { S = fresh(); save(); show('brief'); renderBrief(); toast('Прототип сброшен: день 1, две отсрочки.'); };
+
+  // ---------- старт ----------
+  $('#demo-day').value = String(Math.min(7, S.stage));
+  show('brief');
+  renderBrief();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (current === 'brief') renderBrief(); });
+})();
+</script>
