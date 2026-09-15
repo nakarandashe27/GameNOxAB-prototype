@@ -15,27 +15,40 @@
 
   // Пять элементов работы архитектора. Индекс = тип фишки.
   const TYPES = [
-    { key: 'line', name: 'Линия' },
-    { key: 'volume', name: 'Объём' },
-    { key: 'material', name: 'Материал' },
-    { key: 'green', name: 'Зелень' },
-    { key: 'light', name: 'Свет' },
+    { key: 'line', name: 'Линия', hint: 'оси, размеры, разбивка' },
+    { key: 'volume', name: 'Объём', hint: 'масса, этажи, пятно застройки' },
+    { key: 'material', name: 'Материал', hint: 'бетон, дерево, стекло' },
+    { key: 'green', name: 'Зелень', hint: 'деревья, газон, вода' },
+    { key: 'light', name: 'Свет', hint: 'солнце, тени, время суток' },
   ];
   const T = { line: 0, volume: 1, material: 2, green: 3, light: 4 };
 
   // Неделя проекта. goals: [[тип, количество], ...]. Цифры откалиброваны симуляцией (docs/02-GDD.md, §6).
   const STAGES = [
-    { day: 1, code: 'ГП', name: 'Генплан', desc: 'Посадка объекта на участок', goals: [[T.green, 16], [T.line, 12]] },
-    { day: 2, code: 'ПЛ', name: 'Планы', desc: 'Организация пространства внутри', goals: [[T.line, 18], [T.volume, 12]] },
-    { day: 3, code: 'РЗ', name: 'Разрезы', desc: 'Что происходит по высоте', goals: [[T.volume, 18], [T.line, 16]] },
-    { day: 4, code: 'ФС', name: 'Фасады', desc: 'Как объект выглядит снаружи', goals: [[T.volume, 20], [T.material, 16]] },
-    { day: 5, code: 'МТ', name: 'Материалы', desc: 'Из чего это сделано', goals: [[T.material, 20], [T.green, 18]] },
-    { day: 6, code: 'СВ', name: 'Свет и окружение', desc: 'Время суток, среда, атмосфера', goals: [[T.light, 22], [T.green, 16]] },
-    { day: 7, code: 'ВЗ', name: 'Визуализация', desc: 'Проект сдан — рендер открывается целиком', goals: [[T.light, 22], [T.material, 18]] },
+    { day: 1, code: 'ГП', name: 'Генплан', desc: 'Посадка объекта на участок', goals: [[T.green, 20], [T.line, 14]] },
+    { day: 2, code: 'ПЛ', name: 'Планы', desc: 'Организация пространства внутри', goals: [[T.line, 22], [T.volume, 16]] },
+    { day: 3, code: 'РЗ', name: 'Разрезы', desc: 'Что происходит по высоте', goals: [[T.volume, 24], [T.line, 18]] },
+    { day: 4, code: 'ФС', name: 'Фасады', desc: 'Как объект выглядит снаружи', goals: [[T.volume, 24], [T.material, 20]] },
+    { day: 5, code: 'МТ', name: 'Материалы', desc: 'Из чего это сделано', goals: [[T.material, 26], [T.green, 20]] },
+    { day: 6, code: 'СВ', name: 'Свет и окружение', desc: 'Время суток, среда, атмосфера', goals: [[T.light, 26], [T.green, 22]] },
+    { day: 7, code: 'ВЗ', name: 'Визуализация', desc: 'Проект сдан — рендер открывается целиком', goals: [[T.light, 28], [T.material, 22]] },
   ];
 
-  const MOVES_PER_STAGE = 25;
+  const MOVES_PER_STAGE = 30;
   const EXTRA_MOVES = 5; // «Доработка»: один раз за стадию, если ходы кончились
+
+  // Объекты недель. Сюжет: бюро получает заказ, игрок ведёт его от генплана до подачи.
+  const OBJECTS = [
+    {
+      key: 'pavilion', no: '01', name: 'Павильон у воды', area: '60 м²',
+      client: 'Частный заказчик, участок на берегу озера',
+      brief: 'Летний павильон: гостиная со вторым светом, терраса над водой. Сосны на участке рубить нельзя — заказчик проверит.',
+      quote: '«Хочу видеть закат из гостиной и чтобы соседи не видели меня».',
+    },
+    { key: 'slope', no: '02', name: 'Дом на склоне', area: '180 м²', client: 'Семья из двух поколений', brief: 'Дом на перепаде в 6 метров: три уровня, въезд сверху, спальни внизу.', quote: '«Чтобы бабушке не пришлось подниматься по лестнице».' },
+    { key: 'park', no: '03', name: 'Парковый фрагмент', area: '0,8 га', client: 'Городская администрация', brief: 'Фрагмент набережной: маршруты, свет, места для сидения, сохранение существующих деревьев.', quote: '«Нужно к открытию сезона, бюджет не резиновый».' },
+    { key: 'studio', no: '04', name: 'Интерьер мастерской', area: '95 м²', client: 'Керамист, первая своя мастерская', brief: 'Мастерская с печью, зоной для занятий и витриной на улицу. Много дневного света.', quote: '«Глина везде, поэтому всё должно мыться».' },
+  ];
 
   function hashStr(s) {
     let h = 2166136261;
@@ -222,5 +235,5 @@
     return goals.every(([t, n]) => collected[t] >= n);
   }
 
-  return { SIZE, TYPES, T, STAGES, MOVES_PER_STAGE, EXTRA_MOVES, hashStr, makeRng, adjacent, findMatches, createGame, seedFor, goalsMet };
+  return { SIZE, TYPES, T, STAGES, OBJECTS, MOVES_PER_STAGE, EXTRA_MOVES, hashStr, makeRng, adjacent, findMatches, createGame, seedFor, goalsMet };
 });

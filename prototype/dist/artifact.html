@@ -235,6 +235,35 @@
   .demo select { appearance: none; border-radius: 0; background: var(--ink-2); border: 1px solid var(--rule); padding: 9px 10px; font: 500 13px var(--f-ui); color: var(--paper); text-transform: none; letter-spacing: 0; }
   .demo select:focus { border-color: var(--cta); outline: none; }
 
+  /* титульный лист проекта */
+  .cover-sheet { border: 1px solid var(--rule-strong); padding: 18px 16px 16px; display: grid; gap: 12px; background: linear-gradient(180deg, rgba(27, 35, 53, 0.55), rgba(11, 15, 25, 0.2)); }
+  .cover-sheet h1 { font-size: 32px; }
+  .cover-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .cover-facts div { background: var(--ink-2); padding: 8px 10px; }
+  .cover-facts small { display: block; font: 400 9px/1.3 var(--f-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--dim); }
+  .cover-facts b { font: 600 13px/1.3 var(--f-ui); }
+  .quote { border-left: 2px solid var(--cta); padding-left: 10px; font-size: 14px; }
+  .cover-stamp { display: flex; justify-content: space-between; font: 400 10px var(--f-mono); color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em; border-top: 1px solid var(--rule); padding-top: 8px; }
+
+  /* легенда элементов */
+  .legend-el { display: grid; gap: 7px; border: 1px solid var(--rule); padding: 10px 12px; }
+  .legend-el > div { display: grid; grid-template-columns: 22px auto minmax(0, 1fr); gap: 9px; align-items: center; }
+  .legend-el .gicon { width: 22px; height: 22px; }
+  .legend-el .nm { font: 600 12px var(--f-ui); }
+  .legend-el .hint { font: 400 11px var(--f-mono); color: var(--dim); }
+
+  /* фишки улетают в цель */
+  .particle { position: fixed; z-index: 40; width: 22px; height: 22px; color: var(--tc); pointer-events: none; opacity: 0.95; transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s ease-in; }
+  .particle svg { width: 100%; height: 100%; }
+  .gp.bump .bar i { filter: brightness(1.6); }
+
+  /* каскады и черновик */
+  .combo { position: absolute; left: 50%; top: 14%; z-index: 6; transform: translate(-50%, 0); font: 700 22px/1 var(--f-display); color: var(--c-light); text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7); opacity: 0; transition: opacity 0.2s, transform 0.4s; pointer-events: none; }
+  .combo.on { opacity: 1; transform: translate(-50%, -18px); }
+  .practice-bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; border: 1px dashed var(--c-light); color: var(--c-light); padding: 7px 10px; font: 400 11px var(--f-mono); text-transform: uppercase; letter-spacing: 0.06em; }
+  .btn-ghost { background: transparent; border: 1px solid var(--rule-strong); color: var(--paper); }
+  .btn-ghost:hover { background: rgba(255, 255, 255, 0.07); }
+
   @media (prefers-reduced-motion: reduce) {
     .tile, .face, .bar i, .approved span, .toast { transition-duration: 0.01s !important; }
     .wheel-wrap svg.wheel { transition-duration: 0.3s !important; }
@@ -249,6 +278,35 @@
       <span class="title"><b>Собери проект</b><span>мини-приложение</span></span>
       <span class="more">•••</span>
     </div>
+
+    <!-- Титульный лист проекта -->
+    <section class="screen" id="scr-cover" hidden aria-labelledby="cover-name">
+      <div class="cover-sheet">
+        <div class="eyebrow" id="cover-no">Проект 01 · неделя 1 из 4</div>
+        <h1 class="display" id="cover-name">Павильон у воды</h1>
+        <p class="quote" id="cover-quote"></p>
+        <div class="cover-facts">
+          <div><small>Заказчик</small><b id="cover-client"></b></div>
+          <div><small>Площадь</small><b id="cover-area"></b></div>
+          <div><small>Срок</small><b>7 дней — 7 стадий</b></div>
+          <div><small>Подача</small><b>Визуализация в воскресенье</b></div>
+        </div>
+        <p id="cover-brief" style="margin:0;font-size:14px;line-height:1.5;color:var(--dim)"></p>
+        <div class="cover-stamp"><span>АРТ.БРОДСКИЙ × Нейроотличник</span><span>Лист 0 · задание</span></div>
+      </div>
+      <div class="host">
+        <div class="avatar" aria-hidden="true">О</div>
+        <div class="bubble">
+          <div class="who">Отличник <span>ведущий · черновик</span></div>
+          <p id="cover-msg">Объект твой. Веду тебя по стадиям, семь дней — семь листов. Собираешь стадию на поле, я принимаю лист. В воскресенье смотрим, что получилось.</p>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow" style="margin-bottom:8px">Чем работаем</div>
+        <div class="legend-el" id="cover-legend"></div>
+      </div>
+      <button class="btn btn-primary btn-block" id="btn-take" type="button">Взять проект в работу</button>
+    </section>
 
     <!-- ТЗ дня -->
     <section class="screen" id="scr-brief" aria-labelledby="brief-stage">
@@ -274,12 +332,18 @@
         </div>
       </div>
       <div class="goals" id="brief-goals"></div>
+      <details id="brief-legend-wrap">
+        <summary class="eyebrow" style="cursor:pointer;padding:4px 0">Что означают фишки</summary>
+        <div class="legend-el" id="brief-legend" style="margin-top:8px"></div>
+      </details>
       <button class="btn btn-primary btn-block" id="btn-play" type="button">Открыть поле</button>
+      <button class="btn btn-ghost btn-block" id="btn-practice" type="button" hidden>Черновой лист · играть вне зачёта</button>
       <p class="fine" id="brief-field"></p>
     </section>
 
     <!-- Поле -->
     <section class="screen" id="scr-board" hidden aria-label="Поле стадии">
+      <div class="practice-bar" id="practice-bar" hidden><span>Черновой лист · вне зачёта</span><span id="practice-stat"></span></div>
       <div class="stamp" aria-label="Штамп листа">
         <div><small>Объект</small><b id="stamp-object">Павильон у воды</b></div>
         <div><small>Стадия</small><b id="stamp-stage">Генплан</b></div>
@@ -289,10 +353,12 @@
       <div class="progress" id="progress"></div>
       <div class="board" id="board" tabindex="0" role="application" aria-label="Поле 7 на 7. Стрелки — перемещение, пробел — выбрать фишку, вторая фишка рядом — обмен">
         <div class="approved" id="approved"><span>Принято</span></div>
+        <div class="combo" id="combo" aria-hidden="true"></div>
       </div>
       <div class="sheet" id="sheet" hidden role="dialog" aria-labelledby="sheet-text">
         <p id="sheet-text"></p>
         <button class="btn btn-primary btn-block" id="sheet-btn" type="button"></button>
+        <button class="btn btn-secondary btn-block" id="sheet-btn2" type="button" hidden></button>
       </div>
       <div class="board-foot">
         <div class="say"><span class="avatar" aria-hidden="true">О</span><span id="say" aria-live="polite"></span></div>
@@ -362,25 +428,34 @@
       <div class="eyebrow" style="margin-bottom:10px">АРТ.БРОДСКИЙ × Нейроотличник · прототип к концепту v1.0</div>
       <h1 class="display">Собери <em>проект</em></h1>
     </div>
-    <p class="lead">Кликабельный прототип, чтобы все стороны увидели одно и то же. <b>Механика настоящая</b>: поле, каскады, цели, сдача, рулетка. <b>Заглушки</b>: рисунок вместо рендера студии, примеры промптов, промокод и проверка подписки.</p>
+    <p class="lead">Кликабельный прототип, чтобы все стороны увидели одно и то же. <b>Механика настоящая</b>: поле, каскады, цели, сдача, рулетка. <b>Заглушки</b>: рисунок вместо рендера студии, примеры промптов, промокод и проверка подписки. Версия 0.3 — с правками по комментариям Андрея.</p>
     <div class="steps" id="steps" aria-label="Путь игрока за день"></div>
     <div class="note-card" id="note" aria-live="polite"></div>
     <div class="note-card">
+      <h2>Правки по комментариям Андрея</h2>
+      <ul>
+        <li><b>Сделано:</b> партия длиннее (30 ходов, цели выше); черновой лист для бесконечной игры; титульный лист с заказчиком и сюжетом; легенда фишек; фишки улетают в цель и каскады подписаны; слой вычерчивается, а потом заливается; демо-кнопки названы демо-кнопками.</li>
+        <li><b>Ждём Андрея:</b> предложения по призам студии и промптам <span class="dec">Р5</span> <span class="dec">Р6</span>, дизайн-ассеты и направление оформления <span class="dec">Р7</span>.</li>
+        <li><b>Важно:</b> «5–6 нажатий и выиграл» — это была демо-кнопка, она сдавала лист без игры. Теперь подписана явно.</li>
+      </ul>
+    </div>
+    <div class="note-card">
       <h2>Режим показа</h2>
       <div class="demo">
-        <button class="btn btn-secondary btn-small" id="demo-win" type="button">Сдать стадию сразу</button>
-        <button class="btn btn-secondary btn-small" id="demo-skip" type="button">Прогулять день</button>
-        <label for="demo-day">Перейти к дню
+        <button class="btn btn-secondary btn-small" id="demo-win" type="button">Демо: сдать лист без игры</button>
+        <button class="btn btn-secondary btn-small" id="demo-skip" type="button">Демо: пропустить день</button>
+        <label for="demo-day">Демо: перейти к дню
           <select id="demo-day">
             <option value="1">1 · Генплан</option><option value="2">2 · Планы</option><option value="3">3 · Разрезы</option><option value="4">4 · Фасады</option><option value="5">5 · Материалы</option><option value="6">6 · Свет и окружение</option><option value="7">7 · Визуализация</option>
           </select>
         </label>
-        <label for="demo-spin">Следующий спин
+        <label for="demo-spin">Демо: следующий спин
           <select id="demo-spin">
             <option value="auto">Как решит сервер</option><option value="prompt">Промпт</option><option value="discount">Скидка</option><option value="studio">Приз студии</option>
           </select>
         </label>
-        <button class="btn btn-secondary btn-small" id="demo-reset" type="button" style="grid-column:1 / -1">Сбросить прототип</button>
+        <button class="btn btn-secondary btn-small" id="demo-cover" type="button">Показать титульный лист</button>
+        <button class="btn btn-secondary btn-small" id="demo-reset" type="button">Сбросить прототип</button>
       </div>
     </div>
   </aside>
@@ -404,27 +479,40 @@
 
   // Пять элементов работы архитектора. Индекс = тип фишки.
   const TYPES = [
-    { key: 'line', name: 'Линия' },
-    { key: 'volume', name: 'Объём' },
-    { key: 'material', name: 'Материал' },
-    { key: 'green', name: 'Зелень' },
-    { key: 'light', name: 'Свет' },
+    { key: 'line', name: 'Линия', hint: 'оси, размеры, разбивка' },
+    { key: 'volume', name: 'Объём', hint: 'масса, этажи, пятно застройки' },
+    { key: 'material', name: 'Материал', hint: 'бетон, дерево, стекло' },
+    { key: 'green', name: 'Зелень', hint: 'деревья, газон, вода' },
+    { key: 'light', name: 'Свет', hint: 'солнце, тени, время суток' },
   ];
   const T = { line: 0, volume: 1, material: 2, green: 3, light: 4 };
 
   // Неделя проекта. goals: [[тип, количество], ...]. Цифры откалиброваны симуляцией (docs/02-GDD.md, §6).
   const STAGES = [
-    { day: 1, code: 'ГП', name: 'Генплан', desc: 'Посадка объекта на участок', goals: [[T.green, 16], [T.line, 12]] },
-    { day: 2, code: 'ПЛ', name: 'Планы', desc: 'Организация пространства внутри', goals: [[T.line, 18], [T.volume, 12]] },
-    { day: 3, code: 'РЗ', name: 'Разрезы', desc: 'Что происходит по высоте', goals: [[T.volume, 18], [T.line, 16]] },
-    { day: 4, code: 'ФС', name: 'Фасады', desc: 'Как объект выглядит снаружи', goals: [[T.volume, 20], [T.material, 16]] },
-    { day: 5, code: 'МТ', name: 'Материалы', desc: 'Из чего это сделано', goals: [[T.material, 20], [T.green, 18]] },
-    { day: 6, code: 'СВ', name: 'Свет и окружение', desc: 'Время суток, среда, атмосфера', goals: [[T.light, 22], [T.green, 16]] },
-    { day: 7, code: 'ВЗ', name: 'Визуализация', desc: 'Проект сдан — рендер открывается целиком', goals: [[T.light, 22], [T.material, 18]] },
+    { day: 1, code: 'ГП', name: 'Генплан', desc: 'Посадка объекта на участок', goals: [[T.green, 20], [T.line, 14]] },
+    { day: 2, code: 'ПЛ', name: 'Планы', desc: 'Организация пространства внутри', goals: [[T.line, 22], [T.volume, 16]] },
+    { day: 3, code: 'РЗ', name: 'Разрезы', desc: 'Что происходит по высоте', goals: [[T.volume, 24], [T.line, 18]] },
+    { day: 4, code: 'ФС', name: 'Фасады', desc: 'Как объект выглядит снаружи', goals: [[T.volume, 24], [T.material, 20]] },
+    { day: 5, code: 'МТ', name: 'Материалы', desc: 'Из чего это сделано', goals: [[T.material, 26], [T.green, 20]] },
+    { day: 6, code: 'СВ', name: 'Свет и окружение', desc: 'Время суток, среда, атмосфера', goals: [[T.light, 26], [T.green, 22]] },
+    { day: 7, code: 'ВЗ', name: 'Визуализация', desc: 'Проект сдан — рендер открывается целиком', goals: [[T.light, 28], [T.material, 22]] },
   ];
 
-  const MOVES_PER_STAGE = 25;
+  const MOVES_PER_STAGE = 30;
   const EXTRA_MOVES = 5; // «Доработка»: один раз за стадию, если ходы кончились
+
+  // Объекты недель. Сюжет: бюро получает заказ, игрок ведёт его от генплана до подачи.
+  const OBJECTS = [
+    {
+      key: 'pavilion', no: '01', name: 'Павильон у воды', area: '60 м²',
+      client: 'Частный заказчик, участок на берегу озера',
+      brief: 'Летний павильон: гостиная со вторым светом, терраса над водой. Сосны на участке рубить нельзя — заказчик проверит.',
+      quote: '«Хочу видеть закат из гостиной и чтобы соседи не видели меня».',
+    },
+    { key: 'slope', no: '02', name: 'Дом на склоне', area: '180 м²', client: 'Семья из двух поколений', brief: 'Дом на перепаде в 6 метров: три уровня, въезд сверху, спальни внизу.', quote: '«Чтобы бабушке не пришлось подниматься по лестнице».' },
+    { key: 'park', no: '03', name: 'Парковый фрагмент', area: '0,8 га', client: 'Городская администрация', brief: 'Фрагмент набережной: маршруты, свет, места для сидения, сохранение существующих деревьев.', quote: '«Нужно к открытию сезона, бюджет не резиновый».' },
+    { key: 'studio', no: '04', name: 'Интерьер мастерской', area: '95 м²', client: 'Керамист, первая своя мастерская', brief: 'Мастерская с печью, зоной для занятий и витриной на улицу. Много дневного света.', quote: '«Глина везде, поэтому всё должно мыться».' },
+  ];
 
   function hashStr(s) {
     let h = 2166136261;
@@ -611,19 +699,19 @@
     return goals.every(([t, n]) => collected[t] >= n);
   }
 
-  return { SIZE, TYPES, T, STAGES, MOVES_PER_STAGE, EXTRA_MOVES, hashStr, makeRng, adjacent, findMatches, createGame, seedFor, goalsMet };
+  return { SIZE, TYPES, T, STAGES, OBJECTS, MOVES_PER_STAGE, EXTRA_MOVES, hashStr, makeRng, adjacent, findMatches, createGame, seedFor, goalsMet };
 });
 
 </script>
 <script>
 (function () {
   'use strict';
-  const { SIZE, TYPES, STAGES, MOVES_PER_STAGE, EXTRA_MOVES, createGame, seedFor, goalsMet, adjacent } = window.SobCore;
+  const { SIZE, TYPES, STAGES, OBJECTS, MOVES_PER_STAGE, EXTRA_MOVES, createGame, seedFor, goalsMet, adjacent } = window.SobCore;
   const $ = (s) => document.querySelector(s);
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const wait = (ms) => new Promise((r) => setTimeout(r, reduce ? Math.min(ms, 40) : ms));
 
-  const OBJECT = { key: 'pavilion', name: 'Павильон у воды' };
+  const OBJECT = OBJECTS[0];
   const STORE = 'sobp-proto-v1';
 
   const ICON = [
@@ -681,10 +769,11 @@
   const goalText = (goals) => goals.map(([t, n]) => TYPES[t].name.toLowerCase() + ' ×' + n).join(', ');
 
   // ---------- состояние ----------
-  const fresh = () => ({ v: 1, stage: 1, cal: 0, delays: 2, done: {}, spun: {}, prizes: [], subscribed: false, code: null, studioStock: 8, note: null });
+  const fresh = () => ({ v: 1, stage: 1, cal: 0, delays: 2, done: {}, spun: {}, prizes: [], subscribed: false, code: null, studioStock: 8, note: null, coverSeen: false, practice: { games: 0, best: null } });
   let S = null;
   try { S = JSON.parse(localStorage.getItem(STORE)); } catch (e) { S = null; }
   if (!S || S.v !== 1) S = fresh();
+  if (!S.practice) S.practice = { games: 0, best: null };
   const save = () => { try { localStorage.setItem(STORE, JSON.stringify(S)); } catch (e) { /* без хранилища прототип работает в памяти */ } };
 
   // ---------- визуализация объекта (заглушка вместо рендера студии) ----------
@@ -770,6 +859,47 @@
       }
     }
 
+    // Линии чертежа: план участка, пятна застройки, каркас объёмов.
+    // Вынесено отдельно, чтобы при сдаче стадии слой сначала вычерчивался, а потом заливался.
+    function overlayLines(ctx, L, aPlan, aFoot, aWire, white) {
+        if (aPlan) {
+          ctx.globalAlpha = aPlan; ctx.lineWidth = 1;
+          ctx.strokeStyle = 'rgba(140,152,255,0.55)'; line(ctx, [0, HY], [W, HY]);
+          ctx.strokeStyle = 'rgba(140,152,255,0.18)';
+          for (let x = -4; x <= 20; x += 4) line(ctx, P(x, 0, 0), P(x, 0, 16));
+          for (let z = 0; z <= 16; z += 4) line(ctx, P(-4, 0, z), P(20, 0, z));
+          ctx.strokeStyle = '#8C98FF'; ctx.lineWidth = 1.4;
+          const s = shorePts(); ctx.beginPath(); s.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.stroke();
+          ctx.strokeStyle = '#C6E975'; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.2;
+          path(ctx, [P(-4, 0, 0.2), P(19, 0, 0.2), P(19, 0, 16), P(-4, 0, 16)]); ctx.stroke(); ctx.setLineDash([]);
+          TREES.forEach((t) => { ctx.beginPath(); for (let i = 0; i <= 20; i++) { const a = (i / 20) * Math.PI * 2; const p = P(t.x + Math.cos(a) * t.r, 0, t.z + Math.sin(a) * t.r); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); } ctx.stroke(); const c = P(t.x, 0, t.z); ctx.fillStyle = '#C6E975'; ctx.fillRect(c[0] - 1, c[1] - 1, 2, 2); });
+          // размерная линия, мм
+          const a = P(0, -0.35, -1.5), b = P(15, -0.35, -1.5); const off = 16;
+          ctx.strokeStyle = '#ECEFF5'; ctx.lineWidth = 1;
+          line(ctx, [a[0], a[1] + off], [b[0], b[1] + off]);
+          line(ctx, [a[0] - 4, a[1] + off + 4], [a[0] + 4, a[1] + off - 4]); line(ctx, [b[0] - 4, b[1] + off + 4], [b[0] + 4, b[1] + off - 4]);
+          ctx.fillStyle = '#ECEFF5'; ctx.font = '500 10px "IBM Plex Mono", monospace'; ctx.textAlign = 'center';
+          ctx.fillText('15 000', (a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + off - 4);
+          // север
+          ctx.strokeStyle = '#ECEFF5'; ctx.beginPath(); ctx.arc(W - 24, 26, 10, 0, Math.PI * 2); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(W - 24, 14); ctx.lineTo(W - 20, 28); ctx.lineTo(W - 28, 28); ctx.closePath(); ctx.fill();
+          ctx.fillText('С', W - 24, 50);
+          ctx.globalAlpha = 1;
+        }
+        if (aFoot) {
+          ctx.globalAlpha = aFoot; ctx.strokeStyle = '#8C98FF'; ctx.lineWidth = 1.3;
+          [[0, 15, -1.5, 8], [2.5, 11, 1.5, 6.5], [11, 14, 1, 7]].forEach(([x0, x1, z0, z1]) => { path(ctx, [P(x0, 0, z0), P(x1, 0, z0), P(x1, 0, z1), P(x0, 0, z1)]); ctx.stroke(); });
+          ctx.setLineDash([3, 3]); path(ctx, [P(0.5, 0, 0), P(15.5, 0, 0), P(15.5, 0, 8.5), P(0.5, 0, 8.5)]); ctx.stroke(); ctx.setLineDash([]);
+          line(ctx, P(6.8, 0, 1.5), P(6.8, 0, 6.5));
+          ctx.globalAlpha = 1;
+        }
+        if (aWire) {
+          ctx.globalAlpha = aWire; ctx.strokeStyle = white ? '#ECEFF5' : (L >= 4 ? '#0F1420' : '#ECEFF5'); ctx.lineWidth = 1.1;
+          OBJS.forEach((o) => faces(o.b, C.y).forEach((fc) => { path(ctx, fc.p.map((q) => P(q[0], q[1], q[2]))); ctx.stroke(); }));
+          ctx.globalAlpha = 1;
+        }
+    }
+
     function draw(ctx, L) {
       ctx.save();
       // фон
@@ -838,46 +968,8 @@
       // объёмы
       if (L >= 4) drawPavilion(ctx, L, false);
 
-      // линии чертежа поверх
-      const aPlan = [0, 1, 1, 1, 0.45, 0.15, 0, 0][L];
-      const aFoot = [0, 0, 1, 1, 0.4, 0, 0, 0][L];
-      const aWire = [0, 0, 0, 1, 0.55, 0.2, 0, 0][L];
-      if (aPlan) {
-        ctx.globalAlpha = aPlan; ctx.lineWidth = 1;
-        ctx.strokeStyle = 'rgba(140,152,255,0.55)'; line(ctx, [0, HY], [W, HY]);
-        ctx.strokeStyle = 'rgba(140,152,255,0.18)';
-        for (let x = -4; x <= 20; x += 4) line(ctx, P(x, 0, 0), P(x, 0, 16));
-        for (let z = 0; z <= 16; z += 4) line(ctx, P(-4, 0, z), P(20, 0, z));
-        ctx.strokeStyle = '#8C98FF'; ctx.lineWidth = 1.4;
-        const s = shorePts(); ctx.beginPath(); s.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.stroke();
-        ctx.strokeStyle = '#C6E975'; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.2;
-        path(ctx, [P(-4, 0, 0.2), P(19, 0, 0.2), P(19, 0, 16), P(-4, 0, 16)]); ctx.stroke(); ctx.setLineDash([]);
-        TREES.forEach((t) => { ctx.beginPath(); for (let i = 0; i <= 20; i++) { const a = (i / 20) * Math.PI * 2; const p = P(t.x + Math.cos(a) * t.r, 0, t.z + Math.sin(a) * t.r); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); } ctx.stroke(); const c = P(t.x, 0, t.z); ctx.fillStyle = '#C6E975'; ctx.fillRect(c[0] - 1, c[1] - 1, 2, 2); });
-        // размерная линия, мм
-        const a = P(0, -0.35, -1.5), b = P(15, -0.35, -1.5); const off = 16;
-        ctx.strokeStyle = '#ECEFF5'; ctx.lineWidth = 1;
-        line(ctx, [a[0], a[1] + off], [b[0], b[1] + off]);
-        line(ctx, [a[0] - 4, a[1] + off + 4], [a[0] + 4, a[1] + off - 4]); line(ctx, [b[0] - 4, b[1] + off + 4], [b[0] + 4, b[1] + off - 4]);
-        ctx.fillStyle = '#ECEFF5'; ctx.font = '500 10px "IBM Plex Mono", monospace'; ctx.textAlign = 'center';
-        ctx.fillText('15 000', (a[0] + b[0]) / 2, (a[1] + b[1]) / 2 + off - 4);
-        // север
-        ctx.strokeStyle = '#ECEFF5'; ctx.beginPath(); ctx.arc(W - 24, 26, 10, 0, Math.PI * 2); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(W - 24, 14); ctx.lineTo(W - 20, 28); ctx.lineTo(W - 28, 28); ctx.closePath(); ctx.fill();
-        ctx.fillText('С', W - 24, 50);
-        ctx.globalAlpha = 1;
-      }
-      if (aFoot) {
-        ctx.globalAlpha = aFoot; ctx.strokeStyle = '#8C98FF'; ctx.lineWidth = 1.3;
-        [[0, 15, -1.5, 8], [2.5, 11, 1.5, 6.5], [11, 14, 1, 7]].forEach(([x0, x1, z0, z1]) => { path(ctx, [P(x0, 0, z0), P(x1, 0, z0), P(x1, 0, z1), P(x0, 0, z1)]); ctx.stroke(); });
-        ctx.setLineDash([3, 3]); path(ctx, [P(0.5, 0, 0), P(15.5, 0, 0), P(15.5, 0, 8.5), P(0.5, 0, 8.5)]); ctx.stroke(); ctx.setLineDash([]);
-        line(ctx, P(6.8, 0, 1.5), P(6.8, 0, 6.5));
-        ctx.globalAlpha = 1;
-      }
-      if (aWire) {
-        ctx.globalAlpha = aWire; ctx.strokeStyle = L >= 4 ? '#0F1420' : '#ECEFF5'; ctx.lineWidth = 1.1;
-        OBJS.forEach((o) => faces(o.b, C.y).forEach((fc) => { path(ctx, fc.p.map((q) => P(q[0], q[1], q[2]))); ctx.stroke(); }));
-        ctx.globalAlpha = 1;
-      }
+      overlayLines(ctx, L, [0, 1, 1, 1, 0.45, 0.15, 0, 0][L], [0, 0, 1, 1, 0.4, 0, 0, 0][L], [0, 0, 0, 1, 0.55, 0.2, 0, 0][L], false);
+
       // финальная подача
       if (L >= 7) {
         const vg = ctx.createRadialGradient(W / 2, H * 0.55, H * 0.3, W / 2, H * 0.55, W * 0.72);
@@ -889,7 +981,12 @@
       if (nz) { ctx.globalAlpha = nz; ctx.drawImage(noiseCanvas(), 0, 0, W, H); ctx.globalAlpha = 1; }
       ctx.restore();
     }
-    return { W, H, draw };
+    function drawLines(ctx, L) {
+      ctx.save();
+      overlayLines(ctx, L, L <= 3 ? 1 : 0.5, L >= 2 ? 1 : 0, L >= 3 ? 1 : 0, true);
+      ctx.restore();
+    }
+    return { W, H, draw, drawLines };
   })();
 
   const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -897,32 +994,47 @@
   function drawTo(cv, L) { const ctx = setup(cv); Scene.draw(ctx, Math.max(0, Math.min(7, L))); }
   function offscreen(L) { const cv = document.createElement('canvas'); drawTo(cv, L); return cv; }
   let revealRaf = 0;
+  function offscreenLines(L) {
+    const cv = document.createElement('canvas');
+    cv.width = Scene.W * dpr; cv.height = Scene.H * dpr;
+    const ctx = cv.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    Scene.drawLines(ctx, Math.max(0, Math.min(7, L)));
+    return cv;
+  }
+  // Сдача стадии: сначала слой вычерчивается линиями (как по кальке), потом проявляется целиком.
   function animateReveal(cv, from, to) {
     cancelAnimationFrame(revealRaf);
-    const A = offscreen(from), B2 = offscreen(to);
-    cv.width = A.width; cv.height = A.height;
+    const prev = offscreen(from), next = offscreen(to), lines = offscreenLines(to);
+    cv.width = prev.width; cv.height = prev.height;
     const ctx = cv.getContext('2d');
-    const dur = reduce ? 1 : 2300; const t0 = performance.now();
+    const dur = reduce ? 1 : 3000, draft = 0.5, t0 = performance.now();
     const frame = (now) => {
       const t = Math.min(1, (now - t0) / dur);
-      const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.drawImage(A, 0, 0);
-      const x = e * cv.width;
-      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, x, cv.height); ctx.clip(); ctx.drawImage(B2, 0, 0); ctx.restore();
-      if (t < 1) {
-        const g = ctx.createLinearGradient(x - 30 * dpr, 0, x, 0);
-        g.addColorStop(0, 'rgba(255,211,106,0)'); g.addColorStop(1, 'rgba(255,211,106,0.35)');
-        ctx.fillStyle = g; ctx.fillRect(x - 30 * dpr, 0, 30 * dpr, cv.height);
+      ctx.drawImage(prev, 0, 0);
+      if (t < draft) {
+        // фаза 1: перо ведёт линию слева направо
+        const p = t / draft, x = p * cv.width;
+        ctx.save(); ctx.beginPath(); ctx.rect(0, 0, x, cv.height); ctx.clip();
+        ctx.drawImage(lines, 0, 0); ctx.restore();
+        const g = ctx.createLinearGradient(x - 26 * dpr, 0, x, 0);
+        g.addColorStop(0, 'rgba(255,211,106,0)'); g.addColorStop(1, 'rgba(255,211,106,0.3)');
+        ctx.fillStyle = g; ctx.fillRect(x - 26 * dpr, 0, 26 * dpr, cv.height);
         ctx.fillStyle = '#FFD36A'; ctx.fillRect(x - dpr, 0, 2 * dpr, cv.height);
-        revealRaf = requestAnimationFrame(frame);
+      } else {
+        // фаза 2: чертёж уступает место слою
+        const k = (t - draft) / (1 - draft), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        ctx.globalAlpha = 1 - e; ctx.drawImage(lines, 0, 0);
+        ctx.globalAlpha = e; ctx.drawImage(next, 0, 0);
+        ctx.globalAlpha = 1;
       }
+      if (t < 1) revealRaf = requestAnimationFrame(frame);
     };
     revealRaf = requestAnimationFrame(frame);
   }
 
   // ---------- экраны ----------
-  const SCREENS = ['brief', 'board', 'reveal', 'wheel', 'prize', 'done'];
+  const SCREENS = ['cover', 'brief', 'board', 'reveal', 'wheel', 'prize', 'done'];
   let current = 'brief';
   function show(name) {
     SCREENS.forEach((n) => { $('#scr-' + n).hidden = n !== name; });
@@ -949,6 +1061,19 @@
     }).join('');
   }
 
+  const legendHTML = () => TYPES.map((t, i) => `<div class="t${i}"><span class="gicon">${ICON[i]}</span><span class="nm">${t.name}</span><span class="hint">${t.hint}</span></div>`).join('');
+
+  function renderCover() {
+    $('#cover-no').textContent = 'Проект ' + OBJECT.no + ' · неделя 1 из ' + OBJECTS.length;
+    $('#cover-name').textContent = OBJECT.name;
+    $('#cover-quote').textContent = OBJECT.quote;
+    $('#cover-client').textContent = OBJECT.client;
+    $('#cover-area').textContent = OBJECT.area;
+    $('#cover-brief').textContent = OBJECT.brief;
+    $('#cover-legend').innerHTML = legendHTML();
+  }
+  $('#btn-take').onclick = () => { S.coverSeen = true; save(); show('brief'); renderBrief(); };
+
   function renderBrief() {
     if (S.stage > 7) { renderDone(); show('done'); return; }
     const st = STAGES[S.stage - 1];
@@ -966,26 +1091,33 @@
     drawTo($('#brief-canvas'), shown);
     $('#brief-layers').textContent = 'Проявлено ' + shown + ' из 7';
     $('#brief-field').textContent = 'Поле дня одинаковое у всех, кто сегодня на этой стадии · ' + fmt(S.cal);
+    $('#brief-legend').innerHTML = legendHTML();
+    const pr = $('#btn-practice');
+    pr.hidden = false;
+    pr.textContent = S.practice.games ? `Черновой лист · сыграно ${S.practice.games}${S.practice.best ? ', лучший ' + S.practice.best : ''}` : 'Черновой лист · играть вне зачёта';
   }
 
   // ---------- поле ----------
   let game = null, B = null, els = {}, busy = false, sel = null, cursor = 24, kb = false, hintTimer = 0;
   const board = $('#board');
 
-  function startBoard() {
-    const st = STAGES[S.stage - 1];
-    game = createGame(seedFor(OBJECT.key, S.stage, iso(S.cal)));
-    B = { moves: MOVES_PER_STAGE, used: 0, extraUsed: false, col: [0, 0, 0, 0, 0], goals: st.goals, over: false };
+  function startBoard(practice) {
+    const st = STAGES[Math.min(S.stage, 7) - 1];
+    game = createGame(practice ? 'draft|' + Date.now() + '|' + Math.random() : seedFor(OBJECT.key, S.stage, iso(S.cal)));
+    B = { moves: MOVES_PER_STAGE, used: 0, extraUsed: false, col: [0, 0, 0, 0, 0], goals: st.goals, over: false, practice: !!practice };
+    $('#practice-bar').hidden = !practice;
+    $('#practice-stat').textContent = S.practice.games ? 'сыграно ' + S.practice.games + (S.practice.best ? ' · лучший ' + S.practice.best : '') : 'первый';
     $('#stamp-object').textContent = OBJECT.name;
     $('#stamp-stage').textContent = st.name;
-    $('#stamp-sheet').textContent = S.stage + '/7';
+    $('#stamp-sheet').textContent = practice ? 'черн.' : S.stage + '/7';
     $('#sheet').hidden = true;
     $('#approved').classList.remove('on');
     $('#progress').innerHTML = st.goals.map(([t, n]) => `<div class="gp t${t}" data-t="${t}"><span class="gicon">${ICON[t]}</span><span class="bar"><i></i></span><span class="gp-val">0/${n}</span></div>`).join('');
     buildBoard(game.snapshot());
     busy = false; sel = null;
     updateHud();
-    say(HOST.boardStart);
+    say(practice ? 'Черновик. Считается только удовольствие.' : HOST.boardStart);
+    $('#sheet-btn2').hidden = true;
     show('board');
     armHint();
   }
@@ -1019,6 +1151,35 @@
   function clearSel() { if (sel !== null) { const el = elAt(sel); if (el) el.classList.remove('sel'); } sel = null; }
   function renderCursor() { board.querySelectorAll('.tile.cursor').forEach((e) => e.classList.remove('cursor')); if (kb && game && document.activeElement === board) { const el = elAt(cursor); if (el) el.classList.add('cursor'); } }
   function say(text) { $('#say').textContent = text; }
+  function showCombo(text) {
+    const c = $('#combo'); c.textContent = text;
+    c.classList.remove('on'); void c.offsetWidth; c.classList.add('on');
+    setTimeout(() => c.classList.remove('on'), 950);
+  }
+  // Собранные фишки улетают в свою цель — видно, что из них что-то складывается
+  function flyToGoal(cleared) {
+    if (reduce) return;
+    const targets = {};
+    B.goals.forEach(([t]) => { const el = $('#progress').querySelector('.gp[data-t="' + t + '"]'); if (el) { targets[t] = el.querySelector('.bar').getBoundingClientRect(); el.classList.add('bump'); setTimeout(() => el.classList.remove('bump'), 320); } });
+    let n = 0;
+    cleared.forEach((id) => {
+      const el = els[id]; if (!el || n >= 10) return;
+      const t = +(el.className.match(/t(\d)/) || [0, 0])[1];
+      const tg = targets[t]; if (!tg) return;
+      n++;
+      const r = el.getBoundingClientRect();
+      const par = document.createElement('div');
+      par.className = 'particle t' + t; par.innerHTML = ICON[t];
+      par.style.left = (r.left + r.width / 2 - 11) + 'px';
+      par.style.top = (r.top + r.height / 2 - 11) + 'px';
+      document.body.appendChild(par);
+      requestAnimationFrame(() => {
+        par.style.transform = 'translate(' + (tg.left + tg.width / 2 - r.left - r.width / 2) + 'px,' + (tg.top + tg.height / 2 - r.top - r.height / 2) + 'px) scale(0.4)';
+        par.style.opacity = '0';
+      });
+      setTimeout(() => par.remove(), 700);
+    });
+  }
 
   function updateHud() {
     $('#stamp-moves').textContent = B.moves;
@@ -1052,6 +1213,7 @@
     updateHud();
     for (const st of res.steps) {
       st.cleared.forEach((id) => els[id] && els[id].classList.add('pop'));
+      flyToGoal(st.cleared);
       st.counts.forEach((c, t) => { B.col[t] += c; });
       updateHud();
       await wait(200);
@@ -1061,6 +1223,7 @@
       st.snapshot.forEach((cell, i) => place(cell.id, i));
       await wait(290);
     }
+    if (res.steps.length >= 2) showCombo('×' + res.steps.length + ' каскад');
     if (res.steps.length >= 3) say(HOST.cascade[B.used % HOST.cascade.length]);
     if (res.reshuffled) {
       say('Ходов на поле не осталось — перемешал.');
@@ -1075,6 +1238,7 @@
 
   function outOfMoves() {
     B.over = true; clearHint();
+    if (B.practice) return practiceResult(true);
     const missing = B.goals.filter(([t, n]) => B.col[t] < n).map(([t, n]) => TYPES[t].name.toLowerCase() + ' ×' + (n - B.col[t])).join(', ');
     $('#sheet').hidden = false;
     if (!B.extraUsed) {
@@ -1089,7 +1253,28 @@
     $('#sheet-btn').focus();
   }
 
+  // Черновой лист: сколько угодно партий вне зачёта — чтобы было где позалипать
+  function practiceResult(failed) {
+    B.over = true; busy = true; clearHint();
+    S.practice.games += 1;
+    if (!failed && B.used > 0 && (!S.practice.best || B.used < S.practice.best)) S.practice.best = B.used;
+    save();
+    $('#sheet').hidden = false;
+    $('#sheet-text').textContent = failed
+      ? 'Ходы кончились. Черновик в зачёт не идёт — это тренировка, попробуйте ещё.'
+      : 'Черновик собран за ' + B.used + ' ' + plural(B.used, 'ход', 'хода', 'ходов') + '. Лучший результат: ' + S.practice.best + '. В зачёт не идёт.';
+    $('#sheet-btn').textContent = 'Ещё черновик';
+    $('#sheet-btn').onclick = () => { $('#sheet').hidden = true; $('#sheet-btn2').hidden = true; startBoard(true); };
+    const back = $('#sheet-btn2');
+    back.hidden = false;
+    back.textContent = 'Вернуться к проекту';
+    back.onclick = () => { $('#sheet').hidden = true; back.hidden = true; show('brief'); renderBrief(); };
+    $('#sheet-btn').focus();
+    busy = false;
+  }
+
   async function win(remarks) {
+    if (B.practice) return practiceResult(false);
     B.over = true; busy = true; clearHint();
     $('#approved span').textContent = remarks ? 'С замечаниями' : 'Принято';
     $('#approved').classList.add('on');
@@ -1246,6 +1431,8 @@
       ? `<p>Завтра: <b>${nx.name}</b> — ${goalText(nx.goals)}. Отличник пришлёт ТЗ утром.</p><button class="btn btn-secondary btn-block" id="btn-next" type="button">Следующий день</button>`
       : `<p><b>Все семь листов сданы.</b> Рендер открыт целиком.</p><button class="btn btn-primary btn-block" id="btn-next" type="button">Смотреть проект целиком</button>`;
     $('#btn-next').onclick = nextDay;
+    if (nx) $('#next').insertAdjacentHTML('beforeend', '<button class="btn btn-ghost btn-block" id="btn-practice2" type="button">Черновой лист · играть вне зачёта</button><p class="fine">Черновик не тратит ходы стадии и не даёт наград — просто поиграть.</p>');
+    const p2 = $('#btn-practice2'); if (p2) p2.onclick = () => startBoard(true);
     show('prize');
   }
 
@@ -1263,45 +1450,54 @@
 
   $('#btn-play').onclick = () => {
     if (S.done[S.stage]) { if (!S.spun[S.stage]) openWheel(); else nextDay(); }
-    else startBoard();
+    else startBoard(false);
   };
+  $('#btn-practice').onclick = () => startBoard(true);
 
   // ---------- заметки для сторон ----------
   const D = (id, isNew) => `<span class="dec${isNew ? ' new' : ''}">${id}</span>`;
   const NOTES = {
-    brief: { step: 0, title: 'Утро: техзадание дня', items: [
+    cover: { step: 0, title: 'Титульный лист: заказ на неделю', items: [
+      `Сюжетная рамка: бюро получило объект, у заказчика есть имя, площадь, требования и фраза, которую он повторяет. Дальше семь дней — семь листов. ${D('Р20', true)}`,
+      `Здесь же легенда: что означают пять фишек. По фидбеку Андрея — иконки сами по себе не читались.`,
+      `Экран показывается один раз на объект. Повторно — кнопка «Показать титульный лист» в режиме показа.`,
+    ] },
+    brief: { step: 1, title: 'Утро: техзадание дня', items: [
       `Ведёт игру <b>Отличник</b>: выдаёт ТЗ, хвалит, ворчит за прогул. Пока черновик — зависит от иерархии брендов.`,
       `<b>Неделя личная</b>: день 1 — день первого входа. Эфир 23.09 выпадает на среду. При неделе «ПН–ВС» зрители эфира начали бы с «Разрезов» и не увидели бы рендер целиком. ${D('Р13', true)}`,
       `<b>Отсрочки</b>: две на проект. Прогул списывает одну, третий срывает проект. Попробуйте «Прогулять день» в режиме показа.`,
       `В бою это же сообщение утром присылает бот, не больше двух напоминаний в день.`,
     ] },
-    board: { step: 1, title: 'Поле 7 × 7: пять элементов, 25 ходов', items: [
+    board: { step: 2, title: 'Поле 7 × 7: пять элементов, 30 ходов', items: [
       `Стартовое поле строится из объекта, стадии и даты. У всех, кто сегодня на этой стадии, оно одинаковое, поэтому результаты можно сравнивать. Сервер переигрывает лог ходов и так проверяет сдачу.`,
       `Обмен без совпадения ход не тратит. Спецэлементов, бустеров и жизней нет — как в концепте.`,
-      `<b>Цели подняты против примера из концепта</b>: «12 объёмов и 8 линий» случайные ходы собирают примерно за 11 ходов. Новые цели проверены симуляцией — таблица в docs/02-GDD.md. ${D('Р14', true)}`,
+      `<b>Партия стала длиннее по фидбеку Андрея</b>: 30 ходов вместо 25, цели от 20/14 до 28/22. Обычный игрок сдаёт лист за 16–22 хода вместо 12–17. Проверено симуляцией на 1200 партий. ${D('Р14', true)}`,
+      `<b>Черновой лист</b> — партии вне зачёта, сколько угодно подряд, со счётчиком и личным рекордом. Так есть где позалипать, но дневная стадия остаётся одна. ${D('Р19', true)}`,
+      `Собранные фишки улетают в свою цель, каскады подписаны — видно, что из фишек что-то складывается.`,
       `Кончились ходы — один раз даётся «доработка» (+5), затем сдача «с замечаниями». Стадия не барьер: до рулетки доходят все. ${D('Р15', true)}`,
     ] },
-    reveal: { step: 2, title: 'Сдача: проявляется слой визуализации', items: [
+    reveal: { step: 3, title: 'Сдача: проявляется слой визуализации', items: [
       `Семь слоёв: генплан → планы → разрезы → фасады → материалы → свет → финальный кадр.`,
+      `Сдача идёт в два такта: сначала слой <b>вычерчивается линиями</b>, потом заливается. Это ответ на «хочется, чтобы объект собирался, а не просто появлялся».`,
       `Здесь <b>рисунок-заглушка</b>. В бою студия даёт один финальный рендер на объект (по желанию ещё вайрфрейм), а слои открываются на клиенте масками и фильтрами. Генерации в рантайме нет. ${D('Р7')} ${D('Р8')}`,
     ] },
-    wheel: { step: 3, title: 'Архитектурная рулетка', items: [
+    wheel: { step: 4, title: 'Архитектурная рулетка', items: [
       `12 секторов: 8 промптов, 3 скидки, 1 приз студии. Проигрышных нет.`,
       `<b>Круг показывает призы, но не шансы.</b> Результат выбирает сервер с учётом остатков. При честной 1/12 восемь призов студии разошлись бы в первый же вечер. ${D('Р5')} ${D('Р16', true)}`,
       `До 3-го дня секторы скидки закрыты штриховкой. Проверить разные призы можно через «Следующий спин».`,
     ] },
-    prize: { step: 4, title: 'Приз и карточка дня', items: [
+    prize: { step: 5, title: 'Приз и карточка дня', items: [
       `Промпт выдаётся без условий. Скидка — после подписки на канал школы; чтобы проверять подписку, бот должен быть админом канала. ${D('Р11')}`,
       `Код уникальный, один на Telegram-аккаунт, из пула 150 кодов GetCourse. Срок — до старта интенсива. ${D('Р1')} ${D('Р2')} ${D('Р3')}`,
       `Карточка дня без спойлеров: объект, стадия, ходы. В Telegram она уходит в чат нативным окном выбора.`,
       `Розыгрыш призов — рекламная акция. Правила (организатор, призы, сроки) нужно опубликовать до запуска. ${D('Р17', true)}`,
     ] },
-    done: { step: 4, title: 'Последний день проекта', items: [
+    done: { step: 5, title: 'Последний день проекта', items: [
       `Рендер открыт целиком. Следующая неделя — новый объект. К запуску нужно 4 объекта. ${D('Р8')}`,
       `Проверить удержание: сколько игроков дошло до 3-го и 7-го дня, сколько кодов дожило до оплаты. ${D('Р4')}`,
     ] },
   };
-  const STEP_NAMES = ['ТЗ', 'Поле', 'Сдача', 'Рулетка', 'Приз'];
+  const STEP_NAMES = ['Задание', 'ТЗ', 'Поле', 'Сдача', 'Рулетка', 'Приз'];
   function renderNotes() {
     const n = NOTES[current];
     $('#steps').innerHTML = STEP_NAMES.map((s, i) => `<span class="${i === n.step ? 'on' : ''}">${s}</span>`).join('');
@@ -1309,13 +1505,15 @@
   }
 
   // ---------- режим показа ----------
+  $('#demo-cover').onclick = () => { renderCover(); show('cover'); };
   $('#demo-win').onclick = () => {
+    if (B && B.practice && current === 'board') { B.goals.forEach(([t, n]) => { B.col[t] = Math.max(B.col[t], n); }); B.used = Math.max(B.used, 18); updateHud(); return win(false); }
     if (S.stage > 7) return toast('Неделя уже сдана. Сбросьте прототип.');
     if (S.done[S.stage]) return toast('Эта стадия уже сдана. Дальше — рулетка или следующий день.');
-    if (current !== 'board') startBoard();
+    if (current !== 'board' || (B && B.practice)) startBoard(false);
     if (busy) return;
     B.goals.forEach(([t, n]) => { B.col[t] = Math.max(B.col[t], n); });
-    B.used = Math.max(B.used, 14);
+    B.used = Math.max(B.used, 18);
     updateHud(); win(false);
   };
   $('#demo-skip').onclick = () => {
@@ -1336,8 +1534,8 @@
 
   // ---------- старт ----------
   $('#demo-day').value = String(Math.min(7, S.stage));
-  show('brief');
-  renderBrief();
+  renderCover();
+  if (S.coverSeen) { show('brief'); renderBrief(); } else { show('cover'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (current === 'brief') renderBrief(); });
 })();
 </script>
