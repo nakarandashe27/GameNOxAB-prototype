@@ -16,6 +16,7 @@
 | [04-decisions.md](04-decisions.md) | Реестр решений Р1–Р20: кто утверждает, что блокирует |
 | [05-plan.md](05-plan.md) | План до эфира, скоуп MVP, как провести показ прототипа сторонам |
 | [06-feedback-andrey.md](06-feedback-andrey.md) | Комментарии Андрея по прототипу и что по ним сделано |
+| [07-handoff.md](07-handoff.md) | **Передача работы другому агенту или разработчику** — читать первым |
 | [../prototype/dist/soberi-proekt.html](../prototype/dist/soberi-proekt.html) | **Прототип одним файлом** — его и пересылать сторонам |
 | [../prototype/index.html](../prototype/index.html) + `core.js` | Исходники прототипа; после правок: `node tools/build-prototype.js` |
 | [../tools/balance-sim.js](../tools/balance-sim.js) | Симуляция баланса: `node tools/balance-sim.js 1500` |
