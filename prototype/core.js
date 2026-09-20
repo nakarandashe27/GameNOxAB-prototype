@@ -235,5 +235,28 @@
     return goals.every(([t, n]) => collected[t] >= n);
   }
 
-  return { SIZE, TYPES, T, STAGES, OBJECTS, MOVES_PER_STAGE, EXTRA_MOVES, hashStr, makeRng, adjacent, findMatches, createGame, seedFor, goalsMet };
+  // Календарный день Москвы, независимо от часового пояса устройства.
+  function moscowDay(time = Date.now()) { return Math.floor((time + 3 * 3600000) / 86400000); }
+
+  // Чистый переход календаря. Невостребованная награда ждёт игрока.
+  function calendarStep(state, today) {
+    const s = JSON.parse(JSON.stringify(state));
+    const gap = Math.max(0, today - s.lastDay);
+    if (s.stage > 7 || !gap || (s.done[s.stage] && !s.spun[s.stage])) return s;
+    const completed = !!s.done[s.stage];
+    const missed = Math.max(0, gap - (completed ? 1 : 0));
+    if (completed && s.stage === 7) { s.stage = 8; s.lastDay = today; return s; }
+    s.delays -= missed;
+    if (s.delays < 0) {
+      s.stage = 1; s.done = {}; s.spun = {}; s.delays = 2; s.coverSeen = false;
+      s.note = 'Проект начат заново: две отсрочки закончились. Призы сохранены.';
+    } else {
+      if (completed) s.stage++;
+      if (missed) s.note = 'Пропущено дней: ' + missed + '. Осталось отсрочек: ' + s.delays + '.';
+    }
+    s.lastDay = today;
+    return s;
+  }
+
+  return { SIZE, TYPES, T, STAGES, OBJECTS, MOVES_PER_STAGE, EXTRA_MOVES, hashStr, makeRng, adjacent, findMatches, createGame, seedFor, goalsMet, moscowDay, calendarStep };
 });
