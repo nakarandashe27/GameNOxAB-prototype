@@ -642,6 +642,8 @@
   .screen > * { flex-shrink: 0; }
   .screen > .obj, .screen > .rv, .screen > .album, .screen > .duo, .screen > .archive { flex-shrink: 1; }
 </style>
+</head>
+<body>
 <div class="wrap">
   <main class="phone" id="phone" aria-label="Прототип мини-приложения">
     <div class="blobs" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
@@ -2244,8 +2246,20 @@
     if (current==='wheel' && $('#btn-spin').disabled && !S.prizes.some(p=>p.day===S.stage)) return;
     if (current==='wheel' && $('#btn-spin').textContent==='Крутится…') { toast('Награда уже сохранена. Дождитесь результата.'); return; }
     if (current==='board' && busy) return;
-    if (current==='board' && B && !B.over && !confirm('Вернуться на главную? Ходы этой партии не сохранятся.')) return;
-    if(B) B.over=true; clearHint(); showHome();
+    if (current==='board' && B && !B.over) { askLeave(); return; }
+    leaveToHome();
+  }
+  function leaveToHome() { if(B) B.over=true; clearHint(); showHome(); }
+  // Своё окно вместо confirm(): в артефакте и в Telegram системные окна могут блокироваться.
+  // Пока окно открыто, busy держит поле и повторное «назад».
+  function askLeave() {
+    busy=true; clearHint();
+    const stay=$('#sheet-btn'), leave=$('#sheet-btn2');
+    const close=()=>{ $('#sheet').hidden=true; leave.hidden=true; busy=false; };
+    $('#sheet-text').textContent='Вернуться на главную? Ходы этой партии не сохранятся.';
+    stay.textContent='Продолжить партию'; stay.onclick=()=>{ close(); armHint(); };
+    leave.textContent='На главную'; leave.hidden=false; leave.onclick=()=>{ close(); leaveToHome(); };
+    $('#sheet').hidden=false; stay.focus();
   }
   function renderProject() {
     syncCalendar(); const count = Object.keys(S.done).length;
