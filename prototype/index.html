@@ -219,6 +219,12 @@
 
   /* ---------- мой проект ---------- */
   .album { display: grid; gap: 10px; padding: 10px; }
+  .model-view { position: relative; flex: 1 1 160px; min-height: 110px; border-radius: 16px; overflow: hidden; background: var(--no-paper); }
+  .model-view canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .mv-tag { position: absolute; left: 10px; top: 10px; padding: 6px 11px 5px; border-radius: 999px; background: var(--no-ink); color: var(--lime); font: 700 11px/1 var(--f-neuro); }
+  button.sd { font: inherit; font-size: 10px; color: var(--faint); cursor: pointer; }
+  button.sd:disabled { cursor: default; }
+  .sd.sel { border-color: var(--lime); box-shadow: 0 0 0 1px var(--lime) inset; }
   .compare { position: relative; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: #1F1919; --split: 50%; touch-action: pan-y; }
   .compare canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
   .compare .trace { clip-path: inset(0 calc(100% - var(--split)) 0 0); }
@@ -396,7 +402,6 @@
   .prize { display: grid; gap: 10px; padding: 16px; }
   .prize h3 { font: 700 19px/1.25 var(--f-ui); text-wrap: balance; }
   .prize p { font-size: 14px; color: var(--dim); }
-  .prize.studio { border-color: rgba(245, 245, 240, 0.4); }
   .prize.super { border-color: var(--lime); background: linear-gradient(160deg, rgba(219, 252, 59, 0.16), rgba(255, 255, 255, 0.03) 60%); }
   .prize.school { border-color: rgba(247, 76, 46, 0.55); }
   .pfacts { display: grid; gap: 6px; margin: 0; padding-top: 8px; border-top: 1px solid var(--stroke); }
@@ -411,7 +416,6 @@
   .ptip { font-size: 12.5px; color: var(--dim); }
   .pdf-chip { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; align-items: center; padding: 10px; border-radius: 14px; background: rgba(245, 245, 240, 0.06); font-size: 13px; color: var(--dim); }
   .pdf-chip span { display: grid; place-items: center; height: 44px; border-radius: 10px; background: var(--no-paper); color: var(--no-ink); font: 700 12px/1 var(--f-neuro); }
-  .slot.k-studio .slot-ico { background: var(--no-paper); color: var(--no-ink); }
   .slot.model3d .slot-ico { background: var(--lime); color: var(--lime-ink); font-size: 11px; }
   .slot.model3d { border-color: var(--lime); }
   .slot.excursion .slot-ico { background: var(--ab-blue); color: #fff; }
@@ -589,7 +593,6 @@
   .slot-n { position: absolute; left: 12px; top: 9px; font: 700 13px/1 var(--f-display); color: var(--faint); }
   .slot-ico { position: absolute; right: 10px; top: 8px; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: var(--lime); color: var(--lime-ink); font: 700 15px/1 var(--f-ui); }
   .slot.discount .slot-ico { background: var(--ab-red); color: #fff; }
-  .slot.studio .slot-ico { background: linear-gradient(135deg, var(--ab-red), var(--ab-blue)); color: #fff; }
   .slot-t { font: 600 13px/1.2 var(--f-ui); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .slot small { font-size: 11px; color: var(--faint); }
   .slot:not(.locked) small { color: var(--lime); }
@@ -685,7 +688,7 @@
   @media (max-height: 640px) { .prize .fine { display: none; } pre.prompt { font-size: 11px; line-height: 1.4; padding: 8px 10px; } .prize h3 { font-size: 16px; } .prize { gap: 6px; } }
   .obj, .rv { flex-direction: column; overflow: hidden; }
   .obj canvas, .rv canvas { flex: 1 1 0; height: 0; min-height: 0; }
-  .album, .compare { overflow: hidden; }
+  .album, .compare, .model-view { overflow: hidden; }
   .obj { min-height: 64px; } .rv { min-height: 90px; } .compare { min-height: 84px; }
   .screen > * { flex-shrink: 0; }
   .screen > .obj, .screen > .rv, .screen > .album, .screen > .duo, .screen > .archive { flex-shrink: 1; }
@@ -798,7 +801,7 @@
         <p class="hero-sub">Дом в соснах</p>
       </div>
       <div class="album glass">
-        <div class="compare" id="project-compare"><canvas id="project-render" aria-hidden="true"></canvas><canvas class="trace" id="project-trace" aria-hidden="true"></canvas><div class="compare-tags" aria-hidden="true"><span>Эскиз</span><span>Результат</span></div><div class="compare-line" aria-hidden="true"></div><input id="compare-range" type="range" min="0" max="100" value="50" aria-label="Сдвиньте кальку: от эскиза к результату"></div>
+        <div class="model-view" id="project-model"><canvas id="project-3d" role="img" aria-label="3D-модель дома"></canvas><span class="mv-tag" id="project-tag"></span></div>
         <div class="stage-dots" id="stage-dots"></div>
       </div>
       <div class="status-card glass"><span class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></span><div><b class="t" id="album-title">Проект в работе</b><p><b id="album-count">0</b>/7 этапов · <span id="album-prizes">0 призов</span></p></div></div>
@@ -959,7 +962,7 @@
       <p class="fine">Вы сдали уровень и заработали 1 вращение. Проигрышных секторов нет.</p>
       <div class="wheel-wrap">
         <svg class="wheel-pointer" viewBox="0 0 22 26" aria-hidden="true"><path d="M1 1h20L11 25z" fill="#DBFC3B" stroke="#161010" stroke-width="2" stroke-linejoin="round"/></svg>
-        <svg class="wheel" id="wheel" viewBox="0 0 200 200" role="img" aria-label="Рулетка: 3D-модель, 3 приза студии, 3 скидки, экскурсия, 4 материала"></svg>
+        <svg class="wheel" id="wheel" viewBox="0 0 200 200" role="img" aria-label="Рулетка: узкий сектор суперприза 3D-модели, 3 скидки, экскурсия, 7 секторов материалов"></svg>
       </div>
       <div class="legend" id="legend"></div>
       <button class="btn btn-primary btn-block" id="btn-spin" type="button">Крутить</button>
@@ -1011,7 +1014,7 @@
       <h2>Правки по комментариям Андрея</h2>
       <ul>
         <li><b>Сделано:</b> партия длиннее (30 ходов, цели выше); черновой лист для бесконечной игры; титульный лист с заказчиком и сюжетом; легенда фишек; фишки улетают в цель и каскады подписаны; слой вычерчивается, а потом заливается; демо-кнопки названы демо-кнопками.</li>
-        <li><b>Согласовано 28.10:</b> призы студии и 20 промптов <span class="dec">Р5</span> <span class="dec">Р6</span> — во вращении рулетки и в «Моих призах».</li>
+        <li><b>Согласовано 28.10:</b> суперприз студии (3D-модель) и 20 промптов <span class="dec">Р5</span> <span class="dec">Р6</span> — во вращении рулетки и в «Моих призах».</li>
         <li><b>Важно:</b> «5–6 нажатий и выиграл» — это была демо-кнопка, она сдавала лист без игры. Теперь подписана явно.</li>
       </ul>
     </div>
@@ -1027,7 +1030,7 @@
         </label>
         <label for="demo-spin">Демо: следующий спин
           <select id="demo-spin">
-            <option value="auto">Как решит сервер</option><option value="material">Материал</option><option value="discount">Скидка 10%</option><option value="excursion">Экскурсия</option><option value="improve">Улучшение визуализаций</option><option value="renders5">5 визуализаций</option><option value="model3d">3D-модель</option>
+            <option value="auto">Как решит сервер</option><option value="material">Материал</option><option value="discount">Скидка 10%</option><option value="excursion">Экскурсия</option><option value="model3d">3D-модель</option>
           </select>
         </label>
         <button class="btn btn-secondary btn-small" id="demo-cover" type="button">Показать титульный лист</button>
@@ -1103,16 +1106,12 @@
   const PRIZES = {
     model3d: { kind: 'studio', label: '3D-МОДЕЛЬ', ico: '3D', title: 'Интерактивная 3D-модель вашего проекта', eyebrow: 'Суперприз студии «Нейро Отличник»',
       text: 'Веб-модель по ссылке: её можно крутить, показывать на защите и вставить в портфолио.', facts: [['От вас', 'модель одного объекта: IFC, RVT, PLN, SKP или FBX/OBJ'], ['Срок', '2–3 недели']] },
-    renders5: { kind: 'studio', label: '5 РЕНДЕРОВ', ico: '★', title: '5 визуализаций для вашего проекта', eyebrow: 'Приз студии «Нейро Отличник»',
-      text: 'Серия по чек-листу: общий вид, фасад, деталь, интерьер и вечерний кадр.', facts: [['От вас', 'модель или скриншоты 5 ракурсов + референсы'], ['Срок', '7–10 дней']] },
-    improve: { kind: 'studio', label: 'УЛУЧШЕНИЕ', ico: '★', title: 'Улучшение ваших визуализаций', eyebrow: 'Приз студии «Нейро Отличник»',
-      text: 'До трёх ваших рендеров студия доведёт «Нейро Отличным методом»: свет, материалы, детали.', facts: [['От вас', 'рендеры от 1920 px + скриншот модели'], ['Срок', '3–5 дней']] },
     excursion: { kind: 'school', label: 'ЭКСКУРСИЯ', ico: '⌂', title: 'Место на экскурсии в архбюро', eyebrow: 'Приз школы АРТ.БРОДСКИЙ',
       text: 'Экскурсия в архитектурное бюро в составе группы школы.', facts: [['Как попасть', 'школа напишет, когда соберётся группа']] },
     discount: { kind: 'school', label: '−10%', ico: '%', title: 'Скидка 10% на любой курс', eyebrow: 'Приз школы АРТ.БРОДСКИЙ' },
     material: { kind: 'material', label: 'МАТЕРИАЛЫ', ico: '✦' },
   };
-  const STOCK = { model3d: 2, renders5: 3, improve: 5, excursion: 10 };
+  const STOCK = { model3d: 2, excursion: 10 };
   const MATERIALS = [
     { key: 'checklist', from: 'Материал студии', title: 'Чек-лист визуализации', text: 'Чертёжный лист A4 на 8 листов: шесть шагов от сцены до серии кадров, на рендерах студии. Галочки кликаются.' },
     { key: 'improve10', from: 'Материал студии · 10 промптов', title: '10 промптов: улучшение визуализаций', set: 'improve' },
@@ -1750,29 +1749,31 @@
   $('#btn-to-wheel').onclick = () => { if (S.spun[S.stage]) { const last = S.prizes[S.prizes.length - 1]; if (last) openPrize(last); else nextDay(); } else openWheel(); };
 
   // ---------- рулетка ----------
-  const SECTORS = ['model3d', 'discount', 'material', 'improve', 'excursion', 'material', 'discount', 'renders5', 'material', 'improve', 'discount', 'material'];
+  // Сектор 3D-модели узкий — видно, что это редкий и ценный приз. Остальные 11 делят круг поровну.
+  const SECTORS = ['model3d', 'material', 'discount', 'material', 'excursion', 'material', 'discount', 'material', 'material', 'discount', 'material', 'material'];
+  const SUPER_SPAN = 12, SPANS = SECTORS.map((t) => (t === 'model3d' ? SUPER_SPAN : (360 - SUPER_SPAN) / (SECTORS.length - 1)));
+  const CENTERS = SPANS.map((sp, k) => SPANS.slice(0, k).reduce((a, b) => a + b, 0) - SPANS[0] / 2 + sp / 2);   // сектор 0 — по центру под стрелкой
   let wheelRot = 0;
   function buildWheel() {
     const locked = S.stage < 3;
     const pt = (deg, rad) => { const a = (deg * Math.PI) / 180; return [100 + rad * Math.sin(a), 100 - rad * Math.cos(a)]; };
     let html = '<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#211B1B"/><path d="M0 0v6" stroke="#3D3333" stroke-width="2"/></pattern></defs>';
     SECTORS.forEach((type, k) => {
-      const [x0, y0] = pt(k * 30, 97), [x1, y1] = pt((k + 1) * 30, 97);
+      // сектор k стоит по центру под стрелкой, когда колесо повёрнуто на −CENTERS[k]
+      const [x0, y0] = pt(CENTERS[k] - SPANS[k] / 2, 97), [x1, y1] = pt(CENTERS[k] + SPANS[k] / 2, 97);
       let fill, ink, label = PRIZES[type].label;
       if (type === 'model3d') { fill = '#DBFC3B'; ink = '#2A2A2A'; }
-      else if (PRIZES[type].kind === 'studio') { fill = '#F5F5F0'; ink = '#2A2A2A'; }
       else if (type === 'discount') { fill = locked ? 'url(#hatch)' : '#F74C2E'; ink = locked ? 'rgba(255,255,255,.55)' : '#FFFFFF'; if (locked) label = 'С 3 ДНЯ'; }
       else if (type === 'excursion') { fill = '#4D61F4'; ink = '#FFFFFF'; }
       else { fill = k % 2 ? '#221C1C' : '#2E2626'; ink = '#FFFFFF'; }
       html += `<path d="M100 100 L${x0.toFixed(2)} ${y0.toFixed(2)} A97 97 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z" fill="${fill}" stroke="#161010" stroke-width="1.2"/>`;
-      // подпись идёт по радиусу от ступицы к краю: место — 56 единиц; длинную ужимаем, чтобы она целиком влезла в сектор
-      const fs = Math.min(9.5, (56 - 0.5 * (label.length - 1)) / (0.74 * label.length)).toFixed(2);
-      html += `<g transform="rotate(${k * 30 + 15} 100 100)"><text x="100" y="58" transform="rotate(-90 100 58)" fill="${ink}" font-family="Inter Tight, sans-serif" font-size="${fs}" font-weight="600" text-anchor="middle" dominant-baseline="middle" letter-spacing="0.5">${label}</text></g>`;
+      // все подписи одного кегля и выровнены по внешнему краю: читаются от центра к ободу, самая длинная (10 знаков) влезает до ступицы
+      html += `<g transform="rotate(${CENTERS[k]} 100 100)"><text x="100" y="13" transform="rotate(-90 100 13)" fill="${ink}" font-family="Inter Tight, sans-serif" font-size="${type === 'model3d' ? 6.4 : 7.4}" font-weight="${type === 'model3d' ? 700 : 600}" text-anchor="end" dominant-baseline="middle" letter-spacing="0.4">${label}</text></g>`;
     });
-    html += '<circle cx="100" cy="100" r="99" fill="none" stroke="#DBFC3B" stroke-opacity="0.5" stroke-width="1"/><circle cx="100" cy="100" r="17" fill="#161010" stroke="#DBFC3B" stroke-opacity="0.5"/><text x="100" y="101" fill="#F5F5F0" font-family="Unbounded, Arial" font-size="7" font-weight="700" text-anchor="middle" dominant-baseline="middle">А×Н</text>';
+    html += '<circle cx="100" cy="100" r="99" fill="none" stroke="#DBFC3B" stroke-opacity="0.5" stroke-width="1"/><circle cx="100" cy="100" r="19" fill="#161010" stroke="#DBFC3B" stroke-width="1.2"/><text x="100" y="101" fill="#F5F5F0" font-family="Unbounded, Arial" font-size="7.5" font-weight="700" text-anchor="middle" dominant-baseline="middle">А×Н</text>';
     $('#wheel').innerHTML = html;
-    $('#legend').innerHTML = '<span><i style="background:#DBFC3B"></i>3D-модель · на 7-м листе</span><span><i style="background:#F5F5F0"></i>Студия · 3</span>'
-      + '<span><i style="background:' + (locked ? '#3D3333' : '#F74C2E') + '"></i>Скидка 10% · 3' + (locked ? ' · с 3-го дня' : '') + '</span><span><i style="background:#4D61F4"></i>Экскурсия · 1</span><span><i style="background:#2E2626"></i>Материалы · 4</span>';
+    $('#legend').innerHTML = '<span><i style="background:#DBFC3B"></i>Суперприз студии: 3D-модель · только на 7-м листе</span>'
+      + '<span><i style="background:' + (locked ? '#3D3333' : '#F74C2E') + '"></i>Скидка 10% · 3' + (locked ? ' · с 3-го дня' : '') + '</span><span><i style="background:#4D61F4"></i>Экскурсия · 1</span><span><i style="background:#2E2626"></i>Материалы · 7</span>';
   }
   function openWheel() {
     buildWheel();
@@ -1784,13 +1785,10 @@
   function pickOutcome() {
     const forced = $('#demo-spin').value;
     if (forced !== 'auto') { $('#demo-spin').value = 'auto'; if (forced === 'discount' && S.stage < 3) toast('Скидка до 3-го дня закрыта — показываю, как выглядит приз.'); return forced; }
-    // один приз студии на аккаунт; 3D-модель — только на 7-м листе, среди собравших проект целиком
-    const studioWon = S.prizes.some((p) => PRIZES[p.type] && PRIZES[p.type].kind === 'studio');
+    // 3D-модель — дорогая работа студии: 1 % и только на 7-м листе, среди собравших проект целиком
     const left = (t) => S.stock[t] > 0 && !S.prizes.some((p) => p.type === t);
     const w = [
-      ['model3d', !studioWon && S.stage === 7 && left('model3d') ? 0.08 : 0],
-      ['renders5', !studioWon && left('renders5') ? 0.01 : 0],
-      ['improve', !studioWon && left('improve') ? 0.03 : 0],
+      ['model3d', S.stage === 7 && left('model3d') ? 0.01 : 0],
       ['excursion', left('excursion') ? 0.03 : 0],
       ['discount', S.stage >= 3 && !S.code ? 0.2 : 0],
     ];
@@ -1804,7 +1802,8 @@
     const cands = SECTORS.map((t, k) => (t === out ? k : -1)).filter((k) => k >= 0);
     const k = cands[Math.floor(Math.random() * cands.length)];
     const base = wheelRot - (wheelRot % 360);
-    let final = base + 360 * 5 + (((-(k * 30 + 15)) % 360) + 360) % 360 + (Math.random() * 14 - 7);
+    const jitter = SPANS[k] / 2 - 3;   // стрелка остаётся внутри сектора, даже узкого
+    let final = base + 360 * 5 + (((-CENTERS[k]) % 360) + 360) % 360 + (Math.random() * 2 - 1) * jitter;
     if (final <= wheelRot) final += 360;
     wheelRot = final;
     $('#wheel').style.transform = `rotate(${final}deg)`;
@@ -1948,8 +1947,8 @@
       `Дом — простая 3D-модель от студии «Нейро Отличник» (three.js). Рисуется прямо в игре, без картинок и генераций, — зацепка студии: «так мы собираем ваш проект в 3D». ${D('Р7')} ${D('Р8')}`,
     ] },
     wheel: { step: 4, title: 'Архитектурная рулетка', items: [
-      `12 секторов: 3D-модель (суперприз), 3 приза студии, 3 скидки 10%, экскурсия и 4 сектора материалов. Проигрышных нет.`,
-      `<b>Круг показывает призы, но не шансы.</b> Результат выбирает сервер с учётом остатков. Один приз студии на аккаунт, 3D-модель — только на 7-м листе. Остатки: 3D-модель 2, 5 визуализаций 3, улучшение 5, экскурсия 10. ${D('Р5')} ${D('Р16', true)}`,
+      `12 секторов: узкий сектор суперприза — 3D-модель от студии, 3 скидки 10%, экскурсия и 7 секторов материалов. Проигрышных нет.`,
+      `<b>Круг показывает призы, но не шансы.</b> Результат выбирает сервер с учётом остатков. 3D-модель — 1 % и только на 7-м листе, всего 2 на сезон: это дорогая работа студии. Экскурсия — пока есть 10 мест. ${D('Р5')} ${D('Р16', true)}`,
       `До 3-го дня секторы скидки закрыты штриховкой. Проверить разные призы можно через «Следующий спин».`,
     ] },
     prize: { step: 5, title: 'Приз и карточка дня', items: [
@@ -2139,13 +2138,22 @@
     leave.textContent='На главную'; leave.hidden=false; leave.onclick=()=>{ close(); leaveToHome(); };
     $('#sheet').hidden=false; stay.focus();
   }
+  // «Мой проект»: в центре живая 3D-модель — дом достроен ровно настолько, сколько листов сдано.
+  function projectModel(L, build) {
+    $('#project-tag').textContent = L ? STAGES[L - 1].name + ' · ' + L + ' из 7' : 'Участок ждёт первого листа';
+    $('#project-3d').setAttribute('aria-label', '3D-модель дома: построено ' + L + ' из 7 слоёв');
+    $('#stage-dots').querySelectorAll('.sd').forEach((b) => b.classList.toggle('sel', Number(b.dataset.day) === L));
+    if (window.House3D && House3D.ok) live3d($('#project-3d'), L, build, 'project'); else drawTo($('#project-3d'), L);
+  }
   function renderProject() {
     syncCalendar(); const count = Object.keys(S.done).length;
     $('#project-progress').textContent = count === 7 ? 'Все семь листов собраны — проект готов к подаче.' : S.done[S.stage] ? 'Следующий лист откроется завтра в 00:00 МСК.' : 'Соберите сегодняшний лист, чтобы продвинуть проект.';
     $('#album-title').textContent = count === 7 ? 'Проект собран' : 'Проект в работе';
     $('#album-count').textContent = count;
     $('#album-prizes').textContent = S.prizes.length + ' ' + plural(S.prizes.length, 'приз', 'приза', 'призов');
-    $('#stage-dots').innerHTML = STAGES.map((st) => '<span class="sd' + (S.done[st.day] ? ' on' : st.day === S.stage ? ' now' : '') + '" title="' + st.name + '"><i>' + (S.done[st.day] ? '✓' : st.day) + '</i>' + st.code + '</span>').join('');
+    // кнопки стадий: сданный слой можно пересобрать на модели
+    $('#stage-dots').innerHTML = STAGES.map((st) => '<button type="button" class="sd' + (S.done[st.day] ? ' on' : st.day === S.stage ? ' now' : '') + '" data-day="' + st.day + '"' + (S.done[st.day] ? '' : ' disabled') + ' aria-label="' + st.name + (S.done[st.day] ? ': показать слой на модели' : ': ещё не сдан') + '"><i>' + (S.done[st.day] ? '✓' : st.day) + '</i>' + st.code + '</button>').join('');
+    $('#stage-dots').querySelectorAll('button[data-day]').forEach((b) => b.onclick = () => projectModel(Number(b.dataset.day), true));
     $('#project-open').textContent = S.stage > 7 ? 'Смотреть проект' : S.done[S.stage] ? 'Открыть сданный лист' : 'Продолжить проект';
   }
   function renderLevels() {
@@ -2251,14 +2259,10 @@
     if (current === 'home') { drawPanel($('#home-render'), 7); drawPanel($('#home-trace'), 2); }
     else if (current === 'welcome') { drawPanel($('#welcome-sketch'), 2); drawPanel($('#welcome-render'), 7); }
     else if (current === 'how') { drawPanel($('#how-sketch'), 2); drawPanel($('#how-render'), 7); }
-    else if (current === 'project') { drawPanel($('#project-render'), 7); drawPanel($('#project-trace'), 2); }
+    else if (current === 'project') projectModel(Object.keys(S.done).length, false);
     else if (current === 'levels') $('#project-route').querySelectorAll('canvas').forEach((cv) => drawPanel(cv, Number(cv.dataset.panel)));
     else if (current === 'profile') drawPanel($('#pf-canvas'), Math.max(0, Math.min(6, Object.keys(S.done).length - 1)));
   }
-  $('#compare-range').oninput=e=>{
-    $('#project-compare').style.setProperty('--split',e.target.value+'%');
-    e.target.setAttribute('aria-valuetext',e.target.value+'% чертежа');
-  };
   let tryTiles=[3,0,3,4,3,1,2,0,4],trySelected=null,tryDone=false;
   function renderTryGrid(focusIndex){
     $('#try-grid').innerHTML=tryTiles.map((t,i)=>'<button type="button" data-cell="'+i+'" class="t'+t+(!tryDone&&(i===1||i===4)?' marked':'')+(trySelected===i?' picked':'')+(tryDone&&i<3?' matched':'')+'" aria-pressed="'+(trySelected===i)+'" aria-label="'+TYPES[t].name+', ряд '+(Math.floor(i/3)+1)+', столбец '+(i%3+1)+'">'+ICON[t]+'</button>').join('');

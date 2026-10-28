@@ -235,15 +235,16 @@
       if (it.edges) { it.edges.visible = true; it.edges.material.opacity = (R ? 0.18 : 0.9) * fade; }
     });
   }
-  function aim(theta, close, R) {
-    const r = close ? 28 : R ? 36 : 40, h = close ? 7 : R ? 10 : 18;   // в рендере камера ниже — в кадре горизонт и небо
+  function aim(theta, close, R, aspect) {
+    const k = aspect > 1.15 ? 0.74 : 1;   // в широкой карточке камера ближе: вертикальный угол обзора тот же, а места по бокам больше
+    const r = (close ? 28 : R ? 36 : 40) * k, h = (close ? 7 : R ? 10 : 18) * k;   // в рендере камера ниже — в кадре горизонт и небо
     camera.position.set(Math.sin(theta) * r, h, Math.cos(theta) * r);
     camera.lookAt(close ? 1 : 0.5, close ? 3.4 : 3.6, 0.5);
   }
   function snap(w, h, L, t, mode, theta, close) {
     const rd = getRenderer(); rd.setPixelRatio(1); rd.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
-    pose(L, t, mode); aim(theta, close, mode === 'render'); rd.render(scene, camera); return rd.domElement;
+    pose(L, t, mode); aim(theta, close, mode === 'render', w / h); rd.render(scene, camera); return rd.domElement;
   }
   const BASE = 0.78;
 
