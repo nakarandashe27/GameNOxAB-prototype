@@ -236,7 +236,7 @@
     });
   }
   function aim(theta, close, R, aspect) {
-    const k = aspect > 1.15 ? 0.74 : 1;   // в широкой карточке камера ближе: вертикальный угол обзора тот же, а места по бокам больше
+    const k = aspect > 0.95 ? 0.68 : 1;   // в квадратной и широкой карточке камера ближе: места по бокам больше, дом крупнее
     const r = (close ? 28 : R ? 36 : 40) * k, h = (close ? 7 : R ? 10 : 18) * k;   // в рендере камера ниже — в кадре горизонт и небо
     camera.position.set(Math.sin(theta) * r, h, Math.cos(theta) * r);
     camera.lookAt(close ? 1 : 0.5, close ? 3.4 : 3.6, 0.5);
