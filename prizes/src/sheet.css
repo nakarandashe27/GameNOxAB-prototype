@@ -1,0 +1,48 @@
+/* Чек-лист — «чертёжный лист»: рамка с полем под подшивку, штамп в углу, оси-кружки вместо цифр,
+   лаймовый маркер вместо плашек. Отличается от наборов промптов: те — презентация и сторис. */
+.page { background: var(--paper); padding: 50px 48px 112px 100px; isolation: isolate; }
+.page::before { content: ""; position: absolute; left: 76px; top: 20px; right: 20px; bottom: 20px; border: 1.5px solid var(--ink); pointer-events: none; z-index: -1; }
+.page::after { content: ""; position: absolute; left: 76px; top: 20px; right: 20px; bottom: 20px; pointer-events: none;
+  background: linear-gradient(rgba(42, 42, 42, .045) 1px, transparent 1px) 0 0 / 24px 24px, linear-gradient(90deg, rgba(42, 42, 42, .045) 1px, transparent 1px) 0 0 / 24px 24px; z-index: -2; }
+.stamp { position: absolute; }
+
+/* штамп — как в основной надписи чертежа */
+.stamp { right: 20px; bottom: 20px; width: 360px; display: grid; grid-template-columns: 1.25fr 1.15fr 44px 50px; grid-template-rows: 26px 30px;
+  border-top: 1.5px solid var(--ink); border-left: 1.5px solid var(--ink); background: var(--paper); font: 600 8px/1 "Inter Tight", sans-serif; letter-spacing: .08em; text-transform: uppercase; color: var(--grey); }
+.stamp > div { display: flex; align-items: center; gap: 6px; padding: 0 8px; border-right: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+.stamp > div:nth-child(4n), .stamp .d1, .stamp .d2 { border-right: 0; }
+.stamp .a2, .stamp .d2 { border-bottom: 0; } .stamp .b2, .stamp .c2 { border-bottom: 0; }
+.stamp img { height: 9px; }
+.stamp .a1 { color: var(--ink); }
+.stamp .a2 { font: 700 11px/1 "Kica", sans-serif; letter-spacing: 0; text-transform: none; color: var(--ink); background: var(--lime); }
+.stamp .c2, .stamp .d2 { justify-content: center; font: 700 15px/1 "Kica", sans-serif; color: var(--ink); letter-spacing: 0; }
+.stamp .c1, .stamp .d1 { justify-content: center; }
+.stamp .b2 { align-items: flex-end; padding-bottom: 6px; }
+
+/* заголовок раздела: ось-кружок, как маркировка осей на плане */
+.sec { grid-template-columns: 58px 1fr; column-gap: 16px; }
+.sec .num { width: 52px; height: 52px; border-radius: 50%; border: 2px solid var(--ink); background: var(--lime); -webkit-text-stroke: 0; color: var(--ink); font: 700 20px/48px "Kica", sans-serif; text-align: center; padding: 0; }
+.sec h2 { font-size: 30px; padding-top: 6px; }
+
+/* карточки — тонкие рамки чертежа, без тени и скруглений */
+.card { border: 1.5px solid var(--ink); border-radius: 0; box-shadow: none; background: rgba(255, 255, 255, .78); }
+.card::before { content: ""; position: absolute; left: -6px; top: -6px; width: 10px; height: 10px; border-left: 1.5px solid var(--ink); border-top: 1.5px solid var(--ink); }
+.pill { background: linear-gradient(transparent 12%, var(--lime) 12% 88%, transparent 88%); color: var(--ink); border-radius: 2px; padding: 4px 6px 3px; font-size: 11px; }
+.pill.lime { background: linear-gradient(transparent 12%, var(--lime) 12% 88%, transparent 88%); }
+.pill.line { border: 0; padding: 4px 6px 3px; background: none; text-decoration: underline 1.5px; text-underline-offset: 3px; }
+.ph { border: 1.5px solid var(--ink); border-radius: 0; box-shadow: none; }
+.ph .pill { background: var(--paper); color: var(--ink); padding: 5px 8px 4px; border: 1.5px solid var(--ink); }
+.ph .pill.lime { background: var(--lime); }
+ul.check li .cb { border-width: 1.5px; border-radius: 0; }
+ol.steps li::before { border-radius: 50%; background: transparent; color: var(--ink); border: 1.5px solid var(--ink); line-height: 23px; }
+.card.dark { border-radius: 0; box-shadow: none; background: var(--ink); color: var(--white); }
+.page .step .k, .page .frames .k { -webkit-text-stroke: 0; color: var(--ink); font-size: 22px; width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--ink); background: var(--lime); text-align: center; line-height: 33px; }
+.page .frames .k { position: absolute; left: 20px; top: 16px; width: 30px; height: 30px; font-size: 16px; line-height: 27px; }
+.frames .thumb { border-radius: 0; border-width: 1.5px; }
+.cap { font-family: "Inter Tight", sans-serif; font-weight: 400; font-style: italic; }
+
+/* обложка */
+.cover h1 .out { -webkit-text-stroke: 1.5px var(--ink); }
+.cover .plus { display: none; }
+.cover .top { padding-right: 4px; }
+.cover .lead { max-width: 520px; }

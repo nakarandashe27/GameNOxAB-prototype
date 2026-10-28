@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <title>Чек-лист: визуализация для подачи — Нейро Отличник</title>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="sheet.css">
 <style>
   /* Галочки: ссылка на checkbox.invalid — метка для build.py, он ставит поверх кликабельное поле PDF. */
   .marker { position: absolute; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: var(--lime); border: 2px solid var(--ink); font: 700 11px/22px "Kica", sans-serif; text-align: center; color: var(--ink); }
@@ -31,8 +32,7 @@
     <div class="ver"><span>I</span><i></i><span>V.1 · 2026</span></div>
   </div>
   <img class="doodle" src="img/mark-spiral.svg" style="left:56px;top:118px;width:58px" alt="">
-  <img class="doodle" src="img/mark-stroke.svg" style="right:120px;top:150px;width:44px;transform:rotate(-20deg)" alt="">
-  <div style="margin-top:118px">
+  <div style="margin-top:84px">
     <div class="eyebrow">Чек-лист студии · для студентов</div>
     <h1>Визуализация<span class="out">для подачи</span></h1>
   </div>
@@ -41,7 +41,7 @@
     <span class="pill">Приз игры «Собери проект»</span>
     <span class="pill line">8 страниц · 6 шагов</span>
   </div>
-  <img src="img/cover-tablet.png" alt="" style="position:absolute;left:-9%;bottom:0;width:118%">
+  <img src="img/cover-tablet.png" alt="" style="position:absolute;left:0;bottom:0;width:100%">
   <img class="doodle" src="img/mark-wave.svg" style="right:64px;top:520px;width:64px" alt="">
 </section>
 
@@ -67,7 +67,7 @@
   </div>
   <p class="muted">Галочки кликаются прямо в PDF. Можно и распечатать.</p>
   <img class="doodle" src="img/mark-arrow-curl.svg" style="right:60px;bottom:96px;width:46px" alt="">
-  <div class="foot"><span class="brand"><img src="img/glasses-lime.svg" alt="">Нейро Отличник · Чек-лист визуализации</span><span>Введение · 2</span></div>
+  <div class="stamp"><div class="a1"><img src="img/glasses-lime.svg" alt="">Нейро Отличник</div><div class="b1">Чек-лист визуализации</div><div class="c1">Лист</div><div class="d1">Листов</div><div class="a2">Введение</div><div class="b2">Студент</div><div class="c2">2</div><div class="d2">8</div></div>
 </section>
 
 <!-- 3. Сцена и кадр -->
@@ -92,7 +92,7 @@
     <figure><div class="ph" style="height:410px"><img src="img/street-eve.jpg" alt="" style="object-position:center 62%"><span class="pill lime">Вечер</span></div></figure>
   </div>
   <p class="cap">Свет меняет всё. Один дом и один ракурс: камера не «гуляет» между кадрами, меняется только время суток. Так студия проверяет точность — и так стоит делать пару кадров для подачи.</p>
-  <div class="foot"><span class="brand"><img src="img/glasses-lime.svg" alt="">Нейро Отличник · Чек-лист визуализации</span><span>Часть 01 — Сцена и кадр · 3</span></div>
+  <div class="stamp"><div class="a1"><img src="img/glasses-lime.svg" alt="">Нейро Отличник</div><div class="b1">Чек-лист визуализации</div><div class="c1">Лист</div><div class="d1">Листов</div><div class="a2">Сцена и кадр</div><div class="b2">Студент</div><div class="c2">3</div><div class="d2">8</div></div>
 </section>
 
 <!-- 4. Нейрорендер -->
@@ -123,7 +123,7 @@
       <li><a class="cb" href="https://checkbox.invalid/s2-4"></a>Сомневаетесь — положите кадр на скриншот полупрозрачным слоем и сверьте.</li>
     </ul>
   </div>
-  <div class="foot"><span class="brand"><img src="img/glasses-lime.svg" alt="">Нейро Отличник · Чек-лист визуализации</span><span>Часть 02 — Нейрорендер · 4</span></div>
+  <div class="stamp"><div class="a1"><img src="img/glasses-lime.svg" alt="">Нейро Отличник</div><div class="b1">Чек-лист визуализации</div><div class="c1">Лист</div><div class="d1">Листов</div><div class="a2">Нейрорендер</div><div class="b2">Студент</div><div class="c2">4</div><div class="d2">8</div></div>
 </section>
 
 <!-- 5. Нейро Отличный метод -->
@@ -150,7 +150,7 @@
     </div>
     <img src="img/neuro-think.png" alt="" style="height:210px;margin-bottom:-10px">
   </div>
-  <div class="foot"><span class="brand"><img src="img/glasses-lime.svg" alt="">Нейро Отличник · Чек-лист визуализации</span><span>Часть 03 — Метод · 5</span></div>
+  <div class="stamp"><div class="a1"><img src="img/glasses-lime.svg" alt="">Нейро Отличник</div><div class="b1">Чек-лист визуализации</div><div class="c1">Лист</div><div class="d1">Листов</div><div class="a2">Метод</div><div class="b2">Студент</div><div class="c2">5</div><div class="d2">8</div></div>
 </section>
 
 <!-- 6. Детали -->
@@ -192,7 +192,7 @@
       <li>Для строгой подачи и конкурса — кадр без сюжета. Для портфолио и соцсетей — можно с историей.</li>
     </ul>
   </div>
-  <div class="foot"><span class="brand"><img src="img/glasses-lime.svg" alt="">Нейро Отличник · Чек-лист визуализации</span><span>Часть 04 — Детали · 6</span></div>
+  <div class="stamp"><div class="a1"><img src="img/glasses-lime.svg" alt="">Нейро Отличник</div><div class="b1">Чек-лист визуализации</div><div class="c1">Лист</div><div class="d1">Листов</div><div class="a2">Детали</div><div class="b2">Студент</div><div class="c2">6</div><div class="d2">8</div></div>
 </section>
 
 <!-- 7. Проверка перед сдачей -->
@@ -247,8 +247,8 @@
       </ul>
     </div>
   </div>
-  <img class="doodle" src="img/mark-circle.svg" style="right:52px;top:44px;width:54px" alt="">
-  <div class="foot"><span class="brand"><img src="img/glasses-lime.svg" alt="">Нейро Отличник · Чек-лист визуализации</span><span>Часть 05 — Проверка · 7</span></div>
+  <img class="doodle" src="img/mark-circle.svg" style="right:44px;top:36px;width:46px" alt="">
+  <div class="stamp"><div class="a1"><img src="img/glasses-lime.svg" alt="">Нейро Отличник</div><div class="b1">Чек-лист визуализации</div><div class="c1">Лист</div><div class="d1">Листов</div><div class="a2">Проверка</div><div class="b2">Студент</div><div class="c2">7</div><div class="d2">8</div></div>
 </section>
 
 <!-- 8. Серия для подачи -->
@@ -278,8 +278,8 @@
     </div>
     <div class="qr"><img src="img/qr-channel.svg" alt="QR-код канала"></div>
   </div>
-  <img src="img/neuro-lying.png" alt="" style="position:absolute;right:70px;bottom:268px;width:330px">
-  <div class="foot"><span class="brand"><img src="img/glasses-lime.svg" alt="">Нейро Отличник · Чек-лист визуализации</span><span>Часть 06 — Серия · 8</span></div>
+  <img src="img/neuro-lying.png" alt="" style="position:absolute;right:70px;bottom:306px;width:300px">
+  <div class="stamp"><div class="a1"><img src="img/glasses-lime.svg" alt="">Нейро Отличник</div><div class="b1">Чек-лист визуализации</div><div class="c1">Лист</div><div class="d1">Листов</div><div class="a2">Серия</div><div class="b2">Студент</div><div class="c2">8</div><div class="d2">8</div></div>
 </section>
 
 </body>
