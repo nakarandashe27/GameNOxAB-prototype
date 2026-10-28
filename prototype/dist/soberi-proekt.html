@@ -551,6 +551,22 @@
   .gp.moves.low .gp-val b { display: inline-block; animation: beat 0.8s ease-in-out infinite; }
   @keyframes beat { 50% { transform: scale(1.25); } }
   .combo.on { animation: combo 0.9s cubic-bezier(0.3, 1.6, 0.5, 1); }
+  .board.quake { animation: quake 0.45s cubic-bezier(.36,.07,.19,.97); }
+  .board.quake::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 3px var(--lime), inset 0 0 40px rgba(219, 252, 59, 0.35); animation: flash 0.6s ease-out forwards; }
+  @keyframes quake { 15% { transform: translate(-5px, 2px) rotate(-0.6deg); } 35% { transform: translate(5px, -2px) rotate(0.6deg); } 55% { transform: translate(-3px, 1px); } 75% { transform: translate(2px, 0); } }
+  @keyframes flash { to { opacity: 0; } }
+  .drag-hint { position: absolute; left: 50%; bottom: 10px; z-index: 3; transform: translateX(-50%); padding: 7px 12px 6px; border-radius: 999px; background: rgba(42, 42, 42, 0.86); color: var(--lime); font: 600 12px/1 var(--f-ui); white-space: nowrap; pointer-events: none; animation: hintpulse 1.6s ease-in-out infinite; }
+  @keyframes hintpulse { 50% { transform: translateX(-50%) translateY(-3px); } }
+  .rv { position: relative; }
+  .flip { position: relative; perspective: 1200px; }
+  .flip-front, .flip-back { backface-visibility: hidden; -webkit-backface-visibility: hidden; transition: transform 0.75s cubic-bezier(.3,1.3,.5,1); }
+  .flip-front { transform: rotateY(180deg); }
+  .flip-back { position: absolute; inset: 0; z-index: 2; display: grid; place-content: center; justify-items: center; gap: 8px; border-radius: var(--r-card); border: 1px solid var(--lime); background: radial-gradient(120% 90% at 30% 10%, rgba(247, 76, 46, 0.45), transparent 60%), radial-gradient(120% 90% at 80% 100%, rgba(77, 97, 244, 0.5), transparent 60%), #1E1818; color: #fff; cursor: pointer; animation: glow 1.8s ease-in-out infinite; }
+  .flip-back .fb-mark { width: 74px; height: 74px; display: grid; place-items: center; border-radius: 50%; background: var(--lime); color: var(--lime-ink); font: 700 18px/1 var(--f-display); animation: beat 1.2s ease-in-out infinite; }
+  .flip-back b { font: 700 20px/1.1 var(--f-display); } .flip-back small { color: var(--dim); font-size: 13px; }
+  .flip.open .flip-front { transform: rotateY(0deg); }
+  .flip.open .flip-back { transform: rotateY(-180deg); pointer-events: none; }
+  .guide > img, .guide > .avatar, .guide > .mascot-img { cursor: pointer; }
   @keyframes combo { 0% { transform: translate(-50%, 10px) scale(0.4) rotate(-12deg); } 30% { transform: translate(-50%, -10px) scale(1.25) rotate(6deg); } 100% { transform: translate(-50%, -18px) scale(1) rotate(0); } }
   .ok-ico { animation: pop 0.5s 0.4s cubic-bezier(0.3, 1.8, 0.5, 1) both; }
   .layers span.on { animation: pop 0.4s cubic-bezier(0.3, 1.8, 0.5, 1) both; }
@@ -1308,18 +1324,23 @@
   }
 
   // Живая анимация в 2D-canvas: сборка слоя, для «Отделки» — переход макета в рендер лаймовой линией.
+  // opts.drag — дом крутится пальцем с инерцией, короткий тап пересобирает последний слой; opts.onDrag — первый жест.
   function play(cv, L, opts) {
     opts = opts || {}; const ctx = cv.getContext('2d'); const w = cv.width, h = cv.height;
     const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const dur = reduce ? 1 : (L === 7 ? 3200 : 2400); let began = performance.now(), raf = 0, stopped = false;
-    const seen = () => !opts.build || (cv.checkVisibility ? cv.checkVisibility({ opacityProperty: true, visibilityProperty: true }) : true);
+    const dur = reduce ? 1 : (L === 7 ? 3200 : 2400); let began = performance.now(), raf = 0, stopped = false, build = !!opts.build;
+    let user = 0, vel = 0, dragging = false, lastX = 0, downX = 0, downT = 0;
+    const seen = () => !build || (cv.checkVisibility ? cv.checkVisibility({ opacityProperty: true, visibilityProperty: true }) : true);
     const clayBuf = document.createElement('canvas'); clayBuf.width = w; clayBuf.height = h;
+    const kick = () => { if (!raf && !stopped) raf = requestAnimationFrame(frame); };
     function frame(now) {
+      raf = 0;
       if (stopped) return;
-      if (opts.build && !seen()) began = now;   // ждём, пока карточка проявится
-      const t = opts.build ? Math.min(1, Math.max(0, now - began - 350) / dur) : 1;
-      const theta = BASE - (opts.build ? 0.45 * (1 - ease(t)) : 0) + (reduce ? 0 : 0.1 * Math.sin((now - began) / 4200));
-      if (L === 7 && opts.build && t < 1) {
+      if (build && !seen()) began = now;   // ждём, пока карточка проявится
+      const t = build ? Math.min(1, Math.max(0, now - began - 350) / dur) : 1;
+      if (!dragging) { user += vel; vel *= 0.93; }
+      const theta = BASE - (build ? 0.45 * (1 - ease(t)) : 0) + (reduce ? 0 : 0.1 * Math.sin(now / 4200)) + user;
+      if (L === 7 && build && t < 1) {
         const tb = Math.min(1, t * 1.6);
         clayBuf.getContext('2d').drawImage(snap(w, h, 6, 1, 'clay', theta), 0, 0);
         ctx.drawImage(snap(w, h, 7, tb, 'render', theta), 0, 0);
@@ -1329,10 +1350,23 @@
       } else {
         ctx.drawImage(snap(w, h, L, t, L === 7 ? 'render' : 'clay', theta), 0, 0);
       }
-      if ((opts.build && t < 1) || (opts.alive && opts.alive() && !reduce)) raf = requestAnimationFrame(frame);
+      if ((build && t < 1) || (opts.alive && opts.alive() && !reduce) || dragging || Math.abs(vel) > 0.0004) kick();
     }
-    raf = requestAnimationFrame(frame);
-    return () => { stopped = true; cancelAnimationFrame(raf); };
+    const offs = [];
+    if (opts.drag) {
+      cv.style.touchAction = 'pan-y'; cv.style.cursor = 'grab';
+      const on = (type, fn) => { cv.addEventListener(type, fn); offs.push(() => cv.removeEventListener(type, fn)); };
+      on('pointerdown', (e) => { dragging = true; lastX = downX = e.clientX; downT = performance.now(); vel = 0; cv.style.cursor = 'grabbing'; try { cv.setPointerCapture(e.pointerId); } catch (err) { /* без захвата тоже работает */ } kick(); });
+      on('pointermove', (e) => { if (!dragging) return; const dx = (e.clientX - lastX) * 0.012; lastX = e.clientX; user += dx; vel = dx; if (Math.abs(e.clientX - downX) > 6 && opts.onDrag) { opts.onDrag(); opts.onDrag = null; } kick(); });
+      const up = (e) => {
+        if (!dragging) return; dragging = false; cv.style.cursor = 'grab';
+        if (Math.abs(e.clientX - downX) < 6 && performance.now() - downT < 300 && L > 0) { build = true; began = performance.now() - 350; vel = 0; if (opts.onTap) opts.onTap(); }
+        kick();
+      };
+      on('pointerup', up); on('pointercancel', up);
+    }
+    kick();
+    return () => { stopped = true; cancelAnimationFrame(raf); offs.forEach((f) => f()); cv.style.cursor = ''; };
   }
 
   window.House3D = { ok: true, sprite, play };
@@ -1922,7 +1956,9 @@
     if (live) live();
     const w = cv.clientWidth || 400, h = cv.clientHeight || 533;   // кадр под реальную карточку, без обрезки
     cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); liveCv = cv;
-    live = House3D.play(cv, L, { build, alive: () => current === screen });
+    const drag = screen !== 'home';
+    live = House3D.play(cv, L, { build, alive: () => current === screen, drag, onDrag: () => { S.dragged = true; save(); document.querySelectorAll('.drag-hint').forEach((el) => el.remove()); }, onTap: () => { feedback(); tone(880, 0.08); } });
+    if (drag && !S.dragged && !cv.parentElement.querySelector('.drag-hint')) cv.insertAdjacentHTML('afterend', '<span class="drag-hint" aria-hidden="true">↻ Покрутите дом пальцем</span>');
   }
   function drawTo(cv, L) {
     if (live && cv === liveCv) { live(); live = null; }
@@ -2176,7 +2212,7 @@
       await wait(290);
     }
     if (res.steps.length >= 2) showCombo('×' + res.steps.length + ' каскад');
-    if (res.steps.length >= 3) say(HOST.cascade[B.used % HOST.cascade.length]);
+    if (res.steps.length >= 3) { say(HOST.cascade[B.used % HOST.cascade.length]); board.classList.remove('quake'); void board.offsetWidth; board.classList.add('quake'); tone(220, 0.25, 0.05); }
     if (res.reshuffled) {
       say('Ходов на поле не осталось — перемешал.');
       await wait(250);
@@ -2367,12 +2403,24 @@
     const jitter = SPANS[k] / 2 - 3;   // стрелка остаётся внутри сектора, даже узкого
     let final = base + 360 * 5 + (((-CENTERS[k]) % 360) + 360) % 360 + (Math.random() * 2 - 1) * jitter;
     if (final <= wheelRot) final += 360;
-    wheelRot = final;
+    const fromRot = wheelRot; wheelRot = final;
     $('#wheel').style.transform = `rotate(${final}deg)`;
     S.spun[S.stage] = true;
     const prize = grantPrize(out, false); save();
     $('#btn-spin').disabled = true; $('#btn-spin').textContent = 'Крутится…';
-    setTimeout(() => openPrize(prize), reduce ? 450 : 4400);
+    // стрелка щёлкает на каждой границе секторов: угол считаем по той же кривой, что и CSS-переход колеса (4.2 с)
+    const ptr = $('.wheel-pointer'), t0 = performance.now(), until = t0 + 4300;
+    const curve = (x) => { let lo = 0, hi = 1, t = x; for (let i = 0; i < 22; i++) { const cx = 3 * 0.12 * t * (1 - t) ** 2 + 3 * 0.18 * t * t * (1 - t) + t ** 3; if (cx < x) lo = t; else hi = t; t = (lo + hi) / 2; } return 3 * 0.72 * t * (1 - t) ** 2 + 3 * 1 * t * t * (1 - t) + t ** 3; };
+    let lastSector = -1;
+    const sectorAt = (deg) => { let q = (((-deg) % 360) + 360 + SPANS[0] / 2) % 360; for (let i = 0; i < SPANS.length; i++) { if (q < SPANS[i]) return i; q -= SPANS[i]; } return 0; };
+    const watch = () => {
+      const deg = fromRot + (final - fromRot) * curve(Math.min(1, (performance.now() - t0) / 4200));
+      const sec = sectorAt(deg);
+      if (sec !== lastSector) { if (lastSector >= 0) { tick(); if (!reduce && ptr.animate) ptr.animate([{ transform: 'translateX(-50%) rotate(0deg)' }, { transform: 'translateX(-50%) rotate(-22deg)' }, { transform: 'translateX(-50%) rotate(0deg)' }], { duration: 120 }); } lastSector = sec; }
+      if (performance.now() < until) requestAnimationFrame(watch);
+    };
+    if (!reduce) requestAnimationFrame(watch);
+    setTimeout(() => openPrize(prize, true), reduce ? 450 : 4400);
   };
   function genCode() { const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 4; i++) s += abc[Math.floor(Math.random() * abc.length)]; return 'ARTB-' + s + '-10'; }
   // Материалы выпадают по порядку без повторов; когда все собраны — отдельный промпт из 20 промптов студии.
@@ -2439,9 +2487,14 @@
     }
     return { html, bind, cls };
   }
-  function openPrize(p) {
+  function openPrize(p, reveal = false) {
     const card = $('#prize-card'), body = prizeBody(p);
-    card.innerHTML = `<div class="prize ${body.cls}">${body.html}</div>`;
+    if (reveal && !reduce) {
+      card.innerHTML = `<div class="flip"><div class="flip-front"><div class="prize ${body.cls}">${body.html}</div></div><button class="flip-back" type="button" aria-label="Открыть награду"><span class="fb-mark">А×Н</span><b>Ваша награда</b><small>Нажмите, чтобы открыть</small></button></div>`;
+      const flip = card.querySelector('.flip');
+      const openIt = () => { if (flip.classList.contains('open')) return; flip.classList.add('open'); feedback(); tone(660, 0.12); setTimeout(() => tone(990, 0.16), 110); confetti(48); };
+      card.querySelector('.flip-back').onclick = openIt; setTimeout(openIt, 3000);
+    } else card.innerHTML = `<div class="prize ${body.cls}">${body.html}</div>`;
     body.bind(card);
     const d = S.done[p.day] || { moves: 0 };
     const st = STAGES[p.day - 1];
@@ -2455,7 +2508,7 @@
     $('#btn-next').onclick = nextDay;
     if (nx) $('#next').insertAdjacentHTML('beforeend', '<button class="btn btn-ghost btn-block" id="btn-practice2" type="button">Черновой лист · играть вне зачёта</button><p class="fine">Черновик не тратит ходы стадии и не даёт наград — просто поиграть.</p>');
     const p2 = $('#btn-practice2'); if (p2) p2.onclick = () => startBoard(true);
-    show('prize'); confetti(36);
+    show('prize'); if (!(reveal && !reduce)) confetti(36);
   }
 
   function nextDay() {
@@ -2600,6 +2653,17 @@
     sdk.onload=initTelegram; sdk.onerror=()=>toast('Telegram SDK недоступен. Игра работает в браузерном режиме.'); document.head.append(sdk);
   }
   let audioContext;
+  // короткий тон: щелчки рулетки, тап по дому; молчит, если звук выключен
+  function tone(freq, dur, vol = 0.035) {
+    if (!S.settings.sound) return;
+    try {
+      audioContext ||= new (window.AudioContext || window.webkitAudioContext)(); audioContext.resume();
+      const o = audioContext.createOscillator(), g = audioContext.createGain(), t0 = audioContext.currentTime;
+      o.type = 'triangle'; o.frequency.value = freq; g.gain.setValueAtTime(vol, t0); g.gain.exponentialRampToValueAtTime(0.0008, t0 + dur);
+      o.connect(g); g.connect(audioContext.destination); o.start(); o.stop(t0 + dur + 0.02);
+    } catch (_) { /* Звук не блокирует игру. */ }
+  }
+  function tick() { tone(1500, 0.03, 0.025); if (S.settings.haptic && tg && tg.isVersionAtLeast('6.1')) tg.HapticFeedback.selectionChanged(); }
   function feedback() {
     if (S.settings.haptic && tg && tg.isVersionAtLeast('6.1')) tg.HapticFeedback.impactOccurred('light');
     if (!S.settings.sound) return;
@@ -2847,6 +2911,28 @@
     });
     if(Number.isInteger(focusIndex)) $('#try-grid').children[focusIndex].focus({preventScroll:true});
   }
+  // Гид «Нейро»: тап по картинке — новая реплика в голосе студии и прыжок
+  const QUIPS = [
+    'Хороший рендер — это на 80% свет и только на 20% всё остальное.',
+    'Нейросеть отрисует интерьер быстрее, чем вы заварите чай.',
+    'Каскад — это когда проект сам себя собирает. Почти как в бюро.',
+    'Геометрия — главный критерий. Свет — главный аргумент.',
+    'Сосны не трогаем. Заказчик посчитал каждую.',
+    'Больше реализма богу реализма!',
+    'Белка на рендере — это не баг, это стаффаж.',
+    'Видите узкий лаймовый сектор на колесе? Это 3D-модель вашего проекта. Редкая штука.',
+    'Покрутите дом в «Моём проекте» — он настоящий, не картинка.',
+  ];
+  let quipN = 0;
+  document.addEventListener('click', (e) => {
+    const img = e.target.closest('.guide > img, .guide > .avatar, .guide > .mascot-img');
+    if (!img) return;
+    const sp = img.parentElement.querySelector('.speech'); if (!sp) return;
+    sp.textContent = QUIPS[quipN++ % QUIPS.length];
+    sp.style.animation = 'none'; void sp.offsetWidth; sp.style.animation = '';
+    if (!reduce && img.animate) img.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-10px) rotate(-4deg)' }, { transform: 'translateY(0)' }], { duration: 380, easing: 'cubic-bezier(.3,1.6,.5,1)' });
+    feedback();
+  });
   function tryTap(i){
     if(tryDone)return;
     if(trySelected===null){trySelected=i;renderTryGrid(i);return;}

@@ -258,18 +258,23 @@
   }
 
   // Живая анимация в 2D-canvas: сборка слоя, для «Отделки» — переход макета в рендер лаймовой линией.
+  // opts.drag — дом крутится пальцем с инерцией, короткий тап пересобирает последний слой; opts.onDrag — первый жест.
   function play(cv, L, opts) {
     opts = opts || {}; const ctx = cv.getContext('2d'); const w = cv.width, h = cv.height;
     const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const dur = reduce ? 1 : (L === 7 ? 3200 : 2400); let began = performance.now(), raf = 0, stopped = false;
-    const seen = () => !opts.build || (cv.checkVisibility ? cv.checkVisibility({ opacityProperty: true, visibilityProperty: true }) : true);
+    const dur = reduce ? 1 : (L === 7 ? 3200 : 2400); let began = performance.now(), raf = 0, stopped = false, build = !!opts.build;
+    let user = 0, vel = 0, dragging = false, lastX = 0, downX = 0, downT = 0;
+    const seen = () => !build || (cv.checkVisibility ? cv.checkVisibility({ opacityProperty: true, visibilityProperty: true }) : true);
     const clayBuf = document.createElement('canvas'); clayBuf.width = w; clayBuf.height = h;
+    const kick = () => { if (!raf && !stopped) raf = requestAnimationFrame(frame); };
     function frame(now) {
+      raf = 0;
       if (stopped) return;
-      if (opts.build && !seen()) began = now;   // ждём, пока карточка проявится
-      const t = opts.build ? Math.min(1, Math.max(0, now - began - 350) / dur) : 1;
-      const theta = BASE - (opts.build ? 0.45 * (1 - ease(t)) : 0) + (reduce ? 0 : 0.1 * Math.sin((now - began) / 4200));
-      if (L === 7 && opts.build && t < 1) {
+      if (build && !seen()) began = now;   // ждём, пока карточка проявится
+      const t = build ? Math.min(1, Math.max(0, now - began - 350) / dur) : 1;
+      if (!dragging) { user += vel; vel *= 0.93; }
+      const theta = BASE - (build ? 0.45 * (1 - ease(t)) : 0) + (reduce ? 0 : 0.1 * Math.sin(now / 4200)) + user;
+      if (L === 7 && build && t < 1) {
         const tb = Math.min(1, t * 1.6);
         clayBuf.getContext('2d').drawImage(snap(w, h, 6, 1, 'clay', theta), 0, 0);
         ctx.drawImage(snap(w, h, 7, tb, 'render', theta), 0, 0);
@@ -279,10 +284,23 @@
       } else {
         ctx.drawImage(snap(w, h, L, t, L === 7 ? 'render' : 'clay', theta), 0, 0);
       }
-      if ((opts.build && t < 1) || (opts.alive && opts.alive() && !reduce)) raf = requestAnimationFrame(frame);
+      if ((build && t < 1) || (opts.alive && opts.alive() && !reduce) || dragging || Math.abs(vel) > 0.0004) kick();
     }
-    raf = requestAnimationFrame(frame);
-    return () => { stopped = true; cancelAnimationFrame(raf); };
+    const offs = [];
+    if (opts.drag) {
+      cv.style.touchAction = 'pan-y'; cv.style.cursor = 'grab';
+      const on = (type, fn) => { cv.addEventListener(type, fn); offs.push(() => cv.removeEventListener(type, fn)); };
+      on('pointerdown', (e) => { dragging = true; lastX = downX = e.clientX; downT = performance.now(); vel = 0; cv.style.cursor = 'grabbing'; try { cv.setPointerCapture(e.pointerId); } catch (err) { /* без захвата тоже работает */ } kick(); });
+      on('pointermove', (e) => { if (!dragging) return; const dx = (e.clientX - lastX) * 0.012; lastX = e.clientX; user += dx; vel = dx; if (Math.abs(e.clientX - downX) > 6 && opts.onDrag) { opts.onDrag(); opts.onDrag = null; } kick(); });
+      const up = (e) => {
+        if (!dragging) return; dragging = false; cv.style.cursor = 'grab';
+        if (Math.abs(e.clientX - downX) < 6 && performance.now() - downT < 300 && L > 0) { build = true; began = performance.now() - 350; vel = 0; if (opts.onTap) opts.onTap(); }
+        kick();
+      };
+      on('pointerup', up); on('pointercancel', up);
+    }
+    kick();
+    return () => { stopped = true; cancelAnimationFrame(raf); offs.forEach((f) => f()); cv.style.cursor = ''; };
   }
 
   window.House3D = { ok: true, sprite, play };
