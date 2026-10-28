@@ -19,7 +19,14 @@ const houseTag = '<script src="house3d.js"></script>';
 if (!html.includes(houseTag)) throw new Error('В index.html не найден тег подключения house3d.js');
 
 // three.js остаётся внешним скриптом с cdnjs; ядро и 3D-домик встраиваются в страницу
-const body = html.replace(houseTag, () => '<script>\n' + house + '\n</script>').replace(tag, () => '<script>\n' + core + '\n</script>');
+// Наборы промптов студии — из prizes/src/prompts.json, тот же текст, что в PDF
+const sets = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'prizes', 'src', 'prompts.json'), 'utf8'));
+const pick = (s) => ({ title: s.title + ' ' + s.title_outline, items: s.items.map(({ title, when, prompt, tip }) => ({ title, when, prompt, tip })) });
+const marker = /\/\*@prompts\*\/ \{[^\n]*\};/;
+if (!marker.test(html)) throw new Error('В index.html не найдена метка /*@prompts*/');
+const withPrompts = html.replace(marker, () => 'JSON.parse(' + JSON.stringify(JSON.stringify({ improve: pick(sets.improve), fly: pick(sets.flythrough) })) + ');');
+
+const body = withPrompts.replace(houseTag, () => '<script>\n' + house + '\n</script>').replace(tag, () => '<script>\n' + core + '\n</script>');
 const standalone =
   '<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n' +
   '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +

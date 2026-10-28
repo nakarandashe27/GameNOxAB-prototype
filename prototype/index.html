@@ -396,6 +396,25 @@
   .prize { display: grid; gap: 10px; padding: 16px; }
   .prize h3 { font: 700 19px/1.25 var(--f-ui); text-wrap: balance; }
   .prize p { font-size: 14px; color: var(--dim); }
+  .prize.studio { border-color: rgba(245, 245, 240, 0.4); }
+  .prize.super { border-color: var(--lime); background: linear-gradient(160deg, rgba(219, 252, 59, 0.16), rgba(255, 255, 255, 0.03) 60%); }
+  .prize.school { border-color: rgba(247, 76, 46, 0.55); }
+  .pfacts { display: grid; gap: 6px; margin: 0; padding-top: 8px; border-top: 1px solid var(--stroke); }
+  .pfacts div { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 8px; font-size: 13px; }
+  .pfacts dt { color: var(--faint); } .pfacts dd { margin: 0; }
+  .pviewer { display: grid; gap: 8px; }
+  .pager { display: grid; grid-template-columns: 36px minmax(0, 1fr) 36px; align-items: center; gap: 8px; }
+  .pager.solo { grid-template-columns: 1fr; }
+  .pg-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--stroke-hi); background: rgba(255, 255, 255, 0.06); color: #fff; font: 600 20px/1 var(--f-ui); cursor: pointer; }
+  .pg-t { font-size: 13px; color: var(--dim); text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pg-t b { color: var(--lime); }
+  .ptip { font-size: 12.5px; color: var(--dim); }
+  .pdf-chip { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; align-items: center; padding: 10px; border-radius: 14px; background: rgba(245, 245, 240, 0.06); font-size: 13px; color: var(--dim); }
+  .pdf-chip span { display: grid; place-items: center; height: 44px; border-radius: 10px; background: var(--no-paper); color: var(--no-ink); font: 700 12px/1 var(--f-neuro); }
+  .slot.k-studio .slot-ico { background: var(--no-paper); color: var(--no-ink); }
+  .slot.model3d .slot-ico { background: var(--lime); color: var(--lime-ink); font-size: 11px; }
+  .slot.model3d { border-color: var(--lime); }
+  .slot.excursion .slot-ico { background: var(--ab-blue); color: #fff; }
   .prize .big { font: 700 44px/1 var(--f-display); color: var(--lime); text-shadow: 0 0 24px rgba(219, 252, 59, 0.4); }
   pre.prompt { margin: 0; padding: 12px; border-radius: 14px; border: 1px solid var(--stroke); background: rgba(0, 0, 0, 0.3); white-space: pre-wrap; word-break: break-word; font: 13px/1.5 var(--f-ui); }
   .code { padding: 14px; border: 1.5px dashed var(--lime); border-radius: 14px; font: 600 22px/1 ui-monospace, Consolas, monospace; letter-spacing: 0.08em; text-align: center; }
@@ -577,7 +596,10 @@
   .slot.sum { cursor: default; align-content: center; justify-items: start; background: linear-gradient(135deg, rgba(247, 76, 46, 0.22), rgba(77, 97, 244, 0.22)); }
   .slot.sum b { font: 700 30px/1 var(--f-display); } .slot.sum b i { font-style: normal; font-size: 16px; color: var(--faint); }
   .slot.sum small { color: var(--dim); }
-  .prize-view { position: absolute; inset: 0; z-index: 30; display: grid; align-items: end; padding: 12px; background: rgba(14, 10, 10, 0.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .pv-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .pv-x { flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid var(--stroke-hi); background: rgba(255, 255, 255, 0.08); color: #fff; font: 400 22px/1 var(--f-ui); cursor: pointer; }
+  .pv-card .prize { padding: 0; border: 0; background: none; box-shadow: none; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .prize-view { position: absolute; inset: 0; z-index: 30; display: grid; align-items: end; padding: max(10px, var(--safe-top, 0px)) 10px max(10px, var(--safe-bottom, 0px)); background: rgba(14, 10, 10, 0.72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
   .pv-card { display: grid; gap: 10px; max-height: 100%; padding: 18px 16px 16px; border-radius: 24px; border: 1px solid var(--stroke-hi); background: #1E1818; box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4); }
   .pv-title { font: 700 20px/1.15 var(--f-display); letter-spacing: -0.03em; }
   .pv-text { margin: 0; padding: 12px 14px; border-radius: 14px; border-left: 4px solid var(--lime); background: rgba(245, 245, 240, 0.06); white-space: pre-wrap; overflow-wrap: anywhere; font: 13px/1.5 var(--f-ui); color: #EDEAE4; }
@@ -628,7 +650,7 @@
     #cover-brief { font-size: 13px; line-height: 1.4; }
     .share { grid-template-columns: 72px minmax(0, 1fr); padding: 8px; }
     .prize { gap: 8px; padding: 14px; }
-    pre.prompt { max-height: 22dvh; overflow-y: auto; padding: 10px; font-size: 12px; }
+    pre.prompt { padding: 10px; font-size: 12px; line-height: 1.45; }
     .next { gap: 8px; padding: 12px; } .next p { font-size: 13px; }
     .stats { padding: 8px 0; }
   }
@@ -659,7 +681,8 @@
     #scr-how .hero-title { font-size: 34px; }
     #scr-how .try-grid { grid-template-columns: repeat(3, 42px); } #scr-how .try-grid button { width: 42px; height: 42px; }
   }
-  @media (max-height: 700px) { pre.prompt { max-height: 16dvh; } .prize > p { display: none; } }
+  @media (max-height: 700px) { .prize > p:not(.fine), .ptip { display: none; } }
+  @media (max-height: 640px) { .prize .fine { display: none; } pre.prompt { font-size: 11px; line-height: 1.4; padding: 8px 10px; } .prize h3 { font-size: 16px; } .prize { gap: 6px; } }
   .obj, .rv { flex-direction: column; overflow: hidden; }
   .obj canvas, .rv canvas { flex: 1 1 0; height: 0; min-height: 0; }
   .album, .compare { overflow: hidden; }
@@ -805,13 +828,7 @@
       </div>
       <div class="archive" id="archive-list"></div>
       <div class="prize-view" id="prize-view" role="dialog" aria-modal="true" aria-labelledby="pv-title" hidden>
-        <div class="pv-card">
-          <div class="eyebrow" id="pv-eyebrow"></div>
-          <h3 class="pv-title" id="pv-title"></h3>
-          <pre class="pv-text" id="pv-text"></pre>
-          <p class="pv-tip" id="pv-tip"></p>
-          <div class="pv-actions"><button class="btn btn-primary" id="pv-copy" type="button">Скопировать промпт</button><button class="btn" id="pv-close" type="button">Закрыть</button></div>
-        </div>
+        <div class="pv-card"></div>
       </div>
     </section>
 
@@ -942,7 +959,7 @@
       <p class="fine">Вы сдали уровень и заработали 1 вращение. Проигрышных секторов нет.</p>
       <div class="wheel-wrap">
         <svg class="wheel-pointer" viewBox="0 0 22 26" aria-hidden="true"><path d="M1 1h20L11 25z" fill="#DBFC3B" stroke="#161010" stroke-width="2" stroke-linejoin="round"/></svg>
-        <svg class="wheel" id="wheel" viewBox="0 0 200 200" role="img" aria-label="Рулетка: 8 промптов, 3 скидки, 1 приз студии"></svg>
+        <svg class="wheel" id="wheel" viewBox="0 0 200 200" role="img" aria-label="Рулетка: 3D-модель, 3 приза студии, 3 скидки, экскурсия, 4 материала"></svg>
       </div>
       <div class="legend" id="legend"></div>
       <button class="btn btn-primary btn-block" id="btn-spin" type="button">Крутить</button>
@@ -994,7 +1011,7 @@
       <h2>Правки по комментариям Андрея</h2>
       <ul>
         <li><b>Сделано:</b> партия длиннее (30 ходов, цели выше); черновой лист для бесконечной игры; титульный лист с заказчиком и сюжетом; легенда фишек; фишки улетают в цель и каскады подписаны; слой вычерчивается, а потом заливается; демо-кнопки названы демо-кнопками.</li>
-        <li><b>Ждём Андрея:</b> предложения по призам студии и промптам <span class="dec">Р5</span> <span class="dec">Р6</span>, финальное согласование оформления и изображений <span class="dec">Р7</span>.</li>
+        <li><b>Согласовано 28.10:</b> призы студии и 20 промптов <span class="dec">Р5</span> <span class="dec">Р6</span> — во вращении рулетки и в «Моих призах».</li>
         <li><b>Важно:</b> «5–6 нажатий и выиграл» — это была демо-кнопка, она сдавала лист без игры. Теперь подписана явно.</li>
       </ul>
     </div>
@@ -1010,7 +1027,7 @@
         </label>
         <label for="demo-spin">Демо: следующий спин
           <select id="demo-spin">
-            <option value="auto">Как решит сервер</option><option value="prompt">Промпт</option><option value="discount">Скидка</option><option value="studio">Приз студии</option>
+            <option value="auto">Как решит сервер</option><option value="material">Материал</option><option value="discount">Скидка 10%</option><option value="excursion">Экскурсия</option><option value="improve">Улучшение визуализаций</option><option value="renders5">5 визуализаций</option><option value="model3d">3D-модель</option>
           </select>
         </label>
         <button class="btn btn-secondary btn-small" id="demo-cover" type="button">Показать титульный лист</button>
@@ -1078,16 +1095,29 @@
     broken: 'Проект сорван: отсрочки кончились. Бывает и у лучших бюро. Начинаем объект заново.',
   };
 
-  // Примеры. Финальные 30 промптов пишут школа и студия (Р6).
-  const PROMPTS = [
-    { title: 'Закатная подача у воды', from: 'пример от студии', text: 'Minimalist lakeside pavilion at golden hour, cantilevered concrete roof, floor-to-ceiling glazing, warm interior light, still water reflection, architectural photography, 24mm, soft haze --ar 3:2', tip: 'Время суток меняйте последним: композиция сохранится.' },
-    { title: 'Разрез с людьми и светом', from: 'пример от школы', text: 'Architectural section drawing of a two-storey house with double-height living room, sunlight rays through clerestory, people for scale, clean linework, subtle watercolor wash, white background', tip: 'Слова «double-height» и «clerestory» дают второй свет без долгих объяснений.' },
-    { title: 'Материалы крупным планом', from: 'пример от студии', text: 'Close-up facade detail, board-formed concrete meeting vertical larch cladding, black steel window frame, raking morning light, shallow depth of field, photorealistic, 85mm', tip: 'Называйте породу дерева — «larch» и «oak» дают разную фактуру.' },
-    { title: 'Генплан для портфолио', from: 'пример от школы', text: 'Architectural site plan, top view, pavilion on a lake shore, pine trees with soft shadows, paths and deck, muted colors, paper texture, scale bar and north arrow, presentation board style', tip: 'Для плана всегда добавляйте «top view» — иначе уйдёт в перспективу.' },
-    { title: 'Интерьер тёплым вечером', from: 'пример от студии', text: 'Interior of a timber pavilion at dusk, panoramic window to the lake, linen sofa, pendant lamps, warm 2700K light, reflections on glass, editorial interior photography, 28mm', tip: 'Температура света в кельвинах работает точнее, чем «warm».' },
-    { title: 'Скетч поверх фото участка', from: 'пример от школы', text: 'Loose architectural concept sketch over a site photo, black ink lines, marker shading, pavilion massing by the water, annotations, hand-drawn look', tip: 'Загрузите фото участка как референс и снизьте его вес.' },
-    { title: 'Фасад в тумане', from: 'пример от студии', text: 'Front elevation of a glass pavilion in morning fog, symmetrical composition, pine forest background, muted palette, minimal, fine art architectural photography --ar 16:9', tip: 'Симметрия и туман скрывают недоработанные детали модели.' },
-    { title: 'Аксонометрия для подачи', from: 'пример от школы', text: 'Exploded axonometric diagram of a pavilion: roof slab, glass volume, concrete core, timber deck, labeled layers, isometric view, clean vector style, limited palette', tip: 'Слово «labeled» даёт подписи — потом замените их на свои.' },
+  // Призы согласованы 28.10.2026 (prizes/README.md). Круг — витрина: исход решает сервер по весам и остаткам.
+  // Наборы промптов студии подставляет сборка из prizes/src/prompts.json — тот же текст, что в PDF.
+  const PROMPT_SETS = /*@prompts*/ { improve: { title: 'Улучшение визуализаций', items: [] }, fly: { title: 'Пролёты из одного кадра', items: [] } };
+  // Когда все материалы собраны, выпадают отдельные промпты из обоих наборов.
+  const PROMPTS = [...PROMPT_SETS.improve.items.map((it) => ({ ...it, from: 'студия · улучшение' })), ...PROMPT_SETS.fly.items.map((it) => ({ ...it, from: 'студия · пролёты' }))];
+  const PRIZES = {
+    model3d: { kind: 'studio', label: '3D-МОДЕЛЬ', ico: '3D', title: 'Интерактивная 3D-модель вашего проекта', eyebrow: 'Суперприз студии «Нейро Отличник»',
+      text: 'Веб-модель по ссылке: её можно крутить, показывать на защите и вставить в портфолио.', facts: [['От вас', 'модель одного объекта: IFC, RVT, PLN, SKP или FBX/OBJ'], ['Срок', '2–3 недели']] },
+    renders5: { kind: 'studio', label: '5 РЕНДЕРОВ', ico: '★', title: '5 визуализаций для вашего проекта', eyebrow: 'Приз студии «Нейро Отличник»',
+      text: 'Серия по чек-листу: общий вид, фасад, деталь, интерьер и вечерний кадр.', facts: [['От вас', 'модель или скриншоты 5 ракурсов + референсы'], ['Срок', '7–10 дней']] },
+    improve: { kind: 'studio', label: 'УЛУЧШЕНИЕ', ico: '★', title: 'Улучшение ваших визуализаций', eyebrow: 'Приз студии «Нейро Отличник»',
+      text: 'До трёх ваших рендеров студия доведёт «Нейро Отличным методом»: свет, материалы, детали.', facts: [['От вас', 'рендеры от 1920 px + скриншот модели'], ['Срок', '3–5 дней']] },
+    excursion: { kind: 'school', label: 'ЭКСКУРСИЯ', ico: '⌂', title: 'Место на экскурсии в архбюро', eyebrow: 'Приз школы АРТ.БРОДСКИЙ',
+      text: 'Экскурсия в архитектурное бюро в составе группы школы.', facts: [['Как попасть', 'школа напишет, когда соберётся группа']] },
+    discount: { kind: 'school', label: '−10%', ico: '%', title: 'Скидка 10% на любой курс', eyebrow: 'Приз школы АРТ.БРОДСКИЙ' },
+    material: { kind: 'material', label: 'МАТЕРИАЛЫ', ico: '✦' },
+  };
+  const STOCK = { model3d: 2, renders5: 3, improve: 5, excursion: 10 };
+  const MATERIALS = [
+    { key: 'checklist', from: 'Материал студии', title: 'Чек-лист визуализации', text: 'Чертёжный лист A4 на 8 листов: шесть шагов от сцены до серии кадров, на рендерах студии. Галочки кликаются.' },
+    { key: 'improve10', from: 'Материал студии · 10 промптов', title: '10 промптов: улучшение визуализаций', set: 'improve' },
+    { key: 'fly10', from: 'Материал студии · 10 промптов', title: '10 промптов: пролёты из одного кадра', set: 'fly' },
+    { key: 'ai', from: 'Материал школы АРТ.БРОДСКИЙ', title: 'Чек-лист по работе в ИИ', text: 'Как подключать нейросети к учебному проекту: от идеи до подачи.' },
   ];
 
   const WD = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'];
@@ -1098,10 +1128,10 @@
   const goalText = (goals) => goals.map(([t, n]) => TYPES[t].name.toLowerCase() + ' ×' + n).join(', ');
 
   // ---------- состояние ----------
-  const fresh = () => ({ v: 1, settings: { sound:true, haptic:true, music:true }, startDay: moscowDay(), lastDay: moscowDay(), stage: 1, cal: 0, delays: 2, done: {}, spun: {}, prizes: [], subscribed: false, code: null, studioStock: 8, note: null, coverSeen: false, practice: { games: 0, best: null } });
+  const fresh = () => ({ v: 2, settings: { sound:true, haptic:true, music:true }, startDay: moscowDay(), lastDay: moscowDay(), stage: 1, cal: 0, delays: 2, done: {}, spun: {}, prizes: [], subscribed: false, code: null, stock: { ...STOCK }, note: null, coverSeen: false, practice: { games: 0, best: null } });
   let S = null;
   try { S = JSON.parse(localStorage.getItem(STORE)); } catch (e) { S = null; }
-  if (!S || S.v !== 1) S = fresh();
+  if (!S || S.v !== 2) S = fresh();
   if (!S.practice) S.practice = { games: 0, best: null };
   // Миграция v0.3 сохраняет полученные призы и привязывает демо-неделю к сегодня.
   if (!Number.isFinite(S.lastDay)) { S.lastDay = moscowDay(); S.startDay = S.lastDay - S.cal; }
@@ -1382,6 +1412,7 @@
   let current = 'brief';
   function show(name) {
     SCREENS.forEach((n) => { $('#scr-' + n).hidden = n !== name; });
+    $('#prize-view').hidden = true;   // окно приза живёт поверх всего телефона — при любом переходе закрываем
     current = name; document.body.dataset.screen = name; renderNotes();
     document.body.dataset.hub = HUB.includes(name) ? '1' : '';
     const tab = TABS[name] || '';
@@ -1719,7 +1750,7 @@
   $('#btn-to-wheel').onclick = () => { if (S.spun[S.stage]) { const last = S.prizes[S.prizes.length - 1]; if (last) openPrize(last); else nextDay(); } else openWheel(); };
 
   // ---------- рулетка ----------
-  const SECTORS = ['studio', 'prompt', 'prompt', 'discount', 'prompt', 'prompt', 'discount', 'prompt', 'prompt', 'discount', 'prompt', 'prompt'];
+  const SECTORS = ['model3d', 'discount', 'material', 'improve', 'excursion', 'material', 'discount', 'renders5', 'material', 'improve', 'discount', 'material'];
   let wheelRot = 0;
   function buildWheel() {
     const locked = S.stage < 3;
@@ -1727,10 +1758,12 @@
     let html = '<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="#211B1B"/><path d="M0 0v6" stroke="#3D3333" stroke-width="2"/></pattern></defs>';
     SECTORS.forEach((type, k) => {
       const [x0, y0] = pt(k * 30, 97), [x1, y1] = pt((k + 1) * 30, 97);
-      let fill, ink, label;
-      if (type === 'studio') { fill = '#DBFC3B'; ink = '#17110E'; label = 'СТУДИЯ'; }
-      else if (type === 'discount') { fill = locked ? 'url(#hatch)' : '#F74C2E'; ink = locked ? 'rgba(255,255,255,.55)' : '#FFFFFF'; label = locked ? 'С 3 ДНЯ' : '−20%'; }
-      else { fill = k % 2 ? '#221C1C' : '#2E2626'; ink = '#FFFFFF'; label = 'ПРОМПТ'; }
+      let fill, ink, label = PRIZES[type].label;
+      if (type === 'model3d') { fill = '#DBFC3B'; ink = '#2A2A2A'; }
+      else if (PRIZES[type].kind === 'studio') { fill = '#F5F5F0'; ink = '#2A2A2A'; }
+      else if (type === 'discount') { fill = locked ? 'url(#hatch)' : '#F74C2E'; ink = locked ? 'rgba(255,255,255,.55)' : '#FFFFFF'; if (locked) label = 'С 3 ДНЯ'; }
+      else if (type === 'excursion') { fill = '#4D61F4'; ink = '#FFFFFF'; }
+      else { fill = k % 2 ? '#221C1C' : '#2E2626'; ink = '#FFFFFF'; }
       html += `<path d="M100 100 L${x0.toFixed(2)} ${y0.toFixed(2)} A97 97 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z" fill="${fill}" stroke="#161010" stroke-width="1.2"/>`;
       // подпись идёт по радиусу от ступицы к краю: место — 56 единиц; длинную ужимаем, чтобы она целиком влезла в сектор
       const fs = Math.min(9.5, (56 - 0.5 * (label.length - 1)) / (0.74 * label.length)).toFixed(2);
@@ -1738,7 +1771,8 @@
     });
     html += '<circle cx="100" cy="100" r="99" fill="none" stroke="#DBFC3B" stroke-opacity="0.5" stroke-width="1"/><circle cx="100" cy="100" r="17" fill="#161010" stroke="#DBFC3B" stroke-opacity="0.5"/><text x="100" y="101" fill="#F5F5F0" font-family="Unbounded, Arial" font-size="7" font-weight="700" text-anchor="middle" dominant-baseline="middle">А×Н</text>';
     $('#wheel').innerHTML = html;
-    $('#legend').innerHTML = '<span><i style="background:#2E2626"></i>Промпт · 8</span><span><i style="background:' + (locked ? '#3D3333' : '#F74C2E') + '"></i>Скидка 20% · 3' + (locked ? ' · с 3-го дня' : '') + '</span><span><i style="background:#DBFC3B"></i>Приз студии · 1</span>';
+    $('#legend').innerHTML = '<span><i style="background:#DBFC3B"></i>3D-модель · на 7-м листе</span><span><i style="background:#F5F5F0"></i>Студия · 3</span>'
+      + '<span><i style="background:' + (locked ? '#3D3333' : '#F74C2E') + '"></i>Скидка 10% · 3' + (locked ? ' · с 3-го дня' : '') + '</span><span><i style="background:#4D61F4"></i>Экскурсия · 1</span><span><i style="background:#2E2626"></i>Материалы · 4</span>';
   }
   function openWheel() {
     buildWheel();
@@ -1750,12 +1784,19 @@
   function pickOutcome() {
     const forced = $('#demo-spin').value;
     if (forced !== 'auto') { $('#demo-spin').value = 'auto'; if (forced === 'discount' && S.stage < 3) toast('Скидка до 3-го дня закрыта — показываю, как выглядит приз.'); return forced; }
-    const wStudio = S.studioStock > 0 && !S.prizes.some(p => p.type === 'studio') ? 0.03 : 0;
-    const wDisc = S.stage >= 3 && !S.code ? 0.2 : 0;
-    const x = Math.random();
-    if (x < wStudio) return 'studio';
-    if (x < wStudio + wDisc) return 'discount';
-    return 'prompt';
+    // один приз студии на аккаунт; 3D-модель — только на 7-м листе, среди собравших проект целиком
+    const studioWon = S.prizes.some((p) => PRIZES[p.type] && PRIZES[p.type].kind === 'studio');
+    const left = (t) => S.stock[t] > 0 && !S.prizes.some((p) => p.type === t);
+    const w = [
+      ['model3d', !studioWon && S.stage === 7 && left('model3d') ? 0.08 : 0],
+      ['renders5', !studioWon && left('renders5') ? 0.01 : 0],
+      ['improve', !studioWon && left('improve') ? 0.03 : 0],
+      ['excursion', left('excursion') ? 0.03 : 0],
+      ['discount', S.stage >= 3 && !S.code ? 0.2 : 0],
+    ];
+    let x = Math.random();
+    for (const [t, p] of w) { if (x < p) return t; x -= p; }
+    return 'material';
   }
   $('#btn-spin').onclick = () => {
     if (S.spun[S.stage]) return;
@@ -1772,36 +1813,75 @@
     $('#btn-spin').disabled = true; $('#btn-spin').textContent = 'Крутится…';
     setTimeout(() => openPrize(prize), reduce ? 450 : 4400);
   };
-  function genCode() { const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 4; i++) s += abc[Math.floor(Math.random() * abc.length)]; return 'ARTB-' + s + '-20'; }
+  function genCode() { const abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; for (let i = 0; i < 4; i++) s += abc[Math.floor(Math.random() * abc.length)]; return 'ARTB-' + s + '-10'; }
+  // Материалы выпадают по порядку без повторов; когда все собраны — отдельный промпт из 20 промптов студии.
+  function nextMaterial() {
+    const got = S.prizes.filter((x) => x.type === 'material').map((x) => x.key);
+    const m = MATERIALS.find((x) => !got.includes(x.key));
+    return m ? { type: 'material', key: m.key } : { type: 'prompt', idx: S.prizes.filter((x) => x.type === 'prompt').length % PROMPTS.length };
+  }
   function grantPrize(out, display = true) {
     let p;
-    if (out === 'prompt') p = { type: 'prompt', idx: S.prizes.filter((x) => x.type === 'prompt').length % PROMPTS.length };
+    if (out === 'material') p = nextMaterial();
     else if (out === 'discount') { if (!S.code) S.code = genCode(); p = { type: 'discount' }; }
-    else { S.studioStock = Math.max(0, S.studioStock - 1); p = { type: 'studio', what: S.studioStock >= 5 ? 'consult' : 'frame' }; }
+    else { if (S.stock[out] > 0) S.stock[out] -= 1; p = { type: out }; }
     p.day = S.stage; S.prizes.push(p); save();
     if (display) openPrize(p);
     return p;
   }
 
   // ---------- приз ----------
-  function openPrize(p) {
-    const card = $('#prize-card');
-    if (p.type === 'prompt') {
-      const pr = PROMPTS[p.idx];
-      card.innerHTML = `<div class="prize"><div class="eyebrow">Рабочий промпт · ${pr.from}</div><h3>${pr.title}</h3><pre class="prompt" id="prompt-text">${pr.text}</pre><p>${pr.tip}</p><button class="btn btn-primary btn-block" id="btn-copy-prompt" type="button">Скопировать промпт</button></div>`;
-      $('#btn-copy-prompt').onclick = () => copy(pr.text, 'Промпт скопирован.');
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const prizeTitle = (p) => p.type === 'material' ? MATERIALS.find((m) => m.key === p.key).title : p.type === 'prompt' ? PROMPTS[p.idx].title : PRIZES[p.type].title;
+  const prizeKind = (p) => p.type === 'material' || p.type === 'prompt' ? 'material' : PRIZES[p.type].kind;
+  // Промпты листаются внутри карточки — экран не прокручивается.
+  function promptViewer(list, from) {
+    let i = 0;
+    const html = `<div class="pviewer">${list.length > 1 ? '<div class="pager"><button class="pg-btn" type="button" data-step="-1" aria-label="Предыдущий промпт">‹</button><span class="pg-t"></span><button class="pg-btn" type="button" data-step="1" aria-label="Следующий промпт">›</button></div>' : '<div class="pager solo"><span class="pg-t"></span></div>'}<pre class="prompt"></pre><p class="ptip"></p><button class="btn btn-primary btn-block pcopy" type="button">Скопировать промпт</button></div>`;
+    const bind = (root) => {
+      const v = root.querySelector('.pviewer');
+      const draw = () => {
+        const it = list[i];
+        v.querySelector('.pg-t').innerHTML = (list.length > 1 ? '<b>' + String(i + 1).padStart(2, '0') + '</b> / ' + list.length + ' · ' : '') + esc(it.title);
+        v.querySelector('.prompt').textContent = it.prompt;
+        v.querySelector('.ptip').textContent = it.tip;
+      };
+      v.querySelectorAll('.pg-btn').forEach((b) => b.onclick = () => { i = (i + Number(b.dataset.step) + list.length) % list.length; draw(); });
+      v.querySelector('.pcopy').onclick = () => copy(list[i].prompt, 'Промпт скопирован.');
+      draw();
+    };
+    return { html, bind };
+  }
+  function prizeBody(p) {
+    const facts = (f) => '<dl class="pfacts">' + f.map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + v + '</dd></div>').join('') + '</dl>';
+    let html = '', bind = () => {}, cls = prizeKind(p);
+    if (p.type === 'material' || p.type === 'prompt') {
+      const m = p.type === 'material' ? MATERIALS.find((x) => x.key === p.key) : null;
+      const list = m ? (m.set ? PROMPT_SETS[m.set].items : null) : [PROMPTS[p.idx]];
+      html = `<div class="eyebrow">${m ? m.from : 'Рабочий промпт · ' + PROMPTS[p.idx].from}</div><h3>${esc(prizeTitle(p))}</h3>`;
+      if (list) { const pv = promptViewer(list); html += pv.html; bind = pv.bind; }
+      else html += `<p>${m.text}</p><div class="pdf-chip"><span>PDF</span>Файл придёт в чат бота. В прототипе он не отправляется.</div>`;
+      if (m && m.set) html += '<p class="fine">PDF-версия набора придёт в чат бота.</p>';
     } else if (p.type === 'discount') {
+      const pr = PRIZES.discount;
       if (!S.subscribed) {
-        card.innerHTML = `<div class="prize"><div class="eyebrow">Скидка на октябрьский интенсив</div><div class="big">−20%</div><h3>Код откроется после подписки на канал школы</h3><p>В боевой версии бот проверит подписку. Сейчас можно посмотреть только пример кода.</p><button class="btn btn-primary btn-block" id="btn-sub" type="button">Демо: открыть пример кода</button></div>`;
-        $('#btn-sub').onclick = () => { S.subscribed = true; save(); toast('Это демонстрационный код, подписка не проверялась.'); openPrize(p); };
+        html = `<div class="eyebrow">${pr.eyebrow}</div><div class="big">−10%</div><h3>Скидка на любой курс — код откроется после подписки на канал школы</h3><p>Не суммируется с комбо. В боевой версии бот проверит подписку.</p><button class="btn btn-primary btn-block" id="btn-sub" type="button">Демо: открыть пример кода</button>`;
+        bind = (root) => { root.querySelector('#btn-sub').onclick = () => { S.subscribed = true; save(); toast('Это демонстрационный код, подписка не проверялась.'); openPrize(p); }; };
       } else {
-        card.innerHTML = `<div class="prize"><div class="eyebrow">Скидка на октябрьский интенсив</div><div class="big">−20%</div><div class="code" id="code">${S.code}</div><p>Демонстрационный код: не действует при оплате. Реальные коды появятся после подключения школы.</p><button class="btn btn-primary btn-block" id="btn-copy-code" type="button">Скопировать код</button></div>`;
-        $('#btn-copy-code').onclick = () => copy(S.code, 'Код скопирован.');
+        html = `<div class="eyebrow">${pr.eyebrow}</div><div class="big">−10%</div><div class="code">${S.code}</div><p>На любой курс, не суммируется с комбо. Демонстрационный код: реальные появятся после подключения школы.</p><button class="btn btn-primary btn-block" id="btn-copy-code" type="button">Скопировать код</button>`;
+        bind = (root) => { root.querySelector('#btn-copy-code').onclick = () => copy(S.code, 'Код скопирован.'); };
       }
     } else {
-      const consult = p.what === 'consult';
-      card.innerHTML = `<div class="prize" style="border-color:#C6E975"><div class="eyebrow" style="color:#C6E975">Редкий сектор · приз студии</div><h3>${consult ? 'Консультация по визуализации, 30 минут' : 'Бесплатный кадр визуализации вашего проекта'}</h3><p>Демонстрационный приз. Реальная выдача и связь со студией ещё не подключены. В пуле осталось призов: ${S.studioStock} из 8.</p></div>`;
+      const pr = PRIZES[p.type];
+      html = `<div class="eyebrow">${pr.eyebrow}</div><h3>${pr.title}</h3><p>${pr.text}</p>${facts(pr.facts)}<p class="fine">${pr.kind === 'studio' ? 'Студия напишет вам в Telegram. ' : ''}Демонстрация: реальная выдача ещё не подключена.${S.stock[p.type] !== undefined ? ' Осталось в пуле: ' + S.stock[p.type] + ' из ' + STOCK[p.type] + '.' : ''}</p>`;
+      if (p.type === 'model3d') cls += ' super';
     }
+    return { html, bind, cls };
+  }
+  function openPrize(p) {
+    const card = $('#prize-card'), body = prizeBody(p);
+    card.innerHTML = `<div class="prize ${body.cls}">${body.html}</div>`;
+    body.bind(card);
     const d = S.done[p.day] || { moves: 0 };
     const st = STAGES[p.day - 1];
     drawTo($('#share-canvas'), Object.keys(S.done).length);
@@ -1868,13 +1948,13 @@
       `Дом — простая 3D-модель от студии «Нейро Отличник» (three.js). Рисуется прямо в игре, без картинок и генераций, — зацепка студии: «так мы собираем ваш проект в 3D». ${D('Р7')} ${D('Р8')}`,
     ] },
     wheel: { step: 4, title: 'Архитектурная рулетка', items: [
-      `12 секторов: 8 промптов, 3 скидки, 1 приз студии. Проигрышных нет.`,
-      `<b>Круг показывает призы, но не шансы.</b> Результат выбирает сервер с учётом остатков. При честной 1/12 восемь призов студии разошлись бы в первый же вечер. ${D('Р5')} ${D('Р16', true)}`,
+      `12 секторов: 3D-модель (суперприз), 3 приза студии, 3 скидки 10%, экскурсия и 4 сектора материалов. Проигрышных нет.`,
+      `<b>Круг показывает призы, но не шансы.</b> Результат выбирает сервер с учётом остатков. Один приз студии на аккаунт, 3D-модель — только на 7-м листе. Остатки: 3D-модель 2, 5 визуализаций 3, улучшение 5, экскурсия 10. ${D('Р5')} ${D('Р16', true)}`,
       `До 3-го дня секторы скидки закрыты штриховкой. Проверить разные призы можно через «Следующий спин».`,
     ] },
     prize: { step: 5, title: 'Приз и карточка дня', items: [
-      `Промпт выдаётся без условий. Скидка — после подписки на канал школы; чтобы проверять подписку, бот должен быть админом канала. ${D('Р11')}`,
-      `Код уникальный, один на Telegram-аккаунт, из пула 150 кодов GetCourse. Срок — до старта интенсива. ${D('Р1')} ${D('Р2')} ${D('Р3')}`,
+      `Материалы выдаются без условий и без повторов: чек-лист, 10 промптов на улучшение, 10 на пролёты, чек-лист школы по ИИ. Промпты листаются и копируются прямо в карточке. Скидка — после подписки на канал школы. ${D('Р11')}`,
+      `Код скидки 10% уникальный, один на Telegram-аккаунт, не суммируется с комбо. ${D('Р1')} ${D('Р2')} ${D('Р3')}`,
       `Карточка дня без спойлеров: объект, стадия, ходы. В Telegram она уходит в чат нативным окном выбора.`,
       `Розыгрыш призов — рекламная акция. Правила (организатор, призы, сроки) нужно опубликовать до запуска. ${D('Р17', true)}`,
     ] },
@@ -1913,7 +1993,7 @@
   $('#demo-day').onchange = (e) => {
     const n = Number(e.target.value);
     S = fresh();
-    for (let d = 1; d < n; d++) { S.done[d] = { moves: 13 + ((d * 5) % 8), remarks: false, extra: false, date: iso(d - 1) }; S.spun[d] = true; S.prizes.push({ type: 'prompt', idx: (d - 1) % PROMPTS.length, day: d }); }
+    for (let d = 1; d < n; d++) { S.done[d] = { moves: 13 + ((d * 5) % 8), remarks: false, extra: false, date: iso(d - 1) }; S.spun[d] = true; S.prizes.push({ ...nextMaterial(), day: d }); }
     S.stage = n; S.cal = n - 1; save(); show('brief'); renderBrief();
   };
   $('#demo-reset').onclick = () => { S = fresh(); save(); show('brief'); renderBrief(); toast('Прототип сброшен: день 1, две отсрочки.'); };
@@ -2100,9 +2180,7 @@
   }
   const normalRevealClick=$('#btn-to-wheel').onclick;
   function restoreRevealButton(){ $('#btn-to-wheel').onclick=normalRevealClick; }
-  const PRIZE_ICO = { prompt: '✦', discount: '%', studio: '★' };
   // «Мои призы» — семь ячеек, по одной на лист: всё видно сразу, без прокрутки. Приз открывается поверх экрана.
-  const prizeTitle = (p) => p.type === 'prompt' ? PROMPTS[p.idx].title : p.type === 'discount' ? 'Скидка 20%' : 'Приз студии';
   function archive() {
     const byDay = {}; S.prizes.forEach((p, i) => { byDay[p.day] = i; });
     const got = S.prizes.length;
@@ -2110,21 +2188,19 @@
       const i = byDay[st.day];
       if (i === undefined) return '<div class="slot locked" aria-label="Лист ' + st.day + ': приза пока нет"><span class="slot-n">0' + st.day + '</span><span class="slot-t">' + st.name + '</span><small>Сдайте лист</small></div>';
       const p = S.prizes[i];
-      return '<button class="slot ' + p.type + '" type="button" data-prize="' + i + '"><span class="slot-n">0' + st.day + '</span><span class="slot-ico" aria-hidden="true">' + PRIZE_ICO[p.type] + '</span><span class="slot-t">' + prizeTitle(p) + '</span><small>' + (p.type === 'prompt' ? 'Открыть промпт' : 'Демо-награда') + '</small></button>';
+      return '<button class="slot ' + p.type + ' k-' + prizeKind(p) + '" type="button" data-prize="' + i + '"><span class="slot-n">0' + st.day + '</span><span class="slot-ico" aria-hidden="true">' + (p.type === 'material' || p.type === 'prompt' ? '✦' : PRIZES[p.type].ico) + '</span><span class="slot-t">' + prizeTitle(p) + '</span><small>' + (p.type === 'material' && MATERIALS.find((m) => m.key === p.key).set ? '10 промптов' : p.type === 'prompt' ? 'Открыть промпт' : 'Открыть') + '</small></button>';
     }).join('') + '<div class="slot sum"><b>' + got + '<i>/7</i></b><small>' + (got ? 'призов собрано' : 'Сдайте первый лист — и крутите рулетку') + '</small></div>';
     $('#archive-list').querySelectorAll('button[data-prize]').forEach((el) => el.onclick = () => openPrizeView(S.prizes[Number(el.dataset.prize)]));
     $('#prize-view').hidden = true;
     show('archive');
   }
   function openPrizeView(p) {
-    const st = STAGES[p.day - 1], v = $('#prize-view'), pr = p.type === 'prompt' ? PROMPTS[p.idx] : null;
-    $('#pv-eyebrow').textContent = 'Лист ' + p.day + ' · ' + st.name;
-    $('#pv-title').textContent = prizeTitle(p);
-    $('#pv-text').textContent = pr ? pr.text : 'Сохранён пример награды. Реальная выдача ещё не подключена.';
-    $('#pv-text').classList.toggle('is-prompt', !!pr);
-    $('#pv-tip').textContent = pr && pr.tip ? pr.tip : ''; $('#pv-tip').hidden = !(pr && pr.tip);
-    $('#pv-copy').hidden = !pr; $('#pv-copy').onclick = () => copy(pr.text, 'Промпт скопирован.');
+    const st = STAGES[p.day - 1], v = $('#prize-view'), body = prizeBody(p);
+    if (v.parentElement !== $('#phone')) $('#phone').appendChild(v);   // окно на весь телефон, поверх меню
+    v.querySelector('.pv-card').innerHTML = `<div class="pv-top"><span class="eyebrow">Лист ${p.day} · ${st.name}</span><button class="pv-x" id="pv-close" type="button" aria-label="Закрыть">×</button></div><div class="prize ${body.cls}">${body.html}</div>`;
+    body.bind(v);
     $('#pv-close').onclick = () => { v.hidden = true; };
+    v.onkeydown = (ev) => { if (ev.key === 'Escape') v.hidden = true; };
     v.hidden = false; $('#pv-close').focus();
   }
 
