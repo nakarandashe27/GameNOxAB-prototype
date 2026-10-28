@@ -1,0 +1,183 @@
+{
+  "improve": {
+    "file": "prompty-uluchshenie-vizualizatsiy",
+    "eyebrow": "Набор промптов студии · 10 штук",
+    "title": "Улучшение",
+    "title_outline": "визуализаций",
+    "lead": "Промпты для нейросетей, которые редактируют картинку по тексту. На входе — ваш рендер. На выходе — тот же дом, но со светом, материалами и жизнью, как в кадрах студии.",
+    "part": "Улучшение",
+    "where": "Nano Banana (Gemini), ChatGPT, Flux Kontext в Krea AI, Midjourney Edit. Короткие правки — в Generative Fill Photoshop.",
+    "rules": [
+      "Всегда прикладывайте исходный рендер. В каждом промпте уже есть строка, которая защищает геометрию: её не удаляйте.",
+      "Один проход — одна задача. Сначала свет, потом материалы, потом детали.",
+      "Делайте 3–4 варианта и собирайте лучшее маской в Photoshop — это «Нейро Отличный метод» из чек-листа.",
+      "Промпты на английском: так модели понимают точнее. Свои вставки в [скобках] тоже пишите по-английски."
+    ],
+    "items": [
+      {
+        "title": "Фотореализм без потери геометрии",
+        "when": "Первый проход для любого рендера",
+        "prompt": "Enhance this architectural render into a photorealistic architectural photograph. Keep the building geometry, proportions, window and door layout, roof shape, camera angle and framing exactly as in the original. Improve only the lighting, material textures, vegetation and sky: soft natural daylight, physically correct shadows, realistic glass with reflections, subtle imperfections on surfaces. No plastic CGI look. Professional architectural photography, 35mm lens, high detail.",
+        "tip": "Если нейросеть всё же сдвинула окна, уменьшите силу изменений (strength или creativity) и повторите."
+      },
+      {
+        "title": "Золотой час",
+        "when": "Тёплый кадр для обложки и портфолио",
+        "prompt": "Relight this scene to golden hour, about 40 minutes before sunset. Warm low sun from the side, long soft shadows across the facade and the lawn, warm glow on the materials, gentle haze in the air, sky graded from warm peach to soft blue. Turn on warm 2700K interior lights so the rooms glow through the glass. Keep the building geometry, materials, camera angle and framing exactly as in the original.",
+        "tip": "Хороший рендер — это на 80% свет. Меняйте время суток отдельным проходом, не вместе с материалами."
+      },
+      {
+        "title": "Синий час с тёплыми окнами",
+        "when": "Вечерняя пара к дневному кадру",
+        "prompt": "Turn this scene into blue hour dusk. Deep blue evening sky with a faint warm band at the horizon, interiors lit with warm 2700K light glowing through all windows, linear LED strips under the eaves and soffits, soft landscape uplights on trees and paths. Low ambient light, cool and slightly dark exterior surfaces, glass showing both reflections and the lit interior. Keep the building geometry, window layout, camera angle and framing unchanged.",
+        "tip": "Сделайте вечерний кадр из того же ракурса, что и дневной. Пара «день и вечер» показывает, что проект живёт в любое время."
+      },
+      {
+        "title": "Живые отражения в стекле",
+        "when": "Окна выглядят чёрными или пустыми",
+        "prompt": "Make all glazing photorealistic: reflections of the sky, clouds and surrounding trees on the glass, slight transparency so the furnished interior with curtains and lamps is visible inside, correct Fresnel effect with stronger reflections at grazing angles. Keep the thin window frames, mullions and their spacing exactly as they are. Do not change anything else in the image.",
+        "tip": "Пустое чёрное или голубое стекло — главный признак учебного рендера. Этот промпт чинит именно его."
+      },
+      {
+        "title": "Ландшафт и озеленение",
+        "when": "Дом стоит на голом газоне",
+        "prompt": "Add mature, natural landscaping around the building: ornamental grasses, ferns and flowering shrubs along the foundation, a stone stepping path with groundcover between the stones, a few young trees at the edges of the frame, a lawn with natural color variation. Layered, slightly wild planting typical of the temperate climate of central Russia. Do not cover the windows, the entrance or the main facade. Keep the building and the camera unchanged.",
+        "tip": "Ставьте растения в передний план: так у кадра появляется глубина. Для юга замените климат на «Black Sea coast»."
+      },
+      {
+        "title": "Фактура материалов",
+        "when": "Материалы плоские, как пластик",
+        "prompt": "Increase the realism of the materials without changing their color or layout: [vertical larch planks] with visible wood grain and thin shadow gaps, [board-formed concrete] with subtle pores and formwork marks, matte black metal flashings and parapet with crisp edges, natural stone with color variation. Add slight weathering and imperfections. Keep the building geometry, camera angle and lighting unchanged.",
+        "tip": "Замените примеры в скобках на свои материалы. Порода дерева важна: larch, oak и pine дают разную фактуру."
+      },
+      {
+        "title": "Жизнь в кадре",
+        "when": "Кадр для соцсетей и портфолио",
+        "prompt": "Add subtle signs of life without distracting from the architecture: two people walking along the path at correct human scale, a dog on the lawn, a few fallen leaves on the paving, a small bird on the roof edge. All additions are small, lit consistently with the scene and do not overlap the windows or the entrance. Keep everything else unchanged.",
+        "tip": "Одного-двух акцентов достаточно. Стаффаж показывает масштаб, а не спорит с домом. Для строгой подачи делайте кадр без сюжета."
+      },
+      {
+        "title": "Первый снег",
+        "when": "Сезонный кадр для серии",
+        "prompt": "Turn the season into early winter with the first snow: a thin, even layer of fresh snow on the roof, terrace, railings and tree branches, a light dusting on the lawn with grass showing through, overcast soft daylight, a cool palette, warm 2700K light in the windows, a faint trail of footprints on the path. Keep the building geometry, materials, camera angle and framing exactly as in the original.",
+        "tip": "Вместо снега попробуйте «wet paving after rain with reflections» или «light morning mist between the trees»."
+      },
+      {
+        "title": "Чистка ИИ-артефактов",
+        "when": "После любого улучшения",
+        "prompt": "Fix AI rendering artifacts while keeping the image otherwise identical: straighten all vertical and horizontal architectural lines, make the window mullions evenly spaced and consistent, restore clean sharp edges on the roof, parapet and slabs, remove melted, duplicated or floating objects, remove any text, signs or watermarks. Do not add new elements and do not change the lighting, materials or composition.",
+        "tip": "Потом проверьте кадр в масштабе 100%: окна, перила, углы кровли. Остатки артефактов уберите в Generative Fill."
+      },
+      {
+        "title": "Скриншот модели → визуализация",
+        "when": "Есть только модель, рендера нет",
+        "prompt": "Turn this 3D model screenshot into a photorealistic architectural visualization. Preserve the exact massing, roof shape, number of floors, window and door openings and their positions; do not add or remove any volumes. Materials: [facade material], [roof material], [window frames]. Setting: [pine forest on a gentle slope]. Time: [golden hour]. Eye-level camera, 28mm lens, perfectly vertical lines, natural light, architectural photography.",
+        "tip": "В Prome AI и Leonardo AI ставьте влияние исходника на максимум и добавьте картинку-референс по настроению."
+      }
+    ],
+    "recipe": {
+      "title": "Порядок проходов",
+      "lead": "Как студия проводит рендер через набор: от сырого кадра к готовому. Пропускайте шаги, которые вашему кадру не нужны.",
+      "steps": [
+        10,
+        1,
+        2,
+        4,
+        5,
+        6,
+        7,
+        9
+      ],
+      "note": "Вместо 02 можно взять 03 или 08 — но только один из них: время суток и сезон меняйте одним проходом. После каждого шага сохраняйте вариант и собирайте лучшее маской."
+    }
+  },
+  "flythrough": {
+    "file": "prompty-prolety",
+    "eyebrow": "Набор промптов студии · 10 штук",
+    "title": "Пролёты",
+    "title_outline": "из одного кадра",
+    "lead": "Промпты для нейросетей, которые оживляют картинку в видео. На входе — одна ваша визуализация. На выходе — клип на 5–10 секунд для защиты, портфолио и сторис.",
+    "part": "Пролёты",
+    "where": "Runway — точнее всех управляет камерой. Также Kling, Veo, Luma, Hailuo. Для шаблонных эффектов — Pika.",
+    "rules": [
+      "Описывайте движение камеры, а не дом: дом уже есть на картинке.",
+      "Один ход камеры — один клип на 5 секунд. Длинный ролик соберите из клипов в CapCut или Premiere, переходы — простое затемнение.",
+      "Фразу «The building is static and rigid» не удаляйте: она держит геометрию. Если есть поле negative prompt, добавьте: morphing, warping, melting, bending lines, extra windows, text, watermark.",
+      "Исходник — от 1920 px, лучше 16:9. Готовый клип проверьте по кадрам: окна и углы кровли не должны «дышать»."
+    ],
+    "items": [
+      {
+        "title": "Медленный наезд к входу",
+        "when": "Самый надёжный первый клип",
+        "prompt": "Slow, smooth dolly-in toward the entrance of the house at eye level, about 2 meters of travel over 5 seconds. Steady gimbal movement, no shake. Leaves and grass move gently in a light breeze. The building is static and rigid: no warping, no morphing, all lines stay straight. Photorealistic, cinematic architectural film.",
+        "tip": "Ракурс почти не меняется, поэтому нейросети почти нечего придумывать. Начинайте с этого хода."
+      },
+      {
+        "title": "Облёт по дуге",
+        "when": "Показать объём дома",
+        "prompt": "Smooth orbit to the right around the house, about 20–30 degrees, keeping the building centered in the frame. Camera at eye level, constant speed, gimbal-stabilized. Parallax between the foreground plants, the house and the background trees. The building is static and rigid and keeps its exact shape and proportions: no warping, no morphing. Natural daylight, cinematic architectural film.",
+        "tip": "Не просите больше 30°: обратную сторону дома нейросеть не видела и придумает сама. Для полного облёта нужна 3D-модель."
+      },
+      {
+        "title": "Подъём дрона",
+        "when": "Показать кровлю и участок",
+        "prompt": "The camera rises slowly and vertically from eye level to a low drone height, tilting down slightly to reveal the roof and the site around the house. Smooth, constant speed. The building is static and rigid, roof lines stay straight, no morphing. Trees sway gently. Aerial architectural cinematography.",
+        "tip": "Лучше всего работает, когда на исходном кадре видна часть кровли. Иначе крышу нейросеть нарисует сама — сверьте её с проектом."
+      },
+      {
+        "title": "Отъезд с раскрытием",
+        "when": "Финальный общий план",
+        "prompt": "Slow pull-back from the facade: the camera moves backward and slightly up, gradually revealing more of the garden and the trees in the foreground. Smooth constant speed, gimbal-stabilized. The building is static and rigid, keeps its exact shape, all lines stay straight, no morphing. Natural light, cinematic architectural film.",
+        "tip": "Если сервис принимает первый и последний кадр (Kling, Runway, Luma), поставьте первым крупный план фасада, а последним — общий вид."
+      },
+      {
+        "title": "Боковой проезд с параллаксом",
+        "when": "Длинный фасад, есть передний план",
+        "prompt": "Lateral tracking shot moving slowly from left to right along the facade, camera at eye level and parallel to the house. Foreground trees and grasses pass in front of the camera, creating depth and parallax. Smooth constant speed. The building is static, rigid and undistorted; all verticals stay vertical. Calm, cinematic architectural film.",
+        "tip": "Без переднего плана ход не работает. Сначала добавьте растения промптом «Ландшафт и озеленение» из набора по улучшению."
+      },
+      {
+        "title": "Проход сквозь листву",
+        "when": "Эффектное начало ролика",
+        "prompt": "The camera slowly pushes forward through out-of-focus foreground branches and leaves, which part and slide out of the frame to reveal the house. Focus pulls from the leaves to the building. Smooth movement at eye level. The building is static and rigid: no warping, no morphing. Natural light, cinematic depth of field.",
+        "tip": "Подходит для домов в саду или в лесу. На голом участке листве неоткуда взяться."
+      },
+      {
+        "title": "Таймлапс: день → вечер",
+        "when": "Есть дневной и вечерний рендер",
+        "prompt": "Static locked-off camera. Time-lapse from late afternoon to blue hour: the sun sets, shadows lengthen and fade, the sky turns from warm to deep blue, warm lights inside the house switch on room by room, landscape lights turn on. Clouds drift across the sky. The building and the camera do not move at all, no morphing.",
+        "tip": "Загрузите дневной рендер первым кадром, а вечерний — последним. Так свет совпадёт с вашим проектом."
+      },
+      {
+        "title": "Живая статика",
+        "when": "Сторис, обложка поста, фон для защиты",
+        "prompt": "Static camera, no camera movement. Only nature moves: leaves and grasses sway in a light breeze, clouds drift slowly, reflections shimmer softly on the glass and the water, a bird flies across the sky. The architecture stays perfectly still and sharp. Photorealistic, calm, seamless loop.",
+        "tip": "Самый надёжный формат: геометрия не «плывёт» совсем. Хорошо ставится фоном на слайд защиты."
+      },
+      {
+        "title": "Интерьер: плавная панорама",
+        "when": "Рендер гостиной или кухни",
+        "prompt": "Slow horizontal pan from left to right across the living room at eye level, from the window wall toward the [kitchen]. Smooth, steady, constant speed. Sunlight from the windows, sheer curtains moving slightly, dust particles in the light beams. Furniture and walls are static and rigid, straight lines stay straight, no morphing. Photorealistic interior design film.",
+        "tip": "Не просите поворот больше 30–40°: дальше начинается комната, которой нет на рендере."
+      },
+      {
+        "title": "Подход к двери",
+        "when": "Финальный кадр ролика",
+        "prompt": "First-person walk toward the front door along the path, slow and steady at eye level, with slight natural head movement. The door ahead stays sharp and grows in the frame; the camera stops just before the entrance. Plants along the path pass by on both sides. The house is static and rigid: no warping, no morphing, straight lines. Morning light, photorealistic.",
+        "tip": "Остановите камеру до двери. Проход внутрь нейросети пока придумывают плохо."
+      }
+    ],
+    "recipe": {
+      "title": "Ролик на 25 секунд",
+      "lead": "Пять клипов по 5 секунд — и готовый ролик для защиты или портфолио. Каждый клип — из своего промпта.",
+      "steps": [
+        6,
+        1,
+        2,
+        7,
+        10
+      ],
+      "note": "Склейте клипы в CapCut или Premiere простым затемнением. Для таймлапса нужен вечерний кадр того же ракурса — его сделает промпт «Синий час» из набора по улучшению."
+    }
+  }
+}

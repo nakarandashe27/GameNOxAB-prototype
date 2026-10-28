@@ -1,0 +1,128 @@
+/* Призы студии — вёрстка по брендбуку «Нейро Отличник» V.1 (сентябрь 2026).
+   Три цвета (бумага / инк / лайм, 70 / 25 / 5), KicaBold — заголовки и цифры, InterTight — читаемый текст,
+   KicaLight — подписи. Карточки: обводка 3 px, неровные углы, плоская тень со сдвигом.
+   Шрифты в репозиторий не входят: build.py берёт их из проекта neuro-maket. */
+@font-face { font-family: "Kica"; src: url("fonts/Kica-Bold.woff2") format("woff2"); font-weight: 700; }
+@font-face { font-family: "Kica"; src: url("fonts/Kica-Light.woff2") format("woff2"); font-weight: 300; }
+@font-face { font-family: "Inter Tight"; src: url("fonts/inter-tight-cyrillic-400.woff2") format("woff2"); font-weight: 400; unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Inter Tight"; src: url("fonts/inter-tight-latin-400.woff2") format("woff2"); font-weight: 400; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215; }
+@font-face { font-family: "Inter Tight"; src: url("fonts/Inter-Regular-symbols.woff2") format("woff2"); font-weight: 400; unicode-range: U+2190-23FF, U+25A0-25FF; }
+@font-face { font-family: "Inter Tight"; src: url("fonts/Inter-SemiBold-symbols.woff2") format("woff2"); font-weight: 600; unicode-range: U+2190-23FF, U+25A0-25FF; }
+@font-face { font-family: "Inter Tight"; src: url("fonts/inter-tight-cyrillic-600.woff2") format("woff2"); font-weight: 600; unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116; }
+@font-face { font-family: "Inter Tight"; src: url("fonts/inter-tight-latin-600.woff2") format("woff2"); font-weight: 600; unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2212, U+2215; }
+
+:root {
+  --lime: #DBFC3B;   /* всегда точный HEX, не «похожий» лайм */
+  --ink: #2A2A2A;
+  --paper: #F5F5F0;
+  --white: #FFFFFF;
+  --grey: #6E6E6A;   /* второстепенный текст на белом: 5.2:1 */
+  --line: #D9D9D3;
+  --shift: 6px;      /* сдвиг фирменной плоской тени */
+  --r: 22px 18px 24px 16px;  /* «неровные» углы карточек */
+}
+
+@page { size: A4; margin: 0; }
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--white); }
+body { font: 400 12.5px/1.5 "Inter Tight", sans-serif; color: var(--ink); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+.page { position: relative; width: 210mm; height: 297mm; padding: 50px 56px 74px; overflow: hidden; page-break-after: always; background: var(--white); display: flex; flex-direction: column; gap: 22px; }
+.page:last-child { page-break-after: auto; }
+.page.paper { background: var(--paper); }
+
+/* ── колонтитул ── */
+.foot { position: absolute; left: 56px; right: 56px; bottom: 30px; display: flex; justify-content: space-between; align-items: center; font: 600 8.5px/1 "Inter Tight", sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--grey); }
+.foot .brand { display: flex; align-items: center; gap: 8px; }
+.foot .brand img { height: 11px; }
+
+/* ── заголовок раздела: лаймовая цифра с обводкой + KicaBold ── */
+.sec { display: grid; grid-template-columns: auto 1fr; column-gap: 16px; align-items: start; }
+.sec .num { font: 700 66px/.82 "Kica", sans-serif; color: var(--lime); -webkit-text-stroke: 2px var(--ink); letter-spacing: -.02em; padding-top: 2px; }
+.sec h2 { margin: 0; font: 700 32px/1 "Kica", sans-serif; letter-spacing: -.01em; }
+.sec p { grid-column: 2; margin: 8px 0 0; color: var(--grey); font-size: 12.5px; max-width: 520px; }
+
+h3 { margin: 0; font: 700 17px/1.1 "Kica", sans-serif; letter-spacing: -.005em; }
+p { margin: 0; }
+.lead { font-size: 14px; line-height: 1.5; max-width: 560px; }
+.muted { color: var(--grey); }
+.cap { font: 300 11px/1.35 "Kica", sans-serif; color: var(--grey); }
+
+/* ── карточки ── */
+.card { position: relative; background: var(--white); border: 3px solid var(--ink); border-radius: var(--r); box-shadow: var(--shift) var(--shift) 0 var(--ink); padding: 20px 22px 20px; }
+.card > .pill:first-child { margin-bottom: 12px; }
+.pill { display: inline-block; padding: 5px 12px 4px; border-radius: 999px; background: var(--ink); color: var(--lime); font: 700 10.5px/1 "Kica", sans-serif; letter-spacing: .01em; white-space: nowrap; }
+.pill.lime { background: var(--lime); color: var(--ink); }
+.pill.line { background: transparent; color: var(--ink); border: 2px solid var(--ink); padding: 3px 10px 2px; }
+
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.row { display: flex; gap: 22px; align-items: stretch; }
+.grow { flex: 1; }
+
+/* ── списки ── */
+ul.dash, ol.steps, ul.check { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+ul.dash li { position: relative; padding-left: 18px; }
+ul.dash li::before { content: "—"; position: absolute; left: 0; }
+ul.check li { position: relative; padding-left: 26px; min-height: 16px; }
+ul.check li .cb { position: absolute; left: 0; top: 1px; width: 16px; height: 16px; border: 2px solid var(--ink); border-radius: 3px; background: var(--white); display: block; }
+ol.steps { counter-reset: s; gap: 10px; }
+ol.steps li { counter-increment: s; position: relative; padding-left: 36px; min-height: 26px; }
+ol.steps li::before { content: counter(s); position: absolute; left: 0; top: -1px; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--lime); font: 700 12px/26px "Kica", sans-serif; text-align: center; }
+li b, p b { font-weight: 600; }
+
+/* ── фото в рамке ── */
+.ph { position: relative; border: 3px solid var(--ink); border-radius: 16px; overflow: hidden; box-shadow: var(--shift) var(--shift) 0 var(--ink); background: var(--ink); }
+.ph img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ph .pill { position: absolute; left: 12px; top: 12px; }
+figure { margin: 0; display: grid; gap: 10px; }
+
+/* ── дудлы: только лайм, 30–90 px, в свободных углах, не больше 6–8 на разворот ── */
+.doodle { position: absolute; pointer-events: none; }
+
+/* ── таблица ── */
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { text-align: left; font: 600 9px/1 "Inter Tight", sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--grey); padding: 0 0 8px; border-bottom: 2px solid var(--ink); }
+td { padding: 7px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+td:first-child { width: 42%; padding-right: 12px; }
+
+/* ── обложка ── */
+.cover { padding-top: 46px; }
+.cover .top { display: flex; justify-content: space-between; align-items: center; }
+.cover .top .logo { height: 25px; }
+.cover .ver { display: flex; align-items: center; gap: 10px; font: 600 9px/1 "Inter Tight", sans-serif; letter-spacing: .1em; color: var(--grey); }
+.cover .ver i { display: block; width: 150px; height: 1px; background: var(--grey); opacity: .5; }
+.cover .eyebrow { font: 600 10px/1 "Inter Tight", sans-serif; letter-spacing: .14em; text-transform: uppercase; color: var(--grey); }
+.cover h1 { margin: 12px 0 0; font: 700 64px/.95 "Kica", sans-serif; letter-spacing: -.015em; }
+.cover h1 .out { display: block; color: transparent; -webkit-text-stroke: 2px var(--ink); }
+.cover .plus { position: absolute; width: 11px; height: 11px; }
+.cover .plus::before, .cover .plus::after { content: ""; position: absolute; background: var(--grey); opacity: .6; }
+.cover .plus::before { left: 5px; top: 0; width: 1px; height: 11px; }
+.cover .plus::after { top: 5px; left: 0; height: 1px; width: 11px; }
+.cover .bottom { position: absolute; left: 56px; right: 56px; bottom: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+.cover .contacts { text-align: right; font: 600 10px/1.6 "Inter Tight", sans-serif; color: var(--grey); }
+.cover .ruler { display: flex; gap: 4px; align-items: flex-end; height: 8px; margin-top: 12px; }
+.cover .ruler i { display: block; width: 1px; background: var(--grey); opacity: .6; height: 5px; }
+.cover .ruler i:nth-child(odd) { height: 8px; }
+
+/* ── карточка промпта ── */
+.prompt { display: grid; grid-template-columns: 82px 1fr; column-gap: 14px; padding: 18px 22px 18px 16px; }
+.prompt .n { font: 700 40px/.85 "Kica", sans-serif; color: var(--lime); -webkit-text-stroke: 1.6px var(--ink); text-align: center; padding-top: 2px; }
+.prompt .head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.prompt .text { margin-top: 10px; padding: 11px 13px; background: var(--paper); border-radius: 10px; border-left: 4px solid var(--lime); font: 400 11.5px/1.5 "Inter Tight", sans-serif; }
+.prompt .tip { margin-top: 10px; display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; font-size: 12px; }
+.prompt .tip .pill { margin-top: 1px; }
+
+.dark { background: var(--ink); color: var(--white); box-shadow: var(--shift) var(--shift) 0 var(--lime); }
+.dark .muted { color: #BDBDB6; }
+.dark h3 { color: var(--lime); }
+.quote { font: 700 19px/1.15 "Kica", sans-serif; }
+
+/* ── рецепт: цепочка номеров промптов ── */
+.chain { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; margin-top: 4px; }
+.chain .k { min-width: 34px; height: 34px; padding: 0 8px; border-radius: 999px; background: var(--lime); border: 2px solid var(--ink); font: 700 13px/30px "Kica", sans-serif; text-align: center; }
+.chain .k small { font: 600 10.5px/1 "Inter Tight", sans-serif; margin-left: 6px; }
+.chain .to { font: 700 14px/1 "Kica", sans-serif; color: var(--grey); }
+
+.qr { width: 92px; height: 92px; border: 3px solid var(--ink); border-radius: 12px; padding: 6px; background: var(--white); }
+.qr img { width: 100%; height: 100%; display: block; }
