@@ -1,5 +1,5 @@
 /*
- * Собирает прототип в один HTML-файл (ядро core.js встраивается в страницу).
+ * Собирает прототип в один HTML-файл (ядро core.js и 3D-домик house3d.js встраиваются в страницу, three.js — с cdnjs).
  * Запуск: node tools/build-prototype.js
  *   prototype/dist/soberi-proekt.html — самостоятельный файл, можно переслать сторонам и открыть двойным кликом
  *   prototype/dist/artifact.html      — то же без <head>, для публикации ссылкой (обёртку добавляет хостинг)
@@ -14,7 +14,12 @@ const core = fs.readFileSync(path.join(root, 'core.js'), 'utf8');
 const tag = '<script src="core.js"></script>';
 if (!html.includes(tag)) throw new Error('В index.html не найден тег подключения core.js');
 
-const body = html.replace(tag, () => '<script>\n' + core + '\n</script>');
+const house = fs.readFileSync(path.join(root, 'house3d.js'), 'utf8');
+const houseTag = '<script src="house3d.js"></script>';
+if (!html.includes(houseTag)) throw new Error('В index.html не найден тег подключения house3d.js');
+
+// three.js остаётся внешним скриптом с cdnjs; ядро и 3D-домик встраиваются в страницу
+const body = html.replace(houseTag, () => '<script>\n' + house + '\n</script>').replace(tag, () => '<script>\n' + core + '\n</script>');
 const standalone =
   '<!doctype html>\n<html lang="ru">\n<head>\n<meta charset="utf-8">\n' +
   '<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
