@@ -1203,6 +1203,8 @@
   const edgeMat = new THREE.LineBasicMaterial({ color: C.ink, transparent: true });
   function add(geo, o) {
     const mat = new THREE.MeshStandardMaterial({ color: C.clay, roughness: 0.92, metalness: 0, transparent: !!o.glass });
+    // under — основание: в той же плоскости, что и стоящее на нём, всегда уступает, иначе грани мерцают при повороте камеры
+    if (o.under) Object.assign(mat, { polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 });
     const mesh = new THREE.Mesh(geo, mat); mesh.castShadow = !o.flat; mesh.receiveShadow = true;
     const edges = o.noEdges ? null : new THREE.LineSegments(new THREE.EdgesGeometry(geo, 25), edgeMat.clone());
     const g = new THREE.Group(); g.add(mesh); if (edges) g.add(edges);
@@ -1245,8 +1247,9 @@
   outline.computeLineDistances(); scene.add(outline);
   items.push({ holder: outline, stage: 1, until: 2, anim: 'fade', line: true, mat: outline.material });
 
-  // 2 — план: фундаментная плита и стены, «срезанные» на уровне плана
-  add(box(LX + 0.4, 0.35, LZ + 0.4), { stage: 2, anim: 'rise', at: (m) => m.position.set(0, -0.2, 0), render: { color: 0xB9B5AC } });
+  // 2 — план: фундаментная плита и стены, «срезанные» на уровне плана.
+  // Верх плиты совпадает с низом панорамных проёмов — плита «under», чтобы рамы окон не мерцали.
+  add(box(LX + 0.4, 0.35, LZ + 0.4), { stage: 2, anim: 'rise', under: true, at: (m) => m.position.set(0, -0.2, 0), render: { color: 0xB9B5AC } });
   WALLS.forEach((w, i) => add(wall(w.len, 0.7, OPEN[w.k]).translate(0, 0.15, 0), { stage: 2, until: 3, anim: 'rise', i: i * 0.5, at: w.at }));
   const PART = [[-1.5, 0.15, -3.2, -0.5], [-1.5, 0.15, 0.4, 3.2], [-6, 4.5, -0.5, 0.15]];
   PART.forEach(([x, w, z0, z1], i) => {
