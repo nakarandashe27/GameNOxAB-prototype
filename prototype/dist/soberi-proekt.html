@@ -387,6 +387,7 @@
   .prize { display: grid; gap: 10px; padding: 16px; }
   .prize h3 { font: 700 19px/1.25 var(--f-ui); text-wrap: balance; }
   .prize p { font-size: 14px; color: var(--dim); }
+  .prize [data-prize-link] { text-decoration: none; }
   .prize.super { border-color: var(--lime); background: linear-gradient(160deg, rgba(219, 252, 59, 0.16), rgba(255, 255, 255, 0.03) 60%); }
   .prize.school { border-color: rgba(247, 76, 46, 0.55); }
   .pfacts { display: grid; gap: 6px; margin: 0; padding-top: 8px; border-top: 1px solid var(--stroke); }
@@ -403,7 +404,7 @@
   .pdf-chip span { display: grid; place-items: center; height: 44px; border-radius: 10px; background: var(--no-paper); color: var(--no-ink); font: 700 12px/1 var(--f-neuro); }
   .slot.model3d .slot-ico { background: var(--lime); color: var(--lime-ink); font-size: 11px; }
   .slot.model3d { border-color: var(--lime); }
-  .slot.excursion .slot-ico { background: var(--ab-blue); color: #fff; }
+  .slot.consultation .slot-ico, .slot.excursion .slot-ico { background: var(--ab-blue); color: #fff; }
   .prize .big { font: 700 44px/1 var(--f-display); color: var(--lime); text-shadow: 0 0 24px rgba(219, 252, 59, 0.4); }
   pre.prompt { margin: 0; padding: 12px; border-radius: 14px; border: 1px solid var(--stroke); background: rgba(0, 0, 0, 0.3); white-space: pre-wrap; word-break: break-word; font: 13px/1.5 var(--f-ui); }
   .code { padding: 14px; border: 1.5px dashed var(--lime); border-radius: 14px; font: 600 22px/1 ui-monospace, Consolas, monospace; letter-spacing: 0.08em; text-align: center; }
@@ -684,7 +685,7 @@
     #scr-how .hero-title { font-size: 34px; }
     #scr-how .try-grid { grid-template-columns: repeat(3, 42px); } #scr-how .try-grid button { width: 42px; height: 42px; }
   }
-  @media (max-height: 700px) { .prize > p:not(.fine), .ptip { display: none; } }
+  @media (max-height: 700px) { .prize > p:not(.fine, .claim), .ptip { display: none; } }
   @media (max-height: 640px) { .prize .fine { display: none; } pre.prompt { font-size: 11px; line-height: 1.4; padding: 8px 10px; } .prize h3 { font-size: 16px; } .prize { gap: 6px; } }
   .obj, .rv { flex-direction: column; overflow: hidden; }
   .obj canvas, .rv canvas { flex: 1 1 0; height: 0; min-height: 0; }
@@ -1037,12 +1038,12 @@
       <p class="fine">Вы сдали уровень и заработали 1 вращение. Проигрышных секторов нет.</p>
       <div class="wheel-wrap">
         <svg class="wheel-pointer" viewBox="0 0 22 26" aria-hidden="true"><path d="M1 1h20L11 25z" fill="#DBFC3B" stroke="#161010" stroke-width="2" stroke-linejoin="round"/></svg>
-        <svg class="wheel" id="wheel" viewBox="0 0 200 200" role="img" aria-label="Рулетка: 3D-модель, промпты для рендера, промпты для видео, чек-лист рендера, чек-лист по ИИ, скидка 10%, экскурсия"></svg>
+        <svg class="wheel" id="wheel" viewBox="0 0 200 200" role="img" aria-label="Рулетка: 3D-модель, промпты для рендера, промпты для видео, чек-лист рендера, чек-лист по ИИ, скидка 10%, консультация с Ярославом"></svg>
       </div>
       <div class="guide guide-big wheel-guide"><img data-pose="wave" alt=""><p class="speech">Крутите! Я смотрю, где остановится.</p></div>
       <div class="legend" id="legend"></div>
       <button class="btn btn-primary btn-block" id="btn-spin" type="button">Крутить</button>
-      <p class="fine" id="wheel-fine">Один сданный лист — одна награда. Это демонстрация призов.</p>
+      <p class="fine" id="wheel-fine">Один сданный лист — одна награда. Как её получить, указано в карточке приза.</p>
     </section>
 
     <!-- Приз -->
@@ -1109,7 +1110,7 @@
         </label>
         <label for="demo-spin">Демо: следующий спин
           <select id="demo-spin">
-            <option value="auto">Как решит сервер</option><option value="material">Материал</option><option value="discount">Скидка 10%</option><option value="excursion">Экскурсия</option><option value="model3d">3D-модель</option>
+            <option value="auto">Случайный приз</option><option value="material">Материал</option><option value="discount">Скидка 10%</option><option value="consultation">Консультация с Ярославом</option><option value="model3d">3D-модель</option>
           </select>
         </label>
         <button class="btn btn-secondary btn-small" id="demo-cover" type="button">Показать титульный лист</button>
@@ -1753,7 +1754,7 @@
     broken: 'Проект сорван: отсрочки кончились. Бывает и у лучших бюро. Начинаем объект заново.',
   };
 
-  // Призы согласованы 28.10.2026 (prizes/README.md). Круг — витрина: исход решает сервер по весам и остаткам.
+  // Состав призов: prizes/README.md. В прототипе исход выбирается на устройстве игрока.
   // Наборы промптов студии подставляет сборка из prizes/src/prompts.json — тот же текст, что в PDF.
   const PROMPT_SETS = JSON.parse("{\"improve\":{\"title\":\"Улучшение визуализаций\",\"items\":[{\"title\":\"Фотореализм без потери геометрии\",\"when\":\"Первый проход для любого рендера\",\"prompt\":\"Enhance this architectural render into a photorealistic architectural photograph. Keep the building geometry, proportions, window and door layout, roof shape, camera angle and framing exactly as in the original. Improve only the lighting, material textures, vegetation and sky: soft natural daylight, physically correct shadows, realistic glass with reflections, subtle imperfections on surfaces. No plastic CGI look. Professional architectural photography, 35mm lens, high detail.\",\"tip\":\"Если нейросеть всё же сдвинула окна, уменьшите силу изменений (strength или creativity) и повторите.\"},{\"title\":\"Золотой час\",\"when\":\"Тёплый кадр для обложки и портфолио\",\"prompt\":\"Relight this scene to golden hour, about 40 minutes before sunset. Warm low sun from the side, long soft shadows across the facade and the lawn, warm glow on the materials, gentle haze in the air, sky graded from warm peach to soft blue. Turn on warm 2700K interior lights so the rooms glow through the glass. Keep the building geometry, materials, camera angle and framing exactly as in the original.\",\"tip\":\"Хороший рендер — это на 80% свет. Меняйте время суток отдельным проходом, не вместе с материалами.\"},{\"title\":\"Синий час с тёплыми окнами\",\"when\":\"Вечерняя пара к дневному кадру\",\"prompt\":\"Turn this scene into blue hour dusk. Deep blue evening sky with a faint warm band at the horizon, interiors lit with warm 2700K light glowing through all windows, linear LED strips under the eaves and soffits, soft landscape uplights on trees and paths. Low ambient light, cool and slightly dark exterior surfaces, glass showing both reflections and the lit interior. Keep the building geometry, window layout, camera angle and framing unchanged.\",\"tip\":\"Сделайте вечерний кадр из того же ракурса, что и дневной. Пара «день и вечер» показывает, что проект живёт в любое время.\"},{\"title\":\"Живые отражения в стекле\",\"when\":\"Окна выглядят чёрными или пустыми\",\"prompt\":\"Make all glazing photorealistic: reflections of the sky, clouds and surrounding trees on the glass, slight transparency so the furnished interior with curtains and lamps is visible inside, correct Fresnel effect with stronger reflections at grazing angles. Keep the thin window frames, mullions and their spacing exactly as they are. Do not change anything else in the image.\",\"tip\":\"Пустое чёрное или голубое стекло — главный признак учебного рендера. Этот промпт чинит именно его.\"},{\"title\":\"Ландшафт и озеленение\",\"when\":\"Дом стоит на голом газоне\",\"prompt\":\"Add mature, natural landscaping around the building: ornamental grasses, ferns and flowering shrubs along the foundation, a stone stepping path with groundcover between the stones, a few young trees at the edges of the frame, a lawn with natural color variation. Layered, slightly wild planting typical of the temperate climate of central Russia. Do not cover the windows, the entrance or the main facade. Keep the building and the camera unchanged.\",\"tip\":\"Ставьте растения в передний план: так у кадра появляется глубина. Для юга замените климат на «Black Sea coast».\"},{\"title\":\"Фактура материалов\",\"when\":\"Материалы плоские, как пластик\",\"prompt\":\"Increase the realism of the materials without changing their color or layout: [vertical larch planks] with visible wood grain and thin shadow gaps, [board-formed concrete] with subtle pores and formwork marks, matte black metal flashings and parapet with crisp edges, natural stone with color variation. Add slight weathering and imperfections. Keep the building geometry, camera angle and lighting unchanged.\",\"tip\":\"Замените примеры в скобках на свои материалы. Порода дерева важна: larch, oak и pine дают разную фактуру.\"},{\"title\":\"Жизнь в кадре\",\"when\":\"Кадр для соцсетей и портфолио\",\"prompt\":\"Add subtle signs of life without distracting from the architecture: two people walking along the path at correct human scale, a dog on the lawn, a few fallen leaves on the paving, a small bird on the roof edge. All additions are small, lit consistently with the scene and do not overlap the windows or the entrance. Keep everything else unchanged.\",\"tip\":\"Одного-двух акцентов достаточно. Стаффаж показывает масштаб, а не спорит с домом. Для строгой подачи делайте кадр без сюжета.\"},{\"title\":\"Первый снег\",\"when\":\"Сезонный кадр для серии\",\"prompt\":\"Turn the season into early winter with the first snow: a thin, even layer of fresh snow on the roof, terrace, railings and tree branches, a light dusting on the lawn with grass showing through, overcast soft daylight, a cool palette, warm 2700K light in the windows, a faint trail of footprints on the path. Keep the building geometry, materials, camera angle and framing exactly as in the original.\",\"tip\":\"Вместо снега попробуйте «wet paving after rain with reflections» или «light morning mist between the trees».\"},{\"title\":\"Чистка ИИ-артефактов\",\"when\":\"После любого улучшения\",\"prompt\":\"Fix AI rendering artifacts while keeping the image otherwise identical: straighten all vertical and horizontal architectural lines, make the window mullions evenly spaced and consistent, restore clean sharp edges on the roof, parapet and slabs, remove melted, duplicated or floating objects, remove any text, signs or watermarks. Do not add new elements and do not change the lighting, materials or composition.\",\"tip\":\"Потом проверьте кадр в масштабе 100%: окна, перила, углы кровли. Остатки артефактов уберите в Generative Fill.\"},{\"title\":\"Скриншот модели → визуализация\",\"when\":\"Есть только модель, рендера нет\",\"prompt\":\"Turn this 3D model screenshot into a photorealistic architectural visualization. Preserve the exact massing, roof shape, number of floors, window and door openings and their positions; do not add or remove any volumes. Materials: [facade material], [roof material], [window frames]. Setting: [pine forest on a gentle slope]. Time: [golden hour]. Eye-level camera, 28mm lens, perfectly vertical lines, natural light, architectural photography.\",\"tip\":\"В Prome AI и Leonardo AI ставьте влияние исходника на максимум и добавьте картинку-референс по настроению.\"}]},\"fly\":{\"title\":\"Пролёты из одного кадра\",\"items\":[{\"title\":\"Медленный наезд к входу\",\"when\":\"Самый надёжный первый клип\",\"prompt\":\"Slow, smooth dolly-in toward the entrance of the house at eye level, about 2 meters of travel over 5 seconds. Steady gimbal movement, no shake. Leaves and grass move gently in a light breeze. The building is static and rigid: no warping, no morphing, all lines stay straight. Photorealistic, cinematic architectural film.\",\"tip\":\"Ракурс почти не меняется, поэтому нейросети почти нечего придумывать. Начинайте с этого хода.\"},{\"title\":\"Облёт по дуге\",\"when\":\"Показать объём дома\",\"prompt\":\"Smooth orbit to the right around the house, about 20–30 degrees, keeping the building centered in the frame. Camera at eye level, constant speed, gimbal-stabilized. Parallax between the foreground plants, the house and the background trees. The building is static and rigid and keeps its exact shape and proportions: no warping, no morphing. Natural daylight, cinematic architectural film.\",\"tip\":\"Не просите больше 30°: обратную сторону дома нейросеть не видела и придумает сама. Для полного облёта нужна 3D-модель.\"},{\"title\":\"Подъём дрона\",\"when\":\"Показать кровлю и участок\",\"prompt\":\"The camera rises slowly and vertically from eye level to a low drone height, tilting down slightly to reveal the roof and the site around the house. Smooth, constant speed. The building is static and rigid, roof lines stay straight, no morphing. Trees sway gently. Aerial architectural cinematography.\",\"tip\":\"Лучше всего работает, когда на исходном кадре видна часть кровли. Иначе крышу нейросеть нарисует сама — сверьте её с проектом.\"},{\"title\":\"Отъезд с раскрытием\",\"when\":\"Финальный общий план\",\"prompt\":\"Slow pull-back from the facade: the camera moves backward and slightly up, gradually revealing more of the garden and the trees in the foreground. Smooth constant speed, gimbal-stabilized. The building is static and rigid, keeps its exact shape, all lines stay straight, no morphing. Natural light, cinematic architectural film.\",\"tip\":\"Если сервис принимает первый и последний кадр (Kling, Runway, Luma), поставьте первым крупный план фасада, а последним — общий вид.\"},{\"title\":\"Боковой проезд с параллаксом\",\"when\":\"Длинный фасад, есть передний план\",\"prompt\":\"Lateral tracking shot moving slowly from left to right along the facade, camera at eye level and parallel to the house. Foreground trees and grasses pass in front of the camera, creating depth and parallax. Smooth constant speed. The building is static, rigid and undistorted; all verticals stay vertical. Calm, cinematic architectural film.\",\"tip\":\"Без переднего плана ход не работает. Сначала добавьте растения промптом «Ландшафт и озеленение» из набора по улучшению.\"},{\"title\":\"Проход сквозь листву\",\"when\":\"Эффектное начало ролика\",\"prompt\":\"The camera slowly pushes forward through out-of-focus foreground branches and leaves, which part and slide out of the frame to reveal the house. Focus pulls from the leaves to the building. Smooth movement at eye level. The building is static and rigid: no warping, no morphing. Natural light, cinematic depth of field.\",\"tip\":\"Подходит для домов в саду или в лесу. На голом участке листве неоткуда взяться.\"},{\"title\":\"Таймлапс: день → вечер\",\"when\":\"Есть дневной и вечерний рендер\",\"prompt\":\"Static locked-off camera. Time-lapse from late afternoon to blue hour: the sun sets, shadows lengthen and fade, the sky turns from warm to deep blue, warm lights inside the house switch on room by room, landscape lights turn on. Clouds drift across the sky. The building and the camera do not move at all, no morphing.\",\"tip\":\"Загрузите дневной рендер первым кадром, а вечерний — последним. Так свет совпадёт с вашим проектом.\"},{\"title\":\"Живая статика\",\"when\":\"Сторис, обложка поста, фон для защиты\",\"prompt\":\"Static camera, no camera movement. Only nature moves: leaves and grasses sway in a light breeze, clouds drift slowly, reflections shimmer softly on the glass and the water, a bird flies across the sky. The architecture stays perfectly still and sharp. Photorealistic, calm, seamless loop.\",\"tip\":\"Самый надёжный формат: геометрия не «плывёт» совсем. Хорошо ставится фоном на слайд защиты.\"},{\"title\":\"Интерьер: плавная панорама\",\"when\":\"Рендер гостиной или кухни\",\"prompt\":\"Slow horizontal pan from left to right across the living room at eye level, from the window wall toward the [kitchen]. Smooth, steady, constant speed. Sunlight from the windows, sheer curtains moving slightly, dust particles in the light beams. Furniture and walls are static and rigid, straight lines stay straight, no morphing. Photorealistic interior design film.\",\"tip\":\"Не просите поворот больше 30–40°: дальше начинается комната, которой нет на рендере.\"},{\"title\":\"Подход к двери\",\"when\":\"Финальный кадр ролика\",\"prompt\":\"First-person walk toward the front door along the path, slow and steady at eye level, with slight natural head movement. The door ahead stays sharp and grows in the frame; the camera stops just before the entrance. Plants along the path pass by on both sides. The house is static and rigid: no warping, no morphing, straight lines. Morning light, photorealistic.\",\"tip\":\"Остановите камеру до двери. Проход внутрь нейросети пока придумывают плохо.\"}]}}");
   // Когда все материалы собраны, выпадают отдельные промпты из обоих наборов.
@@ -1761,16 +1762,20 @@
   const PRIZES = {
     model3d: { kind: 'studio', label: '3D-МОДЕЛЬ', ico: '3D', title: 'Интерактивная 3D-модель вашего проекта', eyebrow: 'Суперприз студии «Нейро Отличник»',
       text: 'Веб-модель по ссылке: её можно крутить, показывать на защите и вставить в портфолио.', facts: [['От вас', 'модель одного объекта: IFC, RVT, PLN, SKP или FBX/OBJ'], ['Срок', '2–3 недели']] },
-    excursion: { kind: 'school', label: 'ЭКСКУРСИЯ', ico: '⌂', title: 'Место на экскурсии в архбюро', eyebrow: 'Приз школы АРТ.БРОДСКИЙ',
-      text: 'Экскурсия в архитектурное бюро в составе группы школы.', facts: [['Как попасть', 'школа напишет, когда соберётся группа']] },
+    consultation: { kind: 'school', label: 'КОНСУЛЬТАЦИЯ|20 МИН', ico: '20′', title: 'Консультация с Ярославом Уваровским', eyebrow: 'Приз школы АРТ.БРОДСКИЙ',
+      text: '20 минут один на один. Приложите скриншот приза, чтобы договориться о времени.',
+      url: 'https://t.me/artbrodsky_support' },
+    // Старые выигрыши остаются в «Моих призах», но больше не выпадают.
+    excursion: { kind: 'school', ico: '⌂', title: 'Место на экскурсии в архбюро' },
     discount: { kind: 'school', label: '−10%', ico: '%', title: 'Скидка 10% на любой курс', eyebrow: 'Приз школы АРТ.БРОДСКИЙ' },
     material: { kind: 'material', label: 'МАТЕРИАЛЫ', ico: '✦' },
   };
-  const STOCK = { model3d: 2, excursion: 10 };
+  const STOCK = { model3d: 2 };
+  const PRIZE_FILES = 'https://raw.githubusercontent.com/nakarandashe27/GameNOxAB-prototype/main/prizes/';
   const MATERIALS = [
-    { key: 'checklist', from: 'Материал студии', title: 'Чек-лист визуализации', text: 'Чертёжный лист A4 на 8 листов: шесть шагов от сцены до серии кадров, на рендерах студии. Галочки кликаются.' },
-    { key: 'improve10', from: 'Материал студии · 10 промптов', title: '10 промптов: улучшение визуализаций', set: 'improve' },
-    { key: 'fly10', from: 'Материал студии · 10 промптов', title: '10 промптов: пролёты из одного кадра', set: 'fly' },
+    { key: 'checklist', from: 'Материал студии', title: 'Чек-лист визуализации', text: 'Чертёжный лист A4 на 8 листов: шесть шагов от сцены до серии кадров, на рендерах студии. Галочки кликаются.', pdf: 'chek-list-vizualizatsii.pdf' },
+    { key: 'improve10', from: 'Материал студии · 10 промптов', title: '10 промптов: улучшение визуализаций', set: 'improve', pdf: 'prompty-uluchshenie-vizualizatsiy.pdf' },
+    { key: 'fly10', from: 'Материал студии · 10 промптов', title: '10 промптов: пролёты из одного кадра', set: 'fly', pdf: 'prompty-prolety.pdf' },
     { key: 'ai', from: 'Материал школы АРТ.БРОДСКИЙ', title: 'Чек-лист по работе в ИИ', text: 'Как подключать нейросети к учебному проекту: от идеи до подачи.' },
   ];
 
@@ -2410,7 +2415,7 @@
   // ---------- рулетка ----------
   // Сектор 3D-модели узкий — видно, что это редкий и ценный приз. Остальные 11 делят круг поровну.
   // Материалы на колесе названы прямо: студент видит, что именно может выпасть.
-  const SECTORS = ['model3d', 'improve10', 'discount', 'fly10', 'excursion', 'checklist', 'discount', 'improve10', 'ai', 'discount', 'fly10', 'checklist'];
+  const SECTORS = ['model3d', 'improve10', 'discount', 'fly10', 'consultation', 'checklist', 'discount', 'improve10', 'ai', 'discount', 'fly10', 'checklist'];
   const MAT_LABEL = { improve10: 'ПРОМПТЫ|ДЛЯ РЕНДЕРА', fly10: 'ПРОМПТЫ|ДЛЯ ВИДЕО', checklist: 'ЧЕК-ЛИСТ|РЕНДЕРА', ai: 'ЧЕК-ЛИСТ|ПО ИИ' };
   const SUPER_SPAN = 12, SPANS = SECTORS.map((t) => (t === 'model3d' ? SUPER_SPAN : (360 - SUPER_SPAN) / (SECTORS.length - 1)));
   const CENTERS = SPANS.map((sp, k) => SPANS.slice(0, k).reduce((a, b) => a + b, 0) - SPANS[0] / 2 + sp / 2);   // сектор 0 — по центру под стрелкой
@@ -2425,7 +2430,7 @@
       let fill, ink, label = MAT_LABEL[type] || PRIZES[type].label;
       if (type === 'model3d') { fill = '#DBFC3B'; ink = '#2A2A2A'; }
       else if (type === 'discount') { fill = locked ? 'url(#hatch)' : '#F74C2E'; ink = locked ? 'rgba(255,255,255,.55)' : '#FFFFFF'; label = locked ? 'СКИДКА|С 3 ДНЯ' : 'СКИДКА|−10%'; }
-      else if (type === 'excursion') { fill = '#4D61F4'; ink = '#FFFFFF'; }
+      else if (type === 'consultation') { fill = '#4D61F4'; ink = '#FFFFFF'; }
       else if (type === 'ai') { fill = '#2E2626'; ink = '#FFFFFF'; }   // материал школы
       else { fill = k % 2 ? '#221C1C' : '#2A2323'; ink = '#DBFC3B'; }   // материалы студии — лаймовой подписью
       html += `<path d="M100 100 L${x0.toFixed(2)} ${y0.toFixed(2)} A97 97 0 0 1 ${x1.toFixed(2)} ${y1.toFixed(2)} Z" fill="${fill}" stroke="#161010" stroke-width="1.2"/>`;
@@ -2438,7 +2443,7 @@
     $('#wheel').innerHTML = html;
     $('#legend').innerHTML = '<span><i style="background:#DBFC3B"></i>3D-модель · только 7-й лист</span>'
       + '<span><i style="background:#2A2323;box-shadow:inset 0 0 0 2px #DBFC3B"></i>Материалы студии</span><span><i style="background:#2E2626"></i>Материал школы</span>'
-      + '<span><i style="background:' + (locked ? '#3D3333' : '#F74C2E') + '"></i>Скидка 10% · с 3-го дня</span><span><i style="background:#4D61F4"></i>Экскурсия</span>';
+      + '<span><i style="background:' + (locked ? '#3D3333' : '#F74C2E') + '"></i>Скидка 10% · с 3-го дня</span><span><i style="background:#4D61F4"></i>Консультация с Ярославом · 20 мин</span>';
   }
   function openWheel() {
     buildWheel();
@@ -2454,7 +2459,7 @@
     const left = (t) => S.stock[t] > 0 && !S.prizes.some((p) => p.type === t);
     const w = [
       ['model3d', S.stage === 7 && left('model3d') ? 0.01 : 0],
-      ['excursion', left('excursion') ? 0.03 : 0],
+      ['consultation', !S.prizes.some((p) => p.type === 'consultation') ? 0.03 : 0],
       ['discount', S.stage >= 3 && !S.code ? 0.2 : 0],
     ];
     let x = Math.random();
@@ -2530,6 +2535,18 @@
     };
     return { html, bind };
   }
+  const prizeLink = (url, label) => `<a class="btn btn-small btn-block" data-prize-link href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
+  function bindPrizeLinks(root) {
+    root.querySelectorAll('[data-prize-link]').forEach((link) => {
+      link.onclick = (event) => {
+        if (!tg) return;
+        const method = new URL(link.href).hostname === 't.me' ? 'openTelegramLink' : 'openLink';
+        if (typeof tg[method] !== 'function') return;
+        event.preventDefault();
+        tg[method](link.href);
+      };
+    });
+  }
   function prizeBody(p) {
     const facts = (f) => '<dl class="pfacts">' + f.map(([k, v]) => '<div><dt>' + k + '</dt><dd>' + v + '</dd></div>').join('') + '</dl>';
     let html = '', bind = () => {}, cls = prizeKind(p);
@@ -2537,9 +2554,10 @@
       const m = p.type === 'material' ? MATERIALS.find((x) => x.key === p.key) : null;
       const list = m ? (m.set ? PROMPT_SETS[m.set].items : null) : [PROMPTS[p.idx]];
       html = `<div class="eyebrow">${m ? m.from : 'Рабочий промпт · ' + PROMPTS[p.idx].from}</div><h3>${esc(prizeTitle(p))}</h3>`;
-      if (list) { const pv = promptViewer(list); html += pv.html; bind = pv.bind; }
-      else html += `<p>${m.text}</p><div class="pdf-chip"><span>PDF</span>Файл придёт в чат бота. В прототипе он не отправляется.</div>`;
-      if (m && m.set) html += '<p class="fine">PDF-версия набора придёт в чат бота.</p>';
+      if (list && list.length) { const pv = promptViewer(list); html += pv.html; bind = pv.bind; }
+      else if (m?.text) html += `<p>${m.text}</p>`;
+      if (m?.pdf) html += prizeLink(PRIZE_FILES + m.pdf, 'Скачать PDF');
+      else if (m && !m.set) html += '<div class="pdf-chip"><span>PDF</span>Файл пока недоступен.</div>';
     } else if (p.type === 'discount') {
       const pr = PRIZES.discount;
       if (!S.subscribed) {
@@ -2549,12 +2567,17 @@
         html = `<div class="eyebrow">${pr.eyebrow}</div><div class="big">−10%</div><div class="code">${S.code}</div><p>На любой курс, не суммируется с комбо. Демонстрационный код: реальные появятся после подключения школы.</p><button class="btn btn-primary btn-block" id="btn-copy-code" type="button">Скопировать код</button>`;
         bind = (root) => { root.querySelector('#btn-copy-code').onclick = () => copy(S.code, 'Код скопирован.'); };
       }
-    } else {
-      const pr = PRIZES[p.type];
-      html = `<div class="eyebrow">${pr.eyebrow}</div><h3>${pr.title}</h3><p>${pr.text}</p>${facts(pr.facts)}<p class="fine">${pr.kind === 'studio' ? 'Студия напишет вам в Telegram. ' : ''}Демонстрация: реальная выдача ещё не подключена.${S.stock[p.type] !== undefined ? ' Осталось в пуле: ' + S.stock[p.type] + ' из ' + STOCK[p.type] + '.' : ''}</p>`;
-      if (p.type === 'model3d') cls += ' super';
+    } else if (p.type === 'consultation') {
+      const pr = PRIZES.consultation;
+      html = `<div class="eyebrow">${pr.eyebrow}</div><h3>${pr.title}</h3><p class="claim">${pr.text}</p>${prizeLink(pr.url, 'Написать в школу')}`;
+    } else if (p.type === 'excursion') {
+      html = `<div class="eyebrow">Архивная награда</div><h3>${PRIZES.excursion.title}</h3>`;
+    } else if (p.type === 'model3d') {
+      const pr = PRIZES.model3d;
+      html = `<div class="eyebrow">${pr.eyebrow}</div><h3>${pr.title}</h3><p>${pr.text}</p>${facts(pr.facts)}<p class="fine">Демонстрация: выдача суперприза пока не подключена.</p>`;
+      cls += ' super';
     }
-    return { html, bind, cls };
+    return { html, bind: (root) => { bind(root); bindPrizeLinks(root); }, cls };
   }
   function openPrize(p, reveal = false) {
     const card = $('#prize-card'), body = prizeBody(p);
@@ -2631,12 +2654,12 @@
       `Дом — простая 3D-модель от студии «Нейро Отличник» (three.js). Рисуется прямо в игре, без картинок и генераций, — зацепка студии: «так мы собираем ваш проект в 3D». ${D('Р7')} ${D('Р8')}`,
     ] },
     wheel: { step: 4, title: 'Архитектурная рулетка', items: [
-      `12 секторов: узкий сектор суперприза — 3D-модель от студии, 3 скидки 10%, экскурсия и 7 секторов материалов. Проигрышных нет.`,
-      `<b>Круг показывает призы, но не шансы.</b> Результат выбирает сервер с учётом остатков. 3D-модель — 1 % и только на 7-м листе, всего 2 на сезон: это дорогая работа студии. Экскурсия — пока есть 10 мест. ${D('Р5')} ${D('Р16', true)}`,
+      `12 секторов: узкий сектор суперприза — 3D-модель от студии, 3 скидки 10%, консультация с Ярославом и 7 секторов материалов. Проигрышных нет.`,
+      `<b>Круг показывает призы, но не шансы.</b> В прототипе результат выбирается на устройстве. Шанс на 3D-модель — 1 % на 7-м листе, на консультацию — 3 % до первого выигрыша. ${D('Р5')} ${D('Р16', true)}`,
       `До 3-го дня секторы скидки закрыты штриховкой. Проверить разные призы можно через «Следующий спин».`,
     ] },
     prize: { step: 5, title: 'Приз и карточка дня', items: [
-      `Материалы выдаются без условий и без повторов: чек-лист, 10 промптов на улучшение, 10 на пролёты, чек-лист школы по ИИ. Промпты листаются и копируются прямо в карточке. Скидка — после подписки на канал школы. ${D('Р11')}`,
+      `Материалы выдаются без условий и без повторов: чек-лист, 10 промптов на улучшение, 10 на пролёты, чек-лист школы по ИИ. PDF студии доступны в карточках призов. Промпты можно листать и копировать. Скидка — после подписки на канал школы. ${D('Р11')}`,
       `Код скидки 10% уникальный, один на Telegram-аккаунт, не суммируется с комбо. ${D('Р1')} ${D('Р2')} ${D('Р3')}`,
       `Карточка дня без спойлеров: объект, стадия, ходы. В Telegram она уходит в чат нативным окном выбора.`,
       `Розыгрыш призов — рекламная акция. Правила (организатор, призы, сроки) нужно опубликовать до запуска. ${D('Р17', true)}`,
